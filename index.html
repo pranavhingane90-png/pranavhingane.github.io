@@ -3,8 +3,8 @@
 <head>
     <title>Pranav Project Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Official website of Pranav Hingane, ENTC Engineer. Explore 100+ electronics and engineering project ideas.">
-    <meta name="keywords" content="Pranav Hingane, ENTC Engineer, Electronics Projects, Engineering Ideas">
+    <meta name="description" content="Official website of Pranav Hingane, ENTC Engineer. Explore 999+ electronics and engineering project ideas.">
+    <meta name="keywords" content="Pranav Hingane, Technician/Engineer, Electronics Projects, Engineering Ideas">
     <meta name="author" content="Pranav Hingane">
 
     <style>
@@ -115,60 +115,115 @@
 
 <script>
 
-const levels = [
+const difficulty = [
 "Basic",
-"Intermediate",
+"Mini",
+"Major",
 "Advanced",
-"Industry Level",
-"Research Level"
+"Industry Grade"
 ];
 
-const domains = [
-"Electronics",
-"Embedded Systems",
-"IoT",
-"Robotics",
-"AI & Machine Learning",
-"Power Electronics",
-"Communication Systems",
-"Control Systems",
-"VLSI",
-"Signal Processing"
-];
+const projectIdeas = [
 
-const topics = [
+/* Electronics */
+"Digital Thermometer",
 "Smart Energy Meter",
-"Autonomous Delivery Robot",
-"Solar Power Optimization",
-"Wireless Sensor Network",
-"Industrial Automation System",
-"Smart Agriculture Monitoring",
-"Electric Vehicle Charging System",
-"Home Security Automation",
-"Drone Navigation System",
-"Biomedical Signal Analyzer",
-"Smart Traffic Control",
-"Voice Controlled Assistant",
-"Smart Grid Monitoring",
-"Water Quality Analyzer",
+"Automatic Voltage Stabilizer",
+"LED Matrix Display",
+"Power Factor Correction System",
+"Inverter Circuit",
+"Battery Management System",
+"DC Motor Speed Controller",
+"Wireless Charging System",
+"Solar Battery Charger",
+
+/* IoT */
+"Smart Home Automation",
+"IoT Weather Station",
+"Smart Irrigation System",
+"Remote Health Monitor",
+"IoT Gas Monitoring",
+"Smart Parking System",
+"Smart Dustbin",
+"Industrial IoT Dashboard",
+"Water Level Monitoring",
+"Smart Street Lighting",
+
+/* Robotics */
+"Line Following Robot",
+"Obstacle Avoidance Robot",
+"Autonomous Drone",
+"Robotic Arm",
+"Pick and Place Robot",
+"Fire Fighting Robot",
+"Surveillance Robot",
+"Humanoid Robot Model",
+"Agricultural Robot",
+"Underwater Robot",
+
+/* AI */
 "Face Recognition System",
-"Predictive Maintenance System",
-"Smart Waste Management",
-"Remote Health Monitoring",
-"AI Chatbot System",
-"Blockchain Based Data Security"
+"Voice Assistant",
+"AI Chatbot",
+"Emotion Detection System",
+"Object Detection Model",
+"Hand Gesture Recognition",
+"AI Attendance System",
+"Fraud Detection Model",
+"Predictive Maintenance AI",
+"Medical Diagnosis AI",
+
+/* Communication */
+"FM Transmitter",
+"AM Receiver",
+"Digital Modulation System",
+"GSM Based Automation",
+"RF Communication System",
+"Bluetooth Data Transfer",
+"Satellite Communication Model",
+"5G Simulation Model",
+"Optical Fiber Link",
+"Antenna Design System",
+
+/* Power Systems */
+"Smart Grid System",
+"Load Forecasting Model",
+"Solar Tracker",
+"Wind Energy System",
+"Hydro Power Simulation",
+"EV Charging Station",
+"Power Monitoring Dashboard",
+"Microgrid Model",
+"Energy Audit System",
+"Hybrid Renewable System",
+
+/* Embedded */
+"Arduino Based Security",
+"Raspberry Pi Server",
+"Smart Door Lock",
+"Fingerprint Attendance",
+"RFID Access Control",
+"GPS Tracking System",
+"Smart Helmet",
+"Smart Traffic Light",
+"Digital Clock System",
+"Smart Elevator Control"
+
 ];
 
+// Auto-generate until 1000 unique projects
 let projects = [];
+let counter = 1;
 
-for (let i = 1; i <= 1000; i++) {
-    const level = levels[i % levels.length];
-    const domain = domains[i % domains.length];
-    const topic = topics[i % topics.length];
-
-    projects.push(
-        level + " " + topic + " in " + domain + " - Project Model " + i
-    );
+while (projects.length < 1000) {
+    projectIdeas.forEach(idea => {
+        difficulty.forEach(level => {
+            if (projects.length < 1000) {
+                projects.push(level + " " + idea);
+                counter++;
+            }
+        });
+    });
 }
 
 const container = document.getElementById("projectContainer");
@@ -203,6 +258,7 @@ function filterProjects() {
 displayProjects(projects);
 
 </script>
+
 
 
 
