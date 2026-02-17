@@ -115,36 +115,60 @@
 
 <script>
 
-const baseProjects = [
-"Smart Street Light using LDR",
-"Temperature Monitoring using LM35",
-"Soil Moisture Irrigation System",
-"Gas Leakage Detection System",
-"RF Controlled Robot",
-"Bluetooth Home Automation",
-"IoT Weather Monitoring",
-"Water Level Indicator",
-"Fire Alarm System",
-"Heart Rate Monitor",
-"Ultrasonic Distance Meter",
-"Smart Door Lock",
-"Motion Detection Security System",
-"Digital Voltmeter using Arduino",
-"Smart Parking System",
-"Solar Tracking System",
-"Noise Level Monitoring",
-"Automatic Room Light Controller",
-"Fingerprint Attendance System",
-"Wireless Power Transfer Model"
+const levels = [
+"Basic",
+"Intermediate",
+"Advanced",
+"Industry Level",
+"Research Level"
+];
+
+const domains = [
+"Electronics",
+"Embedded Systems",
+"IoT",
+"Robotics",
+"AI & Machine Learning",
+"Power Electronics",
+"Communication Systems",
+"Control Systems",
+"VLSI",
+"Signal Processing"
+];
+
+const topics = [
+"Smart Energy Meter",
+"Autonomous Delivery Robot",
+"Solar Power Optimization",
+"Wireless Sensor Network",
+"Industrial Automation System",
+"Smart Agriculture Monitoring",
+"Electric Vehicle Charging System",
+"Home Security Automation",
+"Drone Navigation System",
+"Biomedical Signal Analyzer",
+"Smart Traffic Control",
+"Voice Controlled Assistant",
+"Smart Grid Monitoring",
+"Water Quality Analyzer",
+"Face Recognition System",
+"Predictive Maintenance System",
+"Smart Waste Management",
+"Remote Health Monitoring",
+"AI Chatbot System",
+"Blockchain Based Data Security"
 ];
 
 let projects = [];
 
-// Generate 1000+ projects
-for (let i = 1; i <= 50; i++) {   // 20 × 50 = 1000
-    baseProjects.forEach(project => {
-        projects.push(project + " - Advanced Version " + i);
-    });
+for (let i = 1; i <= 1000; i++) {
+    const level = levels[i % levels.length];
+    const domain = domains[i % domains.length];
+    const topic = topics[i % topics.length];
+
+    projects.push(
+        level + " " + topic + " in " + domain + " - Project Model " + i
+    );
 }
 
 const container = document.getElementById("projectContainer");
@@ -179,6 +203,7 @@ function filterProjects() {
 displayProjects(projects);
 
 </script>
+
 
 
 </body>
