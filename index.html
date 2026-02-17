@@ -3,18 +3,30 @@
 <head>
     <title>Pranav Project Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f2f2f2;
+            background: linear-gradient(to right, #141e30, #243b55);
+            color: white;
+            overflow-x: hidden;
         }
 
         header {
-            background: #0d1117;
-            color: white;
-            padding: 30px;
             text-align: center;
+            padding: 60px 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        .creator {
+            font-size: 18px;
+            margin-top: 10px;
+            opacity: 0.8;
         }
 
         section {
@@ -24,92 +36,110 @@
 
         .projects {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            flex-wrap: wrap;
         }
 
         .card {
             background: white;
+            color: black;
+            width: 260px;
             padding: 20px;
-            width: 280px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: left;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            animation: slideUp 1s ease forwards;
         }
 
-        .card h3 {
-            margin-top: 0;
+        .card:hover {
+            transform: scale(1.05);
         }
 
         footer {
-            background: #0d1117;
-            color: white;
-            padding: 15px;
             text-align: center;
+            padding: 20px;
+            background: black;
         }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes slideUp {
+            from {transform: translateY(50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #00c853;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
+
 <body>
 
 <header>
     <h1>Pranav Project Hub</h1>
-    <p>Basic Electronics & IoT Project Ideas with Clear Descriptions</p>
+    <p>100+ Basic Electronics & IoT Project Ideas with Description</p>
+    <div class="creator">
+        Created by Pranav Hingane | ENTC Engineer
+    </div>
 </header>
 
 <section>
-    <h2>Featured Basic Projects</h2>
-
-    <div class="projects">
-
-        <div class="card">
-            <h3>1. Smart Street Light System</h3>
-            <p>
-            Uses LDR and motion sensor to automatically control street lights.
-            Saves power by turning lights ON only when motion is detected at night.
-            </p>
-        </div>
-
-        <div class="card">
-            <h3>2. Temperature Monitoring System</h3>
-            <p>
-            Uses temperature sensor and microcontroller to monitor room temperature.
-            Can display data on LCD and trigger buzzer if temperature exceeds limit.
-            </p>
-        </div>
-
-        <div class="card">
-            <h3>3. Soil Moisture Based Irrigation</h3>
-            <p>
-            Uses soil moisture sensor to detect dryness in soil.
-            Automatically turns ON water pump when soil becomes dry.
-            </p>
-        </div>
-
-        <div class="card">
-            <h3>4. Gas Leakage Detection</h3>
-            <p>
-            Uses gas sensor to detect LPG leakage.
-            Activates buzzer and alert system when gas concentration increases.
-            </p>
-        </div>
-
+    <h2>Project Ideas</h2>
+    <div class="projects" id="projectContainer">
     </div>
 </section>
 
-<section>
-    <h2>About This Website</h2>
-    <p>
-    This platform provides simple and practical electronics project ideas 
-    for diploma and engineering students. Each project includes working concept 
-    and real-world application explanation.
-    </p>
-</section>
-
 <footer>
-    © 2026 Pranav Project Hub | Built by Pranav Hingane
+    © 2026 Pranav Project Hub | All Rights Reserved
 </footer>
+
+<script>
+    const projects = [
+        "Smart Street Light using LDR and IR Sensor",
+        "Temperature Monitoring System using LM35",
+        "Soil Moisture Based Automatic Irrigation",
+        "Gas Leakage Detection System",
+        "RF Controlled Robot",
+        "Bluetooth Controlled Home Automation",
+        "IoT Weather Monitoring System",
+        "Automatic Water Level Indicator",
+        "Fire Detection and Alarm System",
+        "Heart Rate Monitoring System",
+        "Ultrasonic Distance Measurement",
+        "Smart Door Lock using Keypad",
+        "Motion Detection Security System",
+        "Digital Voltmeter using Arduino",
+        "Smart Parking System",
+        "Solar Tracking System",
+        "Noise Level Monitoring",
+        "Automatic Room Light Controller",
+        "Fingerprint Based Attendance System",
+        "Wireless Power Transfer Model"
+    ];
+
+    const container = document.getElementById("projectContainer");
+
+    for (let i = 0; i < 5; i++) {
+        projects.forEach((project, index) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = "<h3>Project " + (i*projects.length + index + 1) + "</h3><p>" + project + "</p>";
+            container.appendChild(card);
+        });
+    }
+</script>
 
 </body>
 </html>
-
