@@ -135,11 +135,24 @@
         projects.forEach((project, index) => {
             const card = document.createElement("div");
             card.className = "card";
-            card.innerHTML = "<h3>Project " + (i*projects.length + index + 1) + "</h3><p>" + project + "</p>";
+
+            card.innerHTML = `
+                <h3>Project ${i*projects.length + index + 1}</h3>
+                <p>${project}</p>
+            `;
+
+            card.style.cursor = "pointer";
+
+            card.onclick = function() {
+                const searchQuery = encodeURIComponent(project);
+                window.open("https://www.google.com/search?q=" + searchQuery, "_blank");
+            };
+
             container.appendChild(card);
         });
     }
 </script>
+
 
 </body>
 </html>
