@@ -1,34 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pranav Tech Solutions</title>
+    <title>Pranav Project Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            font-family: Arial;
-            text-align: center;
-            background-color: #f4f4f4;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
         }
-        .box {
-            margin-top: 100px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: black;
+
+        header {
+            background: #0d1117;
             color: white;
-            border: none;
-            cursor: pointer;
+            padding: 30px;
+            text-align: center;
+        }
+
+        section {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .projects {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            width: 280px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        footer {
+            background: #0d1117;
+            color: white;
+            padding: 15px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h1>Welcome to Pranav Tech Solutions</h1>
-    <p>Electronics | IoT Projects | Engineering Support</p>
-    <button onclick="alert('Contact: pranavhingane90@gmail.com')">
-        Contact Me
-    </button>
-</div>
+<header>
+    <h1>Pranav Project Hub</h1>
+    <p>Basic Electronics & IoT Project Ideas with Clear Descriptions</p>
+</header>
+
+<section>
+    <h2>Featured Basic Projects</h2>
+
+    <div class="projects">
+
+        <div class="card">
+            <h3>1. Smart Street Light System</h3>
+            <p>
+            Uses LDR and motion sensor to automatically control street lights.
+            Saves power by turning lights ON only when motion is detected at night.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>2. Temperature Monitoring System</h3>
+            <p>
+            Uses temperature sensor and microcontroller to monitor room temperature.
+            Can display data on LCD and trigger buzzer if temperature exceeds limit.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>3. Soil Moisture Based Irrigation</h3>
+            <p>
+            Uses soil moisture sensor to detect dryness in soil.
+            Automatically turns ON water pump when soil becomes dry.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>4. Gas Leakage Detection</h3>
+            <p>
+            Uses gas sensor to detect LPG leakage.
+            Activates buzzer and alert system when gas concentration increases.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section>
+    <h2>About This Website</h2>
+    <p>
+    This platform provides simple and practical electronics project ideas 
+    for diploma and engineering students. Each project includes working concept 
+    and real-world application explanation.
+    </p>
+</section>
+
+<footer>
+    © 2026 Pranav Project Hub | Built by Pranav Hingane
+</footer>
 
 </body>
 </html>
+
