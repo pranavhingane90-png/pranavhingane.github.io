@@ -96,7 +96,7 @@
 
 <header>
     <h1>Pranav Project Hub</h1>
-    <p>999+ Electronics & IoT Project Ideas</p>
+    <p>199+ Electronics & IoT Project Ideas</p>
     <div class="creator">
     <h2>Pranav Hingane</h2>
     <p>Electronics Engineer | IoT Innovator | Smart Systems Developer</p>
@@ -117,127 +117,216 @@
 
 <script>
 
-const difficulty = [
-"Basic",
-"Mini",
-"Major",
-"Advanced",
-"Industry Grade"
-];
+const projects = [
 
-const projectIdeas = [
-
-/* Electronics */
-"Digital Thermometer",
-"Smart Energy Meter",
-"Automatic Voltage Stabilizer",
-"LED Matrix Display",
-"Power Factor Correction System",
-"Inverter Circuit",
-"Battery Management System",
-"DC Motor Speed Controller",
-"Wireless Charging System",
-"Solar Battery Charger",
-
-/* IoT */
-"Smart Home Automation",
-"IoT Weather Station",
-"Smart Irrigation System",
-"Remote Health Monitor",
-"IoT Gas Monitoring",
-"Smart Parking System",
-"Smart Dustbin",
-"Industrial IoT Dashboard",
-"Water Level Monitoring",
-"Smart Street Lighting",
-
-/* Robotics */
+"Smart Energy Meter using IoT",
+"Autonomous Delivery Drone",
+"AI Based Face Recognition System",
+"Solar Powered Water Pump",
+"Wireless Health Monitoring System",
+"Electric Vehicle Battery Management",
+"Smart Traffic Congestion Analyzer",
+"Industrial Temperature Monitoring",
+"Smart Agriculture Monitoring System",
+"Bluetooth Controlled Robotic Arm",
+"RFID Smart Parking System",
+"Gesture Controlled Robot",
+"Smart Waste Management System",
+"Voice Controlled Home Automation",
+"Predictive Maintenance System",
+"Smart Street Lighting System",
+"Automatic Railway Gate Controller",
+"Water Quality Monitoring System",
+"Air Pollution Detection System",
+"AI Chatbot for Student Support",
+"Smart Grid Energy System",
+"Wireless Power Transfer Setup",
+"Fire Detection and Alarm System",
+"Digital Power Factor Controller",
+"Drone Surveillance System",
+"Solar Energy Tracking System",
+"Fingerprint Door Lock",
+"GPS Vehicle Tracking System",
+"Industrial Motor Speed Controller",
+"AI Object Detection Model",
+"Smart Helmet Accident Alert",
+"Home Energy Monitoring System",
+"Automatic Irrigation Controller",
+"EV Charging Station Model",
+"Biomedical Signal Monitoring",
+"Smart Inventory System",
+"Wireless Notice Board",
+"RF Controlled Robot Car",
+"Smart Elevator Safety System",
+"Underwater Exploration Robot",
+"AI Stock Market Predictor",
+"QR Code Attendance System",
+"Digital Voting Machine",
 "Line Following Robot",
 "Obstacle Avoidance Robot",
-"Autonomous Drone",
-"Robotic Arm",
-"Pick and Place Robot",
-"Fire Fighting Robot",
-"Surveillance Robot",
-"Humanoid Robot Model",
-"Agricultural Robot",
-"Underwater Robot",
-
-/* AI */
-"Face Recognition System",
-"Voice Assistant",
-"AI Chatbot",
-"Emotion Detection System",
-"Object Detection Model",
-"Hand Gesture Recognition",
-"AI Attendance System",
-"Fraud Detection Model",
-"Predictive Maintenance AI",
-"Medical Diagnosis AI",
-
-/* Communication */
-"FM Transmitter",
-"AM Receiver",
-"Digital Modulation System",
-"GSM Based Automation",
-"RF Communication System",
-"Bluetooth Data Transfer",
-"Satellite Communication Model",
-"5G Simulation Model",
-"Optical Fiber Link",
-"Antenna Design System",
-
-/* Power Systems */
-"Smart Grid System",
-"Load Forecasting Model",
-"Solar Tracker",
-"Wind Energy System",
-"Hydro Power Simulation",
-"EV Charging Station",
-"Power Monitoring Dashboard",
-"Microgrid Model",
-"Energy Audit System",
-"Hybrid Renewable System",
-
-/* Embedded */
-"Arduino Based Security",
-"Raspberry Pi Server",
-"Smart Door Lock",
-"Fingerprint Attendance",
-"RFID Access Control",
-"GPS Tracking System",
-"Smart Helmet",
-"Smart Traffic Light",
-"Digital Clock System",
-"Smart Elevator Control"
+"Smart Blind Stick",
+"IoT Weather Monitoring Station",
+"Automatic Room Light Controller",
+"Keypad Based Door Lock",
+"Real Time Data Logger",
+"PLC Based Industrial Automation",
+"Solar Inverter Monitoring",
+"Smart Water Level Indicator",
+"Electricity Theft Detection System",
+"AI Medical Diagnosis Tool",
+"Smart Bus Tracking System",
+"Wireless Temperature Logger",
+"Smart Traffic Signal Controller",
+"Home Security Surveillance",
+"Energy Efficient Street Light",
+"AI Speech Recognition System",
+"Agricultural Field Robot",
+"Soil Moisture Irrigation System",
+"Wireless Patient Monitoring",
+"Remote Lab Control System",
+"Gas Leakage Detection System",
+"Smart City Monitoring Platform",
+"EV Motor Performance Analyzer",
+"Solar Mobile Charger",
+"Parking Reservation System",
+"AI Hand Gesture Recognition",
+"Automatic Waste Sorting Machine",
+"Remote Health Consultation System",
+"Digital Oscilloscope Prototype",
+"Warehouse Automation System",
+"AI Emotion Detection Model",
+"Smart Classroom System",
+"Industrial Wireless Monitoring",
+"Autonomous Boat Navigation",
+"Smart Building Energy Manager",
+"Flood Detection Alert System",
+"License Plate Recognition System",
+"Campus Navigation App",
+"Voice Assistant Device",
+"Wireless Charging Pad",
+"Traffic Monitoring Camera",
+"Solar Street Lamp",
+"Gas Cylinder Monitoring System",
+"Machine Health Monitoring",
+"Crop Disease Detection using AI",
+"Water Distribution Monitoring",
+"Pollution Monitoring Station",
+"EV Battery Health Analyzer",
+"Virtual AI Assistant",
+"Smart Power Distribution Panel",
+"Wireless Sensor Network",
+"Automated Toll Collection System",
+"Robotic Pick and Place Arm",
+"Smart Firefighting Robot",
+"Industrial Power Monitoring",
+"Electric Load Management System",
+"Smart ATM Security System",
+"Digital Frequency Counter",
+"Battery Charging Controller",
+"Smart Doorbell Camera",
+"AI Resume Screening Tool",
+"Hospital Management System",
+"Smart Farming Drone",
+"Smart Attendance using Face ID",
+"Renewable Energy Hybrid System",
+"Temperature Controlled Fan",
+"Industrial Conveyor Automation",
+"Smart Power Saver Device",
+"Motion Detection Security",
+"Smart Railway Tracking",
+"Intelligent Traffic Analyzer",
+"Automatic Water Dispenser",
+"Solar Powered Fan",
+"Smart Blood Pressure Monitor",
+"Remote Desktop Monitoring",
+"AI Chat Support Bot",
+"Electric Vehicle Dashboard",
+"Voice Controlled Wheelchair",
+"Digital Heartbeat Monitor",
+"Smart Factory Monitoring",
+"AI Based Language Translator",
+"Automated Library System",
+"Smart Power Backup System",
+"Wind Energy Monitoring",
+"Smart Metro Ticketing",
+"Industrial Control Panel",
+"Vehicle Collision Avoidance",
+"Automatic Plant Watering",
+"Digital Speedometer",
+"AI Based Exam Evaluation",
+"Solar Energy Storage System",
+"Smart Office Automation",
+"Temperature Alarm System",
+"AI Based Face Mask Detection",
+"Automatic Sanitizer Dispenser",
+"RF Based Voting System",
+"Smart Water Pump Controller",
+"Digital Load Controller",
+"Smart Hospital Bed Monitoring",
+"AI Chat Learning Assistant",
+"Vehicle Fuel Monitoring System",
+"Electric Energy Analyzer",
+"AI Based Road Damage Detection",
+"Smart Public Announcement System",
+"Wireless Home Security",
+"Solar Battery Charger",
+"AI Career Guidance Tool",
+"Smart Irrigation with Weather Data",
+"Automatic Door Opening System",
+"Smart Retail Billing System",
+"Power Quality Monitoring",
+"AI Video Surveillance System",
+"Intelligent Street Signaling",
+"Smart Waste Collection Tracker",
+"Wireless ECG Monitoring",
+"Smart Gas Stove Safety System",
+"AI Personal Finance Tracker",
+"Electric Power Theft Alert",
+"Smart Campus Security System",
+"Remote Industrial Control",
+"AI Traffic Prediction Model",
+"Smart Shopping Cart System",
+"Digital Temperature Controller",
+"Solar Powered EV Charger",
+"AI Document Scanner",
+"Smart Vehicle Parking Assistant",
+"Wireless Industrial Sensor",
+"Intelligent Home Climate Control",
+"Smart Fire Monitoring System",
+"AI Customer Support Assistant",
+"Automatic Car Washing System",
+"Energy Monitoring Mobile App",
+"Smart Elevator Control System",
+"AI Recruitment Assistant",
+"Industrial Automation Dashboard",
+"Smart Road Lighting System",
+"Electric Power Load Analyzer",
+"AI Crop Yield Prediction",
+"Smart Building Surveillance",
+"Wireless Motor Monitoring",
+"Intelligent Irrigation Planner",
+"Smart Traffic Violation Detection",
+"AI Voice Command System",
+"Solar Energy Monitoring App",
+"Digital Weather Analyzer",
+"Smart Factory Robot",
+"Automatic Oil Level Monitor",
+"AI Powered Study Assistant"
 
 ];
-
-// Auto-generate until 1000 unique projects
-let projects = [];
-let counter = 1;
-
-while (projects.length < 1000) {
-    projectIdeas.forEach(idea => {
-        difficulty.forEach(level => {
-            if (projects.length < 1000) {
-                projects.push(level + " " + idea);
-                counter++;
-            }
-        });
-    });
-}
 
 const container = document.getElementById("projectContainer");
 
 function displayProjects(list) {
     container.innerHTML = "";
-    list.forEach((project, index) => {
+
+    list.forEach(project => {
         const card = document.createElement("div");
         card.className = "card";
+
         card.innerHTML = `
-            <h3>Project ${index + 1}</h3>
-            <p>${project}</p>
+            <h3>${project}</h3>
+            <p>This project focuses on building a practical engineering solution using sensors, automation, embedded systems, and intelligent technologies to solve real-world problems.</p>
         `;
 
         card.onclick = function() {
@@ -251,7 +340,7 @@ function displayProjects(list) {
 
 function filterProjects() {
     const input = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = projects.filter(project => 
+    const filtered = projects.filter(project =>
         project.toLowerCase().includes(input)
     );
     displayProjects(filtered);
@@ -260,6 +349,7 @@ function filterProjects() {
 displayProjects(projects);
 
 </script>
+
 
 
 
