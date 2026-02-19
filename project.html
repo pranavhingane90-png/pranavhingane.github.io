@@ -7,8 +7,8 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #141e30, #243b55);
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: white;
             padding: 40px;
         }
@@ -19,14 +19,6 @@
             background: rgba(255,255,255,0.1);
             padding: 30px;
             border-radius: 15px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        p {
-            line-height: 1.6;
         }
 
         button {
@@ -52,8 +44,6 @@
 
 <script>
 
-const descriptions = "This project focuses on designing and implementing a practical engineering solution using modern technologies such as sensors, microcontrollers, automation, AI, IoT connectivity, and embedded systems. It aims to solve real-world problems efficiently while improving performance, reliability, and scalability.";
-
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -62,7 +52,9 @@ function getQueryParam(param) {
 const title = decodeURIComponent(getQueryParam("title"));
 
 document.getElementById("projectTitle").innerText = title;
-document.getElementById("projectDescription").innerText = descriptions;
+
+document.getElementById("projectDescription").innerText =
+"This project focuses on designing and implementing a real-world engineering solution using modern technologies such as sensors, microcontrollers, AI, IoT connectivity, and embedded systems. It improves efficiency, automation, and intelligent decision-making in practical applications.";
 
 function goBack() {
     window.location.href = "index.html";
