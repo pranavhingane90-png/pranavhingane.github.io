@@ -330,9 +330,9 @@ function displayProjects(list) {
         `;
 
         card.onclick = function() {
-            const query = encodeURIComponent(project);
-            window.open("https://www.google.com/search?q=" + query, "_blank");
-        };
+    const urlTitle = encodeURIComponent(project);
+    window.location.href = "project.html?title=" + urlTitle;
+};
 
         container.appendChild(card);
     });
