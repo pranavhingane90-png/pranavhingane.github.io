@@ -88,6 +88,25 @@
             from {transform: translateY(40px); opacity: 0;}
             to {transform: translateY(0); opacity: 1;}
         }
+        button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.detailsBtn {
+    background: #00bcd4;
+    color: white;
+}
+
+.buyBtn {
+    background: #25D366;
+    color: white;
+}
+
     </style>
 
 </head>
@@ -321,13 +340,48 @@ function displayProjects(list) {
     container.innerHTML = "";
 
     list.forEach(project => {
+
+        let price = "₹1999";
+
+        if(project.includes("AI")) price = "₹4999";
+        if(project.includes("Drone")) price = "₹3999";
+        if(project.includes("IoT")) price = "₹2999";
+
         const card = document.createElement("div");
         card.className = "card";
 
         card.innerHTML = `
+            <img src="https://via.placeholder.com/300x150" style="width:100%; border-radius:10px;">
             <h3>${project}</h3>
-            <p>This project focuses on building a practical engineering solution using sensors, automation, embedded systems, and intelligent technologies to solve real-world problems.</p>
+            <p>Complete engineering project with documentation, code, circuit diagram & explanation.</p>
+            <h4 style="color:#00e676;">${price}</h4>
+            <button class="detailsBtn">View Details</button>
+            <button class="buyBtn">Buy on WhatsApp</button>
         `;
+
+        // VIEW DETAILS
+        card.querySelector(".detailsBtn").onclick = function() {
+            window.location.href = "project.html?title=" + encodeURIComponent(project);
+        };
+
+        // BUY ON WHATSAPP
+        card.querySelector(".buyBtn").onclick = function() {
+
+            const message = `Hello Pranav,
+I am interested in ${project}.
+Price: ${price}.
+Please share complete details and payment method.
+My Location: `;
+
+            const whatsappURL = `https://wa.me/919322018190?text=${encodeURIComponent(message)}`;
+
+            window.open(whatsappURL, "_blank");
+        };
+
+        container.appendChild(card);
+    });
+}
+
 
        card.onclick = function() {
 
