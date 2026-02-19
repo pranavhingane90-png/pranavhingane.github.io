@@ -329,9 +329,20 @@ function displayProjects(list) {
             <p>This project focuses on building a practical engineering solution using sensors, automation, embedded systems, and intelligent technologies to solve real-world problems.</p>
         `;
 
-        card.onclick = function() {
-    const query = encodeURIComponent(project);
-    window.open("https://www.google.com/search?q=" + query, "_blank");
+       card.onclick = function() {
+
+    const price = "₹1999";  // you can change price per project
+    const message = `Hello Pranav,
+I am interested in ${project}.
+Price: ${price}.
+Please share full details.
+My Location: `;
+
+    const encodedMessage = encodeURIComponent(message);
+
+    const whatsappURL = `https://wa.me/919322018190?text=${encodedMessage}`;
+
+    window.open(whatsappURL, "_blank");
 };
 
 
