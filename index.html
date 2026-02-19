@@ -333,6 +333,12 @@ function displayProjects(list) {
     const urlTitle = encodeURIComponent(project);
     window.location.href = "project.html?title=" + urlTitle;
 };
+        card.onclick = function() {
+    if(project === "Smart Energy Meter using IoT"){
+        window.location.href = "smart-energy-meter.html";
+    }
+};
+
 
         container.appendChild(card);
     });
