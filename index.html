@@ -1,196 +1,206 @@
 <!DOCTYPE html>
 <html>
-    <button onclick="getLocation()">Allow Location</button>
 
-<p id="locationStatus"></p>
 <head>
-    <title>Pranav Project Hub</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pranav Project Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-            color: white;
-        }
+<style>
 
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            animation: fadeIn 2s ease-in-out;
-        }
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
 
-        header h1 {
-            font-size: 40px;
-        }
+header{
+text-align:center;
+padding:60px 20px;
+}
 
-        .highlight {
-            color: #00e676;
-        }
+header h1{
+font-size:40px;
+}
 
-        .search-box {
-            text-align: center;
-            margin: 20px;
-        }
+.highlight{
+color:#00e676;
+}
 
-        .search-box input {
-            padding: 12px;
-            width: 300px;
-            border-radius: 30px;
-            border: none;
-            outline: none;
-        }
+.search-box{
+text-align:center;
+margin:20px;
+}
 
-        .projects {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
+.search-box input{
+padding:12px;
+width:300px;
+border-radius:30px;
+border:none;
+outline:none;
+}
 
-        .card {
-            width: 260px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px;
-            transition: 0.4s;
-            animation: slideUp 0.8s ease;
-        }
+.projects{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:20px;
+padding:20px;
+}
 
-        .card:hover {
-            transform: translateY(-8px) scale(1.05);
-            background: rgba(255,255,255,0.2);
-        }
+.card{
+width:260px;
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+border-radius:15px;
+padding:15px;
+transition:0.4s;
+}
 
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-        }
+.card:hover{
+transform:translateY(-8px) scale(1.05);
+background:rgba(255,255,255,0.2);
+}
 
-        .price {
-            color: #00e676;
-            font-weight: bold;
-        }
+.card img{
+width:100%;
+border-radius:10px;
+}
 
-        button {
-            padding: 8px 10px;
-            border: none;
-            border-radius: 6px;
-            margin: 5px 3px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+.price{
+color:#00e676;
+font-weight:bold;
+}
 
-        .detailsBtn {
-            background: #00bcd4;
-            color: white;
-        }
+button{
+padding:8px 10px;
+border:none;
+border-radius:6px;
+margin:5px 3px;
+cursor:pointer;
+font-weight:bold;
+}
 
-        .buyBtn {
-            background: #25D366;
-            color: white;
-        }
+.detailsBtn{
+background:#00bcd4;
+color:white;
+}
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: black;
-        }
+.buyBtn{
+background:#25D366;
+color:white;
+}
 
-        /* Admin Panel */
-        .admin-panel {
-            background: rgba(0,0,0,0.7);
-            padding: 20px;
-            text-align: center;
-            display: none;
-        }
+footer{
+text-align:center;
+padding:20px;
+background:black;
+}
 
-        .admin-panel input {
-            padding: 8px;
-            margin: 5px;
-        }
+.admin-panel{
+background:rgba(0,0,0,0.7);
+padding:20px;
+text-align:center;
+display:none;
+}
 
-        @keyframes fadeIn {
-            from {opacity:0;}
-            to {opacity:1;}
-        }
+.admin-panel input{
+padding:8px;
+margin:5px;
+}
 
-        @keyframes slideUp {
-            from {transform:translateY(40px);opacity:0;}
-            to {transform:translateY(0);opacity:1;}
-        }
-
-    </style>
+</style>
 </head>
 
 <body>
 
+<div style="text-align:center;margin-top:20px;">
+<button onclick="getLocation()">📍 Allow Location</button>
+<p id="locationStatus"></p>
+</div>
+
 <header>
-    <h1><i class="fa-solid fa-microchip"></i> Real Project Hub</h1>
-    <h3>Created by <span class="highlight">Pranav Hingane</span></h3>
-    <p>Electronics Engineer | IoT Innovator | Smart Systems Developer</p>
+
+<h1><i class="fa-solid fa-microchip"></i> Real Project Hub</h1>
+
+<h3>Created by <span class="highlight">Pranav Hingane</span></h3>
+
+<p>Electronics Engineer | IoT Innovator | Smart Systems Developer</p>
+
 </header>
 
 <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 Search Project..." onkeyup="filterProjects()">
+
+<input type="text" id="searchInput" placeholder="🔍 Search Project..." onkeyup="filterProjects()">
+
 </div>
 
 <div style="text-align:center;">
-    <button onclick="toggleAdmin()"><i class="fa-solid fa-user-gear"></i> Admin Dashboard</button>
+<button onclick="toggleAdmin()"><i class="fa-solid fa-user-gear"></i> Admin Dashboard</button>
 </div>
 
 <div class="admin-panel" id="adminPanel">
-    <h3>Admin Panel</h3>
-    <input type="text" id="newProject" placeholder="New Project Name">
-    <button onclick="addProject()">Add Project</button>
+
+<h3>Admin Panel</h3>
+
+<input type="text" id="newProject" placeholder="New Project Name">
+
+<button onclick="addProject()">Add Project</button>
+
 </div>
 
 <section class="projects" id="projectContainer"></section>
 
 <footer>
-    © 2026 Pranav Hingane | All Rights Reserved
+
+© 2026 Pranav Hingane | All Rights Reserved
+
 </footer>
 
 <script>
+
 let userLocation = "";
 
-function getLocation() {
+/* LOCATION */
 
-if (navigator.geolocation) {
+function getLocation(){
 
-navigator.geolocation.getCurrentPosition(showPosition, showError);
+if(navigator.geolocation){
 
-} else {
+navigator.geolocation.getCurrentPosition(showPosition,showError);
 
-document.getElementById("locationStatus").innerHTML = "Location not supported.";
+}else{
+
+document.getElementById("locationStatus").innerHTML="Location not supported";
 
 }
 
 }
 
-function showPosition(position) {
+function showPosition(position){
 
 const lat = position.coords.latitude;
 const lon = position.coords.longitude;
 
-userLocation = "https://maps.google.com/?q=" + lat + "," + lon;
+userLocation="https://maps.google.com/?q="+lat+","+lon;
 
-document.getElementById("locationStatus").innerHTML = "Location captured ✔";
+document.getElementById("locationStatus").innerHTML="Location captured ✔";
+
+}
+
+function showError(){
+
+document.getElementById("locationStatus").innerHTML="Location permission denied";
 
 }
 
-function showError(error) {
 
-document.getElementById("locationStatus").innerHTML = "Location permission denied.";
+/* PROJECT LIST */
 
-}
-let projects = [
+let projects=[
+
 "Smart Energy Meter using IoT",
 "Autonomous Delivery Drone",
 "AI Based Face Recognition System",
@@ -201,78 +211,122 @@ let projects = [
 "Bluetooth Controlled Robotic Arm",
 "Voice Controlled Home Automation",
 "Smart Street Lighting System"
+
 ];
 
-const container = document.getElementById("projectContainer");
+const container=document.getElementById("projectContainer");
 
-function displayProjects(list) {
-    container.innerHTML = "";
 
-    list.forEach(project => {
+function displayProjects(list){
 
-        let price = "₹1999";
-        if(project.includes("AI")) price = "₹4999- and on";
-        if(project.includes("Drone")) price = "₹3999-and on";
-        if(project.includes("IoT")) price = "₹1000-2000";
+container.innerHTML="";
 
-        const card = document.createElement("div");
-        card.className = "card";
+list.forEach(project=>{
 
-        card.innerHTML = `
-            <img src="https://via.placeholder.com/300x150">
-            <h3>${project}</h3>
-            <p>Complete engineering project with documentation & source code.</p>
-            <p class="price">${price}</p>
-            <button class="detailsBtn"><i class="fa-solid fa-circle-info"></i> Details</button>
-            <button class="buyBtn"><i class="fa-brands fa-whatsapp"></i> Buy</button>
-        `;
+let price="₹1999";
 
-        card.querySelector(".detailsBtn").onclick = function() {
-            window.location.href = "project.html?title=" + encodeURIComponent(project);
-        };
+if(project.includes("AI")) price="₹4999";
+if(project.includes("Drone")) price="₹3999";
+if(project.includes("IoT")) price="₹2000";
 
-       function buyProject(projectName, price){
+const card=document.createElement("div");
 
-let message =
-"Project Name: " + projectName +
-"%0APrice: ₹" + price +
-"%0ALocation: " + userLocation;
+card.className="card";
 
-let url = "https://wa.me/919322018190?text=" + message;
+card.innerHTML=`
 
-window.open(url, "_blank");
+<img src="https://via.placeholder.com/300x150">
+
+<h3>${project}</h3>
+
+<p>Complete engineering project with documentation & source code.</p>
+
+<p class="price">${price}</p>
+
+<button class="detailsBtn"><i class="fa-solid fa-circle-info"></i> Details</button>
+
+<button class="buyBtn"><i class="fa-brands fa-whatsapp"></i> Buy</button>
+
+`;
+
+card.querySelector(".detailsBtn").onclick=function(){
+
+window.location.href="project.html?title="+encodeURIComponent(project);
+
+};
+
+card.querySelector(".buyBtn").onclick=function(){
+
+buyProject(project,price);
+
+};
+
+container.appendChild(card);
+
+});
 
 }
 
-            const whatsappURL = `https://wa.me/919322018190?text=${encodeURIComponent(message)}`;
-            window.open(whatsappURL, "_blank");
-        };
 
-        container.appendChild(card);
-    });
+/* WHATSAPP ORDER */
+
+function buyProject(projectName,price){
+
+let message=
+"Project Name: "+projectName+
+"%0APrice: "+price+
+"%0ALocation: "+userLocation;
+
+let url="https://wa.me/919322018190?text="+message;
+
+window.open(url,"_blank");
+
 }
 
-function filterProjects() {
-    const input = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = projects.filter(p =>
-        p.toLowerCase().includes(input)
-    );
-    displayProjects(filtered);
+
+/* SEARCH */
+
+function filterProjects(){
+
+const input=document.getElementById("searchInput").value.toLowerCase();
+
+const filtered=projects.filter(p=>
+
+p.toLowerCase().includes(input)
+
+);
+
+displayProjects(filtered);
+
 }
 
-function toggleAdmin() {
-    const panel = document.getElementById("adminPanel");
-    panel.style.display = panel.style.display === "none" ? "block" : "none";
+
+/* ADMIN PANEL */
+
+function toggleAdmin(){
+
+const panel=document.getElementById("adminPanel");
+
+panel.style.display=panel.style.display==="none"?"block":"none";
+
 }
 
-function addProject() {
-    const newProject = document.getElementById("newProject").value;
-    if(newProject.trim() !== "") {
-        projects.push(newProject);
-        displayProjects(projects);
-        document.getElementById("newProject").value = "";
-        alert("Project Added!");
-    }
+function addProject(){
+
+const newProject=document.getElementById("newProject").value;
+
+if(newProject.trim()!==""){
+
+projects.push(newProject);
+
+displayProjects(projects);
+
+document.getElementById("newProject").value="";
+
+alert("Project Added!");
+
+}
+
 }
 
 displayProjects(projects);
