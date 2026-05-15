@@ -1,337 +1,317 @@
-<!DOCTYPE html>
-<html>
+# Modern Theme Upgrade for Pranav Project Hub
 
-<head>
-<title>Pranav Project Hub</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+Replace your current `<style>` section with this complete upgraded styling.
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-
+```css
 body{
 margin:0;
-font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#090979,#020024,#000000);
+background-size:400% 400%;
+animation:bgAnimation 12s ease infinite;
+color:white;
+overflow-x:hidden;
+}
+
+/* ANIMATED BACKGROUND */
+
+@keyframes bgAnimation{
+0%{
+background-position:0% 50%;
+}
+50%{
+background-position:100% 50%;
+}
+100%{
+background-position:0% 50%;
+}
+}
+
+/* LOGIN PAGE */
+
+#loginPage{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#000428,#004e92);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+backdrop-filter:blur(10px);
+}
+
+.login-box{
+background:rgba(255,255,255,0.08);
+padding:40px;
+border-radius:25px;
+backdrop-filter:blur(18px);
+text-align:center;
+width:320px;
+box-shadow:0 0 30px rgba(0,255,255,0.3);
+animation:fadeIn 1s ease;
+}
+
+.login-box h2{
+font-size:28px;
+margin-bottom:20px;
+}
+
+.login-box input{
+width:90%;
+padding:14px;
+margin:12px 0;
+border:none;
+border-radius:12px;
+outline:none;
+font-size:15px;
+background:rgba(255,255,255,0.15);
 color:white;
 }
 
+.login-box input::placeholder{
+color:#ddd;
+}
+
+.login-btn{
+background:linear-gradient(45deg,#00e676,#00c853);
+color:black;
+padding:12px 25px;
+font-weight:bold;
+font-size:16px;
+transition:0.3s;
+}
+
+.login-btn:hover{
+transform:scale(1.08);
+}
+
+/* HEADER */
+
 header{
 text-align:center;
-padding:60px 20px;
+padding:70px 20px;
+animation:fadeIn 1.5s ease;
 }
 
 header h1{
-font-size:40px;
+font-size:55px;
+margin-bottom:10px;
+background:linear-gradient(to right,#00e5ff,#00ff95);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .highlight{
-color:#00e676;
+color:#00ffae;
+font-weight:bold;
 }
+
+header p{
+font-size:18px;
+opacity:0.9;
+}
+
+/* SEARCH BAR */
 
 .search-box{
 text-align:center;
-margin:20px;
+margin:30px;
 }
 
 .search-box input{
-padding:12px;
-width:300px;
-border-radius:30px;
+padding:15px;
+width:340px;
+border-radius:40px;
 border:none;
 outline:none;
+font-size:16px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(10px);
+color:white;
+box-shadow:0 0 15px rgba(0,255,255,0.2);
 }
+
+.search-box input::placeholder{
+color:#ddd;
+}
+
+/* BUTTONS */
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:10px;
+margin:5px 3px;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+font-size:14px;
+}
+
+button:hover{
+transform:scale(1.07);
+}
+
+.detailsBtn{
+background:linear-gradient(45deg,#00bcd4,#2196f3);
+color:white;
+}
+
+.buyBtn{
+background:linear-gradient(45deg,#25D366,#128C7E);
+color:white;
+}
+
+.locationBtn{
+background:linear-gradient(45deg,#ff9800,#ff5722);
+color:white;
+}
+
+/* PROJECT SECTION */
 
 .projects{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:20px;
-padding:20px;
+gap:25px;
+padding:25px;
 }
 
 .card{
-width:260px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
-border-radius:15px;
-padding:15px;
+width:280px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(18px);
+border-radius:20px;
+padding:18px;
 transition:0.4s;
+box-shadow:0 0 25px rgba(0,0,0,0.4);
+animation:slideUp 0.8s ease;
+position:relative;
+overflow:hidden;
+}
+
+.card::before{
+content:'';
+position:absolute;
+top:-50%;
+left:-50%;
+width:200%;
+height:200%;
+background:linear-gradient(45deg,transparent,rgba(255,255,255,0.08),transparent);
+transform:rotate(25deg);
+animation:shine 4s linear infinite;
+}
+
+@keyframes shine{
+0%{
+transform:translateX(-100%) rotate(25deg);
+}
+100%{
+transform:translateX(100%) rotate(25deg);
+}
 }
 
 .card:hover{
-transform:translateY(-8px) scale(1.05);
-background:rgba(255,255,255,0.2);
+transform:translateY(-10px) scale(1.05);
+background:rgba(255,255,255,0.14);
+box-shadow:0 0 35px rgba(0,255,255,0.4);
 }
 
 .card img{
 width:100%;
-border-radius:10px;
+border-radius:15px;
+margin-bottom:10px;
+}
+
+.card h3{
+font-size:20px;
+margin-bottom:8px;
+}
+
+.card p{
+font-size:14px;
+line-height:1.5;
 }
 
 .price{
-color:#00e676;
+color:#00ff95;
 font-weight:bold;
+font-size:20px;
+margin-top:10px;
 }
-
-button{
-padding:8px 10px;
-border:none;
-border-radius:6px;
-margin:5px 3px;
-cursor:pointer;
-font-weight:bold;
-}
-
-.detailsBtn{
-background:#00bcd4;
-color:white;
-}
-
-.buyBtn{
-background:#25D366;
-color:white;
-}
-
-footer{
-text-align:center;
-padding:20px;
-background:black;
-}
-
-.admin-panel{
-background:rgba(0,0,0,0.7);
-padding:20px;
-text-align:center;
-display:none;
-}
-
-.admin-panel input{
-padding:8px;
-margin:5px;
-}
-
-</style>
-</head>
-
-<body>
-
-<div style="text-align:center;margin-top:20px;">
-<button onclick="getLocation()">📍 Allow Location</button>
-<p id="locationStatus"></p>
-</div>
-
-<header>
-
-<h1><i class="fa-solid fa-microchip"></i> Real Project Hub</h1>
-
-<h3>Created by <span class="highlight">Pranav Hingane</span></h3>
-
-<p>Electronics Engineer | IoT Innovator | Smart Systems Developer</p>
-
-</header>
-
-<div class="search-box">
-
-<input type="text" id="searchInput" placeholder="🔍 Search Project..." onkeyup="filterProjects()">
-
-</div>
-
-<div style="text-align:center;">
-<button onclick="toggleAdmin()"><i class="fa-solid fa-user-gear"></i> Admin Dashboard</button>
-</div>
-
-<div class="admin-panel" id="adminPanel">
-
-<h3>Admin Panel</h3>
-
-<input type="text" id="newProject" placeholder="New Project Name">
-
-<button onclick="addProject()">Add Project</button>
-
-</div>
-
-<section class="projects" id="projectContainer"></section>
-
-<footer>
-
-© 2026 Pranav Hingane | All Rights Reserved
-
-</footer>
-
-<script>
-
-let userLocation = "";
-
-/* LOCATION */
-
-function getLocation(){
-
-if(navigator.geolocation){
-
-navigator.geolocation.getCurrentPosition(showPosition,showError);
-
-}else{
-
-document.getElementById("locationStatus").innerHTML="Location not supported";
-
-}
-
-}
-
-function showPosition(position){
-
-const lat = position.coords.latitude;
-const lon = position.coords.longitude;
-
-userLocation="https://maps.google.com/?q="+lat+","+lon;
-
-document.getElementById("locationStatus").innerHTML="Location captured ✔";
-
-}
-
-function showError(){
-
-document.getElementById("locationStatus").innerHTML="Location permission denied";
-
-}
-
-
-/* PROJECT LIST */
-
-let projects=[
-
-"Smart Energy Meter using IoT",
-"Autonomous Delivery Drone",
-"AI Based Face Recognition System",
-"Solar Powered Water Pump",
-"Wireless Health Monitoring System",
-"Electric Vehicle Battery Management",
-"Smart Traffic Congestion Analyzer",
-"Bluetooth Controlled Robotic Arm",
-"Voice Controlled Home Automation",
-"Smart Street Lighting System"
-
-];
-
-const container=document.getElementById("projectContainer");
-
-
-function displayProjects(list){
-
-container.innerHTML="";
-
-list.forEach(project=>{
-
-let price="₹1999";
-
-if(project.includes("AI")) price="₹4999";
-if(project.includes("Drone")) price="₹3999";
-if(project.includes("IoT")) price="₹2000";
-
-const card=document.createElement("div");
-
-card.className="card";
-
-card.innerHTML=`
-
-<img src="https://via.placeholder.com/300x150">
-
-<h3>${project}</h3>
-
-<p>Complete engineering project with documentation & source code.</p>
-
-<p class="price">${price}</p>
-
-<button class="detailsBtn"><i class="fa-solid fa-circle-info"></i> Details</button>
-
-<button class="buyBtn"><i class="fa-brands fa-whatsapp"></i> Buy</button>
-
-`;
-
-card.querySelector(".detailsBtn").onclick=function(){
-
-window.location.href="project.html?title="+encodeURIComponent(project);
-
-};
-
-card.querySelector(".buyBtn").onclick=function(){
-
-buyProject(project,price);
-
-};
-
-container.appendChild(card);
-
-});
-
-}
-
-
-/* WHATSAPP ORDER */
-
-function buyProject(projectName,price){
-
-let message=
-"Project Name: "+projectName+
-"%0APrice: "+price+
-"%0ALocation: "+userLocation;
-
-let url="https://wa.me/919322018190?text="+message;
-
-window.open(url,"_blank");
-
-}
-
-
-/* SEARCH */
-
-function filterProjects(){
-
-const input=document.getElementById("searchInput").value.toLowerCase();
-
-const filtered=projects.filter(p=>
-
-p.toLowerCase().includes(input)
-
-);
-
-displayProjects(filtered);
-
-}
-
 
 /* ADMIN PANEL */
 
-function toggleAdmin(){
-
-const panel=document.getElementById("adminPanel");
-
-panel.style.display=panel.style.display==="none"?"block":"none";
-
+.admin-panel{
+background:rgba(255,255,255,0.08);
+padding:25px;
+text-align:center;
+display:none;
+margin:20px auto;
+width:80%;
+border-radius:20px;
+backdrop-filter:blur(15px);
 }
 
-function addProject(){
-
-const newProject=document.getElementById("newProject").value;
-
-if(newProject.trim()!==""){
-
-projects.push(newProject);
-
-displayProjects(projects);
-
-document.getElementById("newProject").value="";
-
-alert("Project Added!");
-
+.admin-panel input{
+padding:12px;
+margin:8px;
+border:none;
+border-radius:10px;
+width:250px;
 }
 
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:25px;
+background:rgba(0,0,0,0.8);
+margin-top:50px;
+font-size:14px;
+letter-spacing:1px;
 }
 
-displayProjects(projects);
+/* ANIMATIONS */
 
-</script>
+@keyframes fadeIn{
+from{
+opacity:0;
+}
+to{
+opacity:1;
+}
+}
 
-</body>
-</html>
+@keyframes slideUp{
+from{
+transform:translateY(40px);
+opacity:0;
+}
+to{
+transform:translateY(0);
+opacity:1;
+}
+}
+```
+
+Also add this line inside `<head>` ABOVE your style tag:
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+```
+
+Your website will now have:
+
+* Animated premium background
+* Glassmorphism cards
+* Neon glow effects
+* Modern buttons
+* Professional startup-style UI
+* Smooth animations
+* Better typography
+* Premium engineering website feel
+
