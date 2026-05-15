@@ -3,7 +3,6 @@
 
 <head>
 <title>Pranav Project Hub</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -13,161 +12,210 @@
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+background:linear-gradient(135deg,#000428,#004e92,#000000);
+background-size:400% 400%;
+animation:bgMove 10s ease infinite;
 color:white;
+overflow-x:hidden;
 }
 
-/* LOGIN PAGE */
+/* BACKGROUND ANIMATION */
 
-#loginPage{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:linear-gradient(135deg,#000428,#004e92);
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:9999;
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
-.login-box{
-background:rgba(255,255,255,0.1);
-padding:40px;
-border-radius:20px;
-backdrop-filter:blur(10px);
-text-align:center;
-width:300px;
-animation:fadeIn 1s ease;
-}
-
-.login-box h2{
-margin-bottom:20px;
-}
-
-.login-box input{
-width:90%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:10px;
-outline:none;
-}
-
-.login-btn{
-background:#00e676;
-color:black;
-padding:10px 20px;
-font-weight:bold;
-}
-
-/* MAIN WEBSITE */
+/* HEADER */
 
 header{
 text-align:center;
-padding:60px 20px;
+padding:70px 20px;
 animation:fadeIn 1.5s ease;
 }
 
 header h1{
-font-size:42px;
+font-size:55px;
+background:linear-gradient(to right,#00e5ff,#00ff95);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:10px;
 }
 
 .highlight{
-color:#00e676;
+color:#00ffae;
+font-weight:bold;
 }
+
+header p{
+font-size:18px;
+opacity:0.9;
+}
+
+/* TOP BUTTONS */
+
+.top-tools{
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+margin-top:20px;
+margin-bottom:20px;
+}
+
+/* SEARCH */
 
 .search-box{
 text-align:center;
-margin:20px;
+margin:30px;
 }
 
 .search-box input{
-padding:12px;
-width:300px;
-border-radius:30px;
+padding:15px;
+width:340px;
+border-radius:40px;
 border:none;
 outline:none;
 font-size:16px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(10px);
+color:white;
+box-shadow:0 0 15px rgba(0,255,255,0.3);
 }
+
+.search-box input::placeholder{
+color:#ddd;
+}
+
+/* PROJECTS */
 
 .projects{
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:20px;
-padding:20px;
+gap:25px;
+padding:25px;
 }
 
+/* CARD */
+
 .card{
-width:260px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
-border-radius:15px;
-padding:15px;
+width:280px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(18px);
+border-radius:20px;
+padding:18px;
 transition:0.4s;
+box-shadow:0 0 25px rgba(0,0,0,0.4);
+position:relative;
+overflow:hidden;
 animation:slideUp 0.8s ease;
 }
 
 .card:hover{
-transform:translateY(-8px) scale(1.05);
-background:rgba(255,255,255,0.2);
+transform:translateY(-10px) scale(1.05);
+background:rgba(255,255,255,0.15);
+box-shadow:0 0 35px rgba(0,255,255,0.4);
 }
 
 .card img{
 width:100%;
-border-radius:10px;
+border-radius:15px;
+margin-bottom:12px;
+}
+
+.card h3{
+font-size:20px;
+margin-bottom:8px;
+}
+
+.card p{
+font-size:14px;
+line-height:1.5;
 }
 
 .price{
-color:#00e676;
+color:#00ff95;
+font-size:22px;
 font-weight:bold;
-font-size:18px;
+margin-top:10px;
 }
 
+/* BUTTONS */
+
 button{
-padding:8px 12px;
+padding:10px 15px;
 border:none;
-border-radius:6px;
+border-radius:10px;
 margin:5px 3px;
 cursor:pointer;
 font-weight:bold;
+transition:0.3s;
+font-size:14px;
+}
+
+button:hover{
+transform:scale(1.08);
 }
 
 .detailsBtn{
-background:#00bcd4;
+background:linear-gradient(45deg,#00bcd4,#2196f3);
 color:white;
 }
 
 .buyBtn{
-background:#25D366;
+background:linear-gradient(45deg,#25D366,#128C7E);
 color:white;
 }
 
 .locationBtn{
-background:#ff9800;
+background:linear-gradient(45deg,#ff9800,#ff5722);
 color:white;
 }
 
-footer{
-text-align:center;
-padding:20px;
-background:black;
-margin-top:40px;
+.adminBtn{
+background:linear-gradient(45deg,#9c27b0,#673ab7);
+color:white;
 }
 
+.contactBtn{
+background:linear-gradient(45deg,#ff1744,#ff9100);
+color:white;
+}
+
+/* ADMIN PANEL */
+
 .admin-panel{
-background:rgba(0,0,0,0.7);
-padding:20px;
+background:rgba(255,255,255,0.08);
+padding:25px;
 text-align:center;
 display:none;
+margin:20px auto;
+width:80%;
+border-radius:20px;
+backdrop-filter:blur(15px);
 }
 
 .admin-panel input{
-padding:8px;
-margin:5px;
+padding:12px;
+margin:8px;
+border:none;
+border-radius:10px;
+width:250px;
 }
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:25px;
+background:rgba(0,0,0,0.8);
+margin-top:50px;
+font-size:14px;
+}
+
+/* ANIMATIONS */
 
 @keyframes fadeIn{
 from{opacity:0;}
@@ -186,59 +234,53 @@ opacity:1;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<!-- LOGIN PAGE -->
+<!-- TOP BUTTONS -->
 
-<div id="loginPage">
-
-<div class="login-box">
-
-<h2>🔐 Login</h2>
-
-<input type="text" id="username" placeholder="Enter Username">
-
-<input type="password" id="password" placeholder="Enter Password">
-
-<button class="login-btn" onclick="login()">Login</button>
-
-<p id="loginMessage"></p>
-
-</div>
-
-</div>
-
-<!-- LOCATION -->
-
-<div style="text-align:center;margin-top:20px;">
+<div class="top-tools">
 
 <button class="locationBtn" onclick="getLocation()">
-📍 Allow Location
+📍 Location
 </button>
 
-<p id="locationStatus"></p>
+<button class="adminBtn" onclick="toggleAdmin()">
+⚙ Admin
+</button>
+
+<button class="contactBtn"
+onclick="window.open('https://wa.me/919322018190')">
+📞 Contact
+</button>
+
+<button class="detailsBtn"
+onclick="window.scrollTo(0,document.body.scrollHeight)">
+⬇ Projects
+</button>
 
 </div>
+
+<p id="locationStatus" style="text-align:center;"></p>
 
 <!-- HEADER -->
 
 <header>
 
-<h1>
-<i class="fa-solid fa-microchip"></i>
-Real Project Hub
-</h1>
+<h1>⚡ REAL PROJECT HUB</h1>
 
-<h3>
+<h2>
 Created by
 <span class="highlight">Pranav Hingane</span>
-</h3>
+</h2>
 
 <p>
-Electronics Engineer | IoT Innovator | Smart Systems Developer
+Electronics Engineer • IoT Innovator • AI Project Developer
+</p>
+
+<p>
+🚀 200+ Engineering Projects Available
 </p>
 
 </header>
@@ -247,40 +289,32 @@ Electronics Engineer | IoT Innovator | Smart Systems Developer
 
 <div class="search-box">
 
-<input
-type="text"
+<input type="text"
 id="searchInput"
 placeholder="🔍 Search Project..."
-onkeyup="filterProjects()"
->
-
-</div>
-
-<!-- ADMIN BUTTON -->
-
-<div style="text-align:center;">
-
-<button onclick="toggleAdmin()">
-<i class="fa-solid fa-user-gear"></i>
-Admin Dashboard
-</button>
+onkeyup="filterProjects()">
 
 </div>
 
 <!-- ADMIN PANEL -->
 
+<div style="text-align:center;">
+<button class="adminBtn" onclick="toggleAdmin()">
+<i class="fa-solid fa-user-gear"></i>
+Admin Dashboard
+</button>
+</div>
+
 <div class="admin-panel" id="adminPanel">
 
-<h3>Admin Panel</h3>
+<h3>⚙ Admin Panel</h3>
 
-<input
-type="text"
+<input type="text"
 id="newProject"
-placeholder="New Project Name"
->
+placeholder="New Project Name">
 
 <button onclick="addProject()">
-Add Project
+➕ Add Project
 </button>
 
 </div>
@@ -293,53 +327,15 @@ Add Project
 
 <footer>
 
-© 2026 Pranav Hingane | All Rights Reserved
+© 2026 Pranav Hingane | Real Project Hub
 
 </footer>
 
 <script>
 
-/* LOGIN SYSTEM */
-
-function login(){
-
-const username =
-document.getElementById("username").value;
-
-const password =
-document.getElementById("password").value;
-
-if(username==="pranav" && password==="1234"){
-
-document.getElementById("loginPage").style.display="none";
-
-localStorage.setItem("loggedIn","true");
-
-}
-else{
-
-document.getElementById("loginMessage").innerHTML =
-"❌ Wrong Username or Password";
-
-}
-
-}
-
-/* AUTO LOGIN */
-
-if(localStorage.getItem("loggedIn")==="true"){
-
-window.onload=function(){
-
-document.getElementById("loginPage").style.display="none";
-
-};
-
-}
+let userLocation = "";
 
 /* LOCATION */
-
-let userLocation="";
 
 function getLocation(){
 
@@ -349,7 +345,7 @@ navigator.geolocation.getCurrentPosition(showPosition,showError);
 
 }else{
 
-document.getElementById("locationStatus").innerHTML=
+document.getElementById("locationStatus").innerHTML =
 "Location not supported";
 
 }
@@ -358,25 +354,25 @@ document.getElementById("locationStatus").innerHTML=
 
 function showPosition(position){
 
-const lat=position.coords.latitude;
-const lon=position.coords.longitude;
+const lat = position.coords.latitude;
+const lon = position.coords.longitude;
 
-userLocation=
+userLocation =
 "https://maps.google.com/?q="+lat+","+lon;
 
-document.getElementById("locationStatus").innerHTML=
-"Location captured ✔";
+document.getElementById("locationStatus").innerHTML =
+"📍 Location captured successfully ✔";
 
 }
 
 function showError(){
 
-document.getElementById("locationStatus").innerHTML=
-"Location permission denied";
+document.getElementById("locationStatus").innerHTML =
+"❌ Location permission denied";
 
 }
 
-/* PROJECTS */
+/* PROJECT LIST */
 
 let projects=[
 
@@ -389,16 +385,11 @@ let projects=[
 "Smart Traffic Congestion Analyzer",
 "Bluetooth Controlled Robotic Arm",
 "Voice Controlled Home Automation",
-"Smart Street Lighting System",
-"Smart Helmet Accident Alert",
-"Wireless ECG Monitoring",
-"AI Traffic Prediction Model",
-"Solar Powered EV Charger",
-"Smart Fire Monitoring System"
+"Smart Street Lighting System"
 
 ];
 
-const container=
+const container =
 document.getElementById("projectContainer");
 
 /* DISPLAY PROJECTS */
@@ -413,7 +404,7 @@ let price="₹1999";
 
 if(project.includes("AI")) price="₹4999";
 if(project.includes("Drone")) price="₹3999";
-if(project.includes("IoT")) price="₹2999";
+if(project.includes("IoT")) price="₹2000";
 
 const card=document.createElement("div");
 
@@ -427,8 +418,7 @@ card.innerHTML=`
 
 <p>
 Complete engineering project with
-documentation, source code,
-circuit diagram & explanation.
+documentation & source code.
 </p>
 
 <p class="price">${price}</p>
@@ -445,16 +435,12 @@ Buy
 
 `;
 
-/* DETAILS */
-
 card.querySelector(".detailsBtn").onclick=function(){
 
 window.location.href=
 "project.html?title="+encodeURIComponent(project);
 
 };
-
-/* BUY */
 
 card.querySelector(".buyBtn").onclick=function(){
 
@@ -468,22 +454,16 @@ container.appendChild(card);
 
 }
 
-/* WHATSAPP */
+/* WHATSAPP BUY */
 
 function buyProject(projectName,price){
 
-let message=
+let message =
+"Project Name: "+projectName+
+"%0APrice: "+price+
+"%0ALocation: "+userLocation;
 
-"Hello Pranav,%0A%0A"+
-"I am interested in: "+projectName+
-"%0A"+
-"Price: "+price+
-"%0A"+
-"My Location: "+userLocation+
-"%0A%0A"+
-"Please share project details.";
-
-let url=
+let url =
 "https://wa.me/919322018190?text="+message;
 
 window.open(url,"_blank");
@@ -494,15 +474,13 @@ window.open(url,"_blank");
 
 function filterProjects(){
 
-const input=
+const input =
 document.getElementById("searchInput")
 .value.toLowerCase();
 
-const filtered=
+const filtered =
 projects.filter(p=>
-
 p.toLowerCase().includes(input)
-
 );
 
 displayProjects(filtered);
@@ -513,15 +491,13 @@ displayProjects(filtered);
 
 function toggleAdmin(){
 
-const panel=
+const panel =
 document.getElementById("adminPanel");
 
-panel.style.display=
+panel.style.display =
 panel.style.display==="none"
-?
-"block"
-:
-"none";
+? "block"
+: "none";
 
 }
 
@@ -529,7 +505,7 @@ panel.style.display==="none"
 
 function addProject(){
 
-const newProject=
+const newProject =
 document.getElementById("newProject").value;
 
 if(newProject.trim()!==""){
@@ -540,7 +516,7 @@ displayProjects(projects);
 
 document.getElementById("newProject").value="";
 
-alert("Project Added!");
+alert("✅ Project Added!");
 
 }
 
@@ -554,4 +530,3 @@ displayProjects(projects);
 
 </body>
 </html>
-
