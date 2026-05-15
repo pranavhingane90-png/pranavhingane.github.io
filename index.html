@@ -234,73 +234,6 @@ opacity:1;
 }
 
 </style>
-  /* CREDITS POPUP */
-
-.credits-popup{
-display:none;
-position:fixed;
-z-index:9999;
-left:0;
-top:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-backdrop-filter:blur(10px);
-justify-content:center;
-align-items:center;
-}
-
-.credits-box{
-background:rgba(255,255,255,0.08);
-padding:30px;
-border-radius:25px;
-width:320px;
-text-align:center;
-backdrop-filter:blur(20px);
-animation:slideUp 0.5s ease;
-box-shadow:0 0 30px rgba(0,255,255,0.3);
-position:relative;
-}
-
-.profile-img{
-width:120px;
-height:120px;
-border-radius:50%;
-object-fit:cover;
-border:4px solid #00ffae;
-margin-bottom:15px;
-}
-
-.credit-role{
-color:#00ffae;
-font-weight:bold;
-margin-bottom:15px;
-}
-
-.social-links{
-margin-top:20px;
-}
-
-.social-links a{
-color:white;
-font-size:28px;
-margin:0 12px;
-transition:0.3s;
-}
-
-.social-links a:hover{
-color:#00ffae;
-transform:scale(1.2);
-}
-
-.close-btn{
-position:absolute;
-right:18px;
-top:10px;
-font-size:30px;
-cursor:pointer;
-color:white;
-}
 </head>
 
 <body>
@@ -320,10 +253,6 @@ color:white;
 <button class="contactBtn"
 onclick="window.open('https://wa.me/919322018190')">
 📞 Contact
-</button>
-
-  <button class="detailsBtn" onclick="openCredits()">
-👤 Credits
 </button>
 
 <button class="detailsBtn"
@@ -401,64 +330,9 @@ placeholder="New Project Name">
 © 2026 Pranav Hingane | Real Project Hub
 
 </footer>
-<!-- CREDITS POPUP -->
 
-<div id="creditsWindow" class="credits-popup">
-
-<div class="credits-box">
-
-<span class="close-btn" onclick="closeCredits()">
-&times;
-</span>
-
-<img src="yourimage.jpg" class="profile-img">
-
-<h2>Pranav Hingane</h2>
-
-<p class="credit-role">
-Electronics Engineer • IoT Innovator • AI Developer
-</p>
-
-<p>
-Founder of Real Project Hub 🚀
-Passionate about electronics,
-automation, embedded systems,
-AI projects and startup innovation.
-</p>
-
-<div class="social-links">
-
-<a href="https://github.com/" target="_blank">
-<i class="fa-brands fa-github"></i>
-</a>
-
-<a href="https://linkedin.com/" target="_blank">
-<i class="fa-brands fa-linkedin"></i>
-</a>
-
-<a href="https://wa.me/919322018190" target="_blank">
-<i class="fa-brands fa-whatsapp"></i>
-</a>
-
-</div>
-
-</div>
-
-</div>
 <script>
-/* CREDITS WINDOW */
 
-function openCredits(){
-
-document.getElementById("creditsWindow").style.display="flex";
-
-}
-
-function closeCredits(){
-
-document.getElementById("creditsWindow").style.display="none";
-
-}
 let userLocation = "";
 
 /* LOCATION */
