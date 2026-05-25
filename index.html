@@ -234,6 +234,53 @@ opacity:1;
 }
 
 </style>
+  /* QUIZ POPUP */
+
+.quiz-popup{
+display:none;
+position:fixed;
+z-index:9999;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+backdrop-filter:blur(10px);
+justify-content:center;
+align-items:center;
+overflow:auto;
+padding:20px;
+}
+
+.quiz-box{
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:25px;
+width:90%;
+max-width:600px;
+backdrop-filter:blur(20px);
+box-shadow:0 0 30px rgba(0,255,255,0.3);
+animation:slideUp 0.5s ease;
+text-align:center;
+}
+
+.quiz-box p{
+font-size:18px;
+margin-top:20px;
+}
+
+.quiz-box button{
+margin:8px;
+}
+
+.close-btn{
+position:absolute;
+right:30px;
+top:20px;
+font-size:35px;
+cursor:pointer;
+color:white;
+}
 </head>
 
 <body>
@@ -258,6 +305,11 @@ onclick="window.open('https://wa.me/919322018190')">
   <button class="detailsBtn"
 onclick="window.location.href='games.html'">
 🎮 Games
+</button>
+
+  <button class="detailsBtn"
+onclick="openQuiz()">
+🧠 Electronics IQ
 </button>
 
 <button class="detailsBtn"
@@ -335,9 +387,193 @@ placeholder="New Project Name">
 © 2026 Pranav Hingane | Real Project Hub
 
 </footer>
+<!-- QUIZ WINDOW -->
 
+<div id="quizWindow" class="quiz-popup">
+
+<div class="quiz-box">
+
+<span class="close-btn"
+onclick="closeQuiz()">
+&times;
+</span>
+
+<h2>🧠 Test Your Basic Electronics IQ</h2>
+
+<div id="quizContainer">
+
+<p>
+1️⃣ What is the unit of resistance?
+</p>
+
+<button onclick="checkAnswer(this,true)">
+Ohm
+</button>
+
+<button onclick="checkAnswer(this,false)">
+Volt
+</button>
+
+<button onclick="checkAnswer(this,false)">
+Ampere
+</button>
+
+<hr>
+
+<p>
+2️⃣ Which component stores charge?
+</p>
+
+<button onclick="checkAnswer(this,false)">
+Resistor
+</button>
+
+<button onclick="checkAnswer(this,true)">
+Capacitor
+</button>
+
+<button onclick="checkAnswer(this,false)">
+Relay
+</button>
+
+<hr>
+
+<p>
+3️⃣ Arduino UNO uses which controller?
+</p>
+
+<button onclick="checkAnswer(this,true)">
+ATmega328P
+</button>
+
+<button onclick="checkAnswer(this,false)">
+ESP8266
+</button>
+
+<button onclick="checkAnswer(this,false)">
+8051
+</button>
+
+<hr>
+
+<p>
+4️⃣ Which device converts AC to DC?
+</p>
+
+<button onclick="checkAnswer(this,true)">
+Rectifier
+</button>
+
+<button onclick="checkAnswer(this,false)">
+Transformer
+</button>
+
+<button onclick="checkAnswer(this,false)">
+Oscillator
+</button>
+
+<hr>
+
+<p>
+5️⃣ Which sensor measures temperature?
+</p>
+
+<button onclick="checkAnswer(this,true)">
+LM35
+</button>
+
+<button onclick="checkAnswer(this,false)">
+IR Sensor
+</button>
+
+<button onclick="checkAnswer(this,false)">
+LDR
+</button>
+
+<br><br>
+
+<button class="buyBtn"
+onclick="showScore()">
+🏆 Submit Quiz
+</button>
+
+</div>
+
+<h2 id="scoreResult"></h2>
+
+</div>
+
+</div>
 <script>
+/* QUIZ SYSTEM */
 
+let score = 0;
+
+function openQuiz(){
+
+document.getElementById("quizWindow")
+.style.display="flex";
+
+score = 0;
+
+document.getElementById("scoreResult")
+.innerHTML="";
+
+}
+
+function closeQuiz(){
+
+document.getElementById("quizWindow")
+.style.display="none";
+
+}
+
+function checkAnswer(button,isCorrect){
+
+if(button.disabled) return;
+
+if(isCorrect){
+
+score++;
+
+button.style.background="green";
+
+}else{
+
+button.style.background="red";
+
+}
+
+button.disabled=true;
+
+}
+
+function showScore(){
+
+let emoji = "😅";
+
+if(score >= 5){
+
+emoji = "🏆🔥";
+
+}else if(score >= 3){
+
+emoji = "😎⚡";
+
+}else{
+
+emoji = "😂📚";
+
+}
+
+document.getElementById("scoreResult")
+.innerHTML =
+
+"Your Score: "
++ score +
+"/5 " + emoji;
+
+}
 let userLocation = "";
 
 /* LOCATION */
