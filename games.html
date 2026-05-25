@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Games Zone | Pranav Project Hub</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#000428,#004e92,#000000);
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+header{
+padding:50px 20px;
+}
+
+header h1{
+font-size:50px;
+background:linear-gradient(to right,#00e5ff,#00ff95);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.games-container{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:25px;
+padding:20px;
+}
+
+.game-card{
+width:300px;
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:20px;
+backdrop-filter:blur(15px);
+transition:0.4s;
+}
+
+.game-card:hover{
+transform:translateY(-10px) scale(1.05);
+box-shadow:0 0 30px rgba(0,255,255,0.3);
+}
+
+button{
+padding:12px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+background:linear-gradient(45deg,#00bcd4,#2196f3);
+color:white;
+margin-top:10px;
+}
+
+canvas{
+background:black;
+border-radius:10px;
+margin-top:15px;
+}
+
+footer{
+padding:20px;
+margin-top:40px;
+background:black;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🎮 Games Zone</h1>
+
+<p>
+Fun Mini Games by Pranav Hingane 🚀
+</p>
+
+</header>
+
+<div class="games-container">
+
+<!-- TIC TAC TOE -->
+
+<div class="game-card">
+
+<h2>❌⭕ Tic Tac Toe</h2>
+
+<p>Classic 2 Player Game</p>
+
+<button onclick="openTicTacToe()">
+Play Game
+</button>
+
+</div>
+
+<!-- GUESS NUMBER -->
+
+<div class="game-card">
+
+<h2>🎯 Guess The Number</h2>
+
+<p>Guess random number between 1-10</p>
+
+<button onclick="guessNumber()">
+Start Game
+</button>
+
+</div>
+
+<!-- SNAKE GAME -->
+
+<div class="game-card">
+
+<h2>🐍 Snake Game</h2>
+
+<p>Simple Snake Game</p>
+
+<button onclick="startSnake()">
+Play Snake
+</button>
+
+<canvas id="snakeCanvas"
+width="250"
+height="250"></canvas>
+
+</div>
+
+</div>
+
+<footer>
+
+© 2026 Pranav Hingane | Games Zone
+
+</footer>
+
+<script>
+
+/* TIC TAC TOE */
+
+function openTicTacToe(){
+
+window.open(
+"https://playtictactoe.org/",
+"_blank"
+);
+
+}
+
+/* GUESS NUMBER */
+
+function guessNumber(){
+
+let random =
+Math.floor(Math.random()*10)+1;
+
+let guess =
+prompt("Guess number between 1 to 10");
+
+if(parseInt(guess)===random){
+
+alert("🎉 Correct Guess!");
+
+}else{
+
+alert(
+"❌ Wrong! Number was "+random
+);
+
+}
+
+}
+
+/* SNAKE GAME */
+
+const canvas =
+document.getElementById("snakeCanvas");
+
+const ctx = canvas.getContext("2d");
+
+let snake = [{x:10,y:10}];
+
+let food = {x:5,y:5};
+
+let dx = 1;
+let dy = 0;
+
+function drawGame(){
+
+ctx.fillStyle="black";
+ctx.fillRect(0,0,250,250);
+
+ctx.fillStyle="lime";
+
+snake.forEach(part=>{
+ctx.fillRect(
+part.x*10,
+part.y*10,
+10,
+10
+);
+});
+
+ctx.fillStyle="red";
+
+ctx.fillRect(
+food.x*10,
+food.y*10,
+10,
+10
+);
+
+let head = {
+x:snake[0].x+dx,
+y:snake[0].y+dy
+};
+
+snake.unshift(head);
+
+if(head.x===food.x &&
+head.y===food.y){
+
+food={
+x:Math.floor(Math.random()*25),
+y:Math.floor(Math.random()*25)
+};
+
+}else{
+
+snake.pop();
+
+}
+
+if(head.x<0 || head.y<0 ||
+head.x>24 || head.y>24){
+
+snake=[{x:10,y:10}];
+
+}
+
+}
+
+document.addEventListener("keydown",e=>{
+
+if(e.key==="ArrowUp"){
+dx=0;dy=-1;
+}
+
+if(e.key==="ArrowDown"){
+dx=0;dy=1;
+}
+
+if(e.key==="ArrowLeft"){
+dx=-1;dy=0;
+}
+
+if(e.key==="ArrowRight"){
+dx=1;dy=0;
+}
+
+});
+
+function startSnake(){
+
+setInterval(drawGame,100);
+
+}
+
+</script>
+
+</body>
+</html>
