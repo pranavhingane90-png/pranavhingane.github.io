@@ -13,17 +13,22 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
 font-family:'Segoe UI',sans-serif;
 background:linear-gradient(135deg,#000428,#004e92,#000000);
 background-size:400% 400%;
-animation:bgMove 10s ease infinite;
+animation:bgMove 12s ease infinite;
 color:white;
 overflow-x:hidden;
 }
 
-/* BACKGROUND */
+/* ANIMATED BG */
 
 @keyframes bgMove{
 0%{background-position:0% 50%;}
@@ -40,8 +45,8 @@ animation:fadeIn 1.5s ease;
 }
 
 header h1{
-font-size:55px;
-background:linear-gradient(to right,#00e5ff,#00ff95);
+font-size:60px;
+background:linear-gradient(to right,#00e5ff,#00ff95,#00e5ff);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 margin-bottom:10px;
@@ -55,27 +60,30 @@ font-weight:bold;
 header p{
 font-size:18px;
 opacity:0.9;
+margin-top:10px;
 }
 
-/* TOP BUTTONS */
+/* TOP TOOLBAR */
 
 .top-tools{
 display:flex;
 justify-content:center;
 gap:15px;
 flex-wrap:wrap;
-margin-top:20px;
-margin-bottom:20px;
+padding:15px;
 }
 
+/* BUTTONS */
+
 button{
-padding:10px 15px;
+padding:12px 18px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 cursor:pointer;
 font-weight:bold;
 transition:0.3s;
 font-size:14px;
+box-shadow:0 0 15px rgba(0,0,0,0.3);
 }
 
 button:hover{
@@ -107,6 +115,11 @@ background:linear-gradient(45deg,#25D366,#128C7E);
 color:white;
 }
 
+.funBtn{
+background:linear-gradient(45deg,#ff00cc,#3333ff);
+color:white;
+}
+
 /* SEARCH */
 
 .search-box{
@@ -117,6 +130,7 @@ margin:30px;
 .search-box input{
 padding:15px;
 width:340px;
+max-width:90%;
 border-radius:40px;
 border:none;
 outline:none;
@@ -124,11 +138,35 @@ font-size:16px;
 background:rgba(255,255,255,0.12);
 backdrop-filter:blur(10px);
 color:white;
-box-shadow:0 0 15px rgba(0,255,255,0.3);
+box-shadow:0 0 20px rgba(0,255,255,0.3);
 }
 
 .search-box input::placeholder{
 color:#ddd;
+}
+
+/* STATS */
+
+.stats{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:20px;
+margin:20px;
+}
+
+.stat-box{
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:20px;
+width:180px;
+text-align:center;
+backdrop-filter:blur(10px);
+box-shadow:0 0 20px rgba(0,255,255,0.2);
+}
+
+.stat-box h2{
+color:#00ffae;
 }
 
 /* PROJECTS */
@@ -141,8 +179,10 @@ gap:25px;
 padding:25px;
 }
 
+/* CARD */
+
 .card{
-width:280px;
+width:290px;
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(18px);
 border-radius:20px;
@@ -150,35 +190,50 @@ padding:18px;
 transition:0.4s;
 box-shadow:0 0 25px rgba(0,0,0,0.4);
 animation:slideUp 0.8s ease;
+position:relative;
+overflow:hidden;
 }
 
 .card:hover{
-transform:translateY(-10px) scale(1.05);
+transform:translateY(-10px) scale(1.04);
 background:rgba(255,255,255,0.15);
-box-shadow:0 0 35px rgba(0,255,255,0.4);
+box-shadow:0 0 35px rgba(0,255,255,0.5);
+}
+
+.card::before{
+content:'';
+position:absolute;
+width:100%;
+height:5px;
+background:linear-gradient(to right,#00e5ff,#00ff95);
+top:0;
+left:0;
 }
 
 .card img{
 width:100%;
+height:170px;
+object-fit:cover;
 border-radius:15px;
 margin-bottom:12px;
 }
 
 .card h3{
-font-size:20px;
-margin-bottom:8px;
+font-size:21px;
+margin-bottom:10px;
 }
 
 .card p{
 font-size:14px;
 line-height:1.5;
+opacity:0.9;
 }
 
 .price{
 color:#00ff95;
-font-size:22px;
+font-size:24px;
 font-weight:bold;
-margin-top:10px;
+margin-top:12px;
 }
 
 /* ADMIN PANEL */
@@ -189,7 +244,7 @@ padding:25px;
 text-align:center;
 display:none;
 margin:20px auto;
-width:80%;
+width:85%;
 border-radius:20px;
 backdrop-filter:blur(15px);
 }
@@ -216,8 +271,8 @@ background:rgba(0,0,0,0.85);
 backdrop-filter:blur(10px);
 justify-content:center;
 align-items:center;
-overflow:auto;
 padding:20px;
+overflow:auto;
 }
 
 .quiz-box{
@@ -225,17 +280,16 @@ background:rgba(255,255,255,0.08);
 padding:30px;
 border-radius:25px;
 width:90%;
-max-width:600px;
+max-width:650px;
 backdrop-filter:blur(20px);
 box-shadow:0 0 30px rgba(0,255,255,0.3);
-animation:slideUp 0.5s ease;
-text-align:center;
 position:relative;
+animation:slideUp 0.5s ease;
 }
 
 .quiz-box p{
-font-size:18px;
 margin-top:20px;
+font-size:18px;
 }
 
 .quiz-box button{
@@ -248,17 +302,16 @@ right:20px;
 top:10px;
 font-size:35px;
 cursor:pointer;
-color:white;
 }
 
 /* FOOTER */
 
 footer{
 text-align:center;
-padding:25px;
-background:rgba(0,0,0,0.8);
-margin-top:50px;
-font-size:14px;
+padding:30px;
+background:rgba(0,0,0,0.85);
+margin-top:40px;
+font-size:15px;
 }
 
 /* ANIMATIONS */
@@ -285,7 +338,7 @@ opacity:1;
 
 <body>
 
-<!-- TOP BUTTONS -->
+<!-- TOP TOOLS -->
 
 <div class="top-tools">
 
@@ -303,13 +356,23 @@ onclick="window.open('https://wa.me/919322018190')">
 </button>
 
 <button class="detailsBtn"
-onclick="window.location.href='games.html'">
-🎮 Games
-</button>
-
-<button class="detailsBtn"
 onclick="openQuiz()">
 🧠 Electronics IQ
+</button>
+
+<button class="funBtn"
+onclick="showJoke()">
+😂 Joke
+</button>
+
+<button class="funBtn"
+onclick="showQuote()">
+💡 Quote
+</button>
+
+<button class="funBtn"
+onclick="changeTheme()">
+🎨 Theme
 </button>
 
 <button class="detailsBtn"
@@ -333,7 +396,7 @@ Created by
 </h2>
 
 <p>
-Electronics Engineer • IoT Innovator • AI Project Developer
+Electronics Engineer • IoT Innovator • AI Developer
 </p>
 
 <p>
@@ -342,13 +405,39 @@ Electronics Engineer • IoT Innovator • AI Project Developer
 
 </header>
 
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat-box">
+<h2>200+</h2>
+<p>Projects</p>
+</div>
+
+<div class="stat-box">
+<h2>50+</h2>
+<p>AI Models</p>
+</div>
+
+<div class="stat-box">
+<h2>24/7</h2>
+<p>Support</p>
+</div>
+
+<div class="stat-box">
+<h2>100%</h2>
+<p>Source Code</p>
+</div>
+
+</div>
+
 <!-- SEARCH -->
 
 <div class="search-box">
 
 <input type="text"
 id="searchInput"
-placeholder="🔍 Search Project..."
+placeholder="🔍 Search Projects..."
 onkeyup="filterProjects()">
 
 </div>
@@ -356,21 +445,27 @@ onkeyup="filterProjects()">
 <!-- ADMIN PANEL -->
 
 <div style="text-align:center;">
-<button class="adminBtn" onclick="toggleAdmin()">
+
+<button class="adminBtn"
+onclick="toggleAdmin()">
+
 <i class="fa-solid fa-user-gear"></i>
 Admin Dashboard
+
 </button>
+
 </div>
 
 <div class="admin-panel" id="adminPanel">
 
-<h3>⚙ Admin Panel</h3>
+<h2>⚙ Admin Dashboard</h2>
 
 <input type="text"
 id="newProject"
-placeholder="New Project Name">
+placeholder="Enter New Project">
 
-<button onclick="addProject()">
+<button class="buyBtn"
+onclick="addProject()">
 ➕ Add Project
 </button>
 
@@ -378,11 +473,15 @@ placeholder="New Project Name">
 
 <!-- PROJECTS -->
 
-<section class="projects" id="projectContainer"></section>
+<section class="projects"
+id="projectContainer">
+
+</section>
 
 <!-- QUIZ -->
 
-<div id="quizWindow" class="quiz-popup">
+<div id="quizWindow"
+class="quiz-popup">
 
 <div class="quiz-box">
 
@@ -393,9 +492,7 @@ onclick="closeQuiz()">
 
 <h2>🧠 Test Your Electronics IQ</h2>
 
-<div id="quizContainer">
-
-<p>1️⃣ What is the unit of resistance?</p>
+<p>1️⃣ Unit of Resistance?</p>
 
 <button onclick="checkAnswer(this,true)">Ohm</button>
 <button onclick="checkAnswer(this,false)">Volt</button>
@@ -403,15 +500,15 @@ onclick="closeQuiz()">
 
 <hr>
 
-<p>2️⃣ Which component stores charge?</p>
+<p>2️⃣ Which stores charge?</p>
 
-<button onclick="checkAnswer(this,false)">Resistor</button>
 <button onclick="checkAnswer(this,true)">Capacitor</button>
 <button onclick="checkAnswer(this,false)">Relay</button>
+<button onclick="checkAnswer(this,false)">Motor</button>
 
 <hr>
 
-<p>3️⃣ Arduino UNO uses which controller?</p>
+<p>3️⃣ Arduino UNO Controller?</p>
 
 <button onclick="checkAnswer(this,true)">ATmega328P</button>
 <button onclick="checkAnswer(this,false)">ESP32</button>
@@ -419,7 +516,7 @@ onclick="closeQuiz()">
 
 <hr>
 
-<p>4️⃣ Which device converts AC to DC?</p>
+<p>4️⃣ AC to DC Device?</p>
 
 <button onclick="checkAnswer(this,true)">Rectifier</button>
 <button onclick="checkAnswer(this,false)">Transformer</button>
@@ -427,7 +524,7 @@ onclick="closeQuiz()">
 
 <hr>
 
-<p>5️⃣ Which sensor measures temperature?</p>
+<p>5️⃣ Temperature Sensor?</p>
 
 <button onclick="checkAnswer(this,true)">LM35</button>
 <button onclick="checkAnswer(this,false)">IR Sensor</button>
@@ -439,8 +536,6 @@ onclick="closeQuiz()">
 onclick="showScore()">
 🏆 Submit Quiz
 </button>
-
-</div>
 
 <h2 id="scoreResult"></h2>
 
@@ -458,23 +553,205 @@ onclick="showScore()">
 
 <script>
 
+/* LOCATION */
+
+let userLocation="";
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(showPosition,showError);
+
+}
+
+}
+
+function showPosition(position){
+
+const lat=position.coords.latitude;
+const lon=position.coords.longitude;
+
+userLocation=
+"https://maps.google.com/?q="+lat+","+lon;
+
+document.getElementById("locationStatus").innerHTML=
+"📍 Location Captured Successfully ✔";
+
+}
+
+function showError(){
+
+document.getElementById("locationStatus").innerHTML=
+"❌ Permission Denied";
+
+}
+
+/* PROJECTS */
+
+let projects=[
+
+"Smart Energy Meter using IoT",
+"Autonomous Delivery Drone",
+"AI Based Face Recognition System",
+"Solar Powered Water Pump",
+"Wireless Health Monitoring System",
+"Electric Vehicle Battery Management",
+"Smart Traffic Congestion Analyzer",
+"Bluetooth Controlled Robotic Arm",
+"Voice Controlled Home Automation",
+"Smart Street Lighting System"
+
+];
+
+const container=
+document.getElementById("projectContainer");
+
+function displayProjects(list){
+
+container.innerHTML="";
+
+list.forEach(project=>{
+
+let price="₹1999";
+
+if(project.includes("AI")) price="₹4999";
+if(project.includes("Drone")) price="₹3999";
+if(project.includes("IoT")) price="₹2000";
+
+const card=document.createElement("div");
+
+card.className="card";
+
+card.innerHTML=`
+
+<img src="https://via.placeholder.com/400x200">
+
+<h3>${project}</h3>
+
+<p>
+Complete engineering project with
+documentation & source code.
+</p>
+
+<p class="price">${price}</p>
+
+<button class="detailsBtn">
+<i class="fa-solid fa-circle-info"></i>
+Details
+</button>
+
+<button class="buyBtn">
+<i class="fa-brands fa-whatsapp"></i>
+Buy
+</button>
+
+`;
+
+card.querySelector(".detailsBtn").onclick=function(){
+
+alert(project+" Details Coming Soon 🚀");
+
+};
+
+card.querySelector(".buyBtn").onclick=function(){
+
+buyProject(project,price);
+
+};
+
+container.appendChild(card);
+
+});
+
+}
+
+/* WHATSAPP */
+
+function buyProject(projectName,price){
+
+let message=
+"Project Name: "+projectName+
+"%0APrice: "+price+
+"%0ALocation: "+userLocation;
+
+window.open(
+"https://wa.me/919322018190?text="+message,
+"_blank"
+);
+
+}
+
+/* SEARCH */
+
+function filterProjects(){
+
+const input=
+document.getElementById("searchInput")
+.value.toLowerCase();
+
+const filtered=
+projects.filter(p=>
+p.toLowerCase().includes(input)
+);
+
+displayProjects(filtered);
+
+}
+
+/* ADMIN */
+
+function toggleAdmin(){
+
+const panel=
+document.getElementById("adminPanel");
+
+panel.style.display=
+panel.style.display==="block"
+? "none"
+: "block";
+
+}
+
+function addProject(){
+
+const newProject=
+document.getElementById("newProject").value;
+
+if(newProject.trim()!==""){
+
+projects.push(newProject);
+
+displayProjects(projects);
+
+document.getElementById("newProject").value="";
+
+alert("✅ Project Added!");
+
+}
+
+}
+
 /* QUIZ */
 
-let score = 0;
+let score=0;
 
 function openQuiz(){
 
-document.getElementById("quizWindow").style.display="flex";
+document.getElementById("quizWindow")
+.style.display="flex";
 
-score = 0;
+score=0;
 
-document.getElementById("scoreResult").innerHTML="";
+document.getElementById("scoreResult")
+.innerHTML="";
 
 }
 
 function closeQuiz(){
 
-document.getElementById("quizWindow").style.display="none";
+document.getElementById("quizWindow")
+.style.display="none";
 
 }
 
@@ -511,198 +788,54 @@ else{
 emoji="😂📚";
 }
 
-document.getElementById("scoreResult").innerHTML=
+document.getElementById("scoreResult")
+.innerHTML=
 "Your Score: "+score+"/5 "+emoji;
 
 }
 
-/* LOCATION */
+/* FUN BUTTONS */
 
-let userLocation="";
+function showJoke(){
 
-function getLocation(){
+const jokes=[
 
-if(navigator.geolocation){
+"Why do programmers hate nature? Too many bugs 😂",
 
-navigator.geolocation.getCurrentPosition(showPosition,showError);
+"Resistor and capacitor got married because they had chemistry ⚡",
 
-}else{
-
-document.getElementById("locationStatus").innerHTML=
-"Location not supported";
-
-}
-
-}
-
-function showPosition(position){
-
-const lat=position.coords.latitude;
-const lon=position.coords.longitude;
-
-userLocation=
-"https://maps.google.com/?q="+lat+","+lon;
-
-document.getElementById("locationStatus").innerHTML=
-"📍 Location Captured Successfully ✔";
-
-}
-
-function showError(){
-
-document.getElementById("locationStatus").innerHTML=
-"❌ Location Permission Denied";
-
-}
-
-/* PROJECTS */
-
-let projects=[
-
-"Smart Energy Meter using IoT",
-"Autonomous Delivery Drone",
-"AI Based Face Recognition System",
-"Solar Powered Water Pump",
-"Wireless Health Monitoring System",
-"Electric Vehicle Battery Management",
-"Smart Traffic Congestion Analyzer",
-"Bluetooth Controlled Robotic Arm",
-"Voice Controlled Home Automation",
-"Smart Street Lighting System"
+"Arduino's favorite music? Heavy metal 🤘"
 
 ];
 
-const container=document.getElementById("projectContainer");
-
-function displayProjects(list){
-
-container.innerHTML="";
-
-list.forEach(project=>{
-
-let price="₹1999";
-
-if(project.includes("AI")) price="₹4999";
-if(project.includes("Drone")) price="₹3999";
-if(project.includes("IoT")) price="₹2000";
-
-const card=document.createElement("div");
-
-card.className="card";
-
-card.innerHTML=`
-
-<img src="https://via.placeholder.com/300x150">
-
-<h3>${project}</h3>
-
-<p>
-Complete engineering project with
-documentation & source code.
-</p>
-
-<p class="price">${price}</p>
-
-<button class="detailsBtn">
-<i class="fa-solid fa-circle-info"></i>
-Details
-</button>
-
-<button class="buyBtn">
-<i class="fa-brands fa-whatsapp"></i>
-Buy
-</button>
-
-`;
-
-card.querySelector(".detailsBtn").onclick=function(){
-
-window.location.href=
-"project.html?title="+encodeURIComponent(project);
-
-};
-
-card.querySelector(".buyBtn").onclick=function(){
-
-buyProject(project,price);
-
-};
-
-container.appendChild(card);
-
-});
+alert(jokes[Math.floor(Math.random()*jokes.length)]);
 
 }
 
-/* WHATSAPP */
+function showQuote(){
 
-function buyProject(projectName,price){
+const quotes=[
 
-let message=
-"Project Name: "+projectName+
-"%0APrice: "+price+
-"%0ALocation: "+userLocation;
+"Dream big. Build bigger 🚀",
 
-let url=
-"https://wa.me/919322018190?text="+message;
+"Electronics is the poetry of engineering ⚡",
 
-window.open(url,"_blank");
+"Success starts with one project 💡"
 
-}
+];
 
-/* SEARCH */
-
-function filterProjects(){
-
-const input=
-document.getElementById("searchInput")
-.value.toLowerCase();
-
-const filtered=
-projects.filter(p=>
-p.toLowerCase().includes(input)
-);
-
-displayProjects(filtered);
+alert(quotes[Math.floor(Math.random()*quotes.length)]);
 
 }
 
-/* ADMIN PANEL */
+function changeTheme(){
 
-function toggleAdmin(){
-
-const panel=
-document.getElementById("adminPanel");
-
-panel.style.display=
-panel.style.display==="none"
-? "block"
-: "none";
+document.body.style.background=
+"linear-gradient(135deg,#1a0033,#000000,#003366)";
 
 }
 
-/* ADD PROJECT */
-
-function addProject(){
-
-const newProject=
-document.getElementById("newProject").value;
-
-if(newProject.trim()!==""){
-
-projects.push(newProject);
-
-displayProjects(projects);
-
-document.getElementById("newProject").value="";
-
-alert("✅ Project Added!");
-
-}
-
-}
-
-/* INITIAL LOAD */
+/* LOAD */
 
 displayProjects(projects);
 
