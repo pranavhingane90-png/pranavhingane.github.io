@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Credits - Pranav Project Hub</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#000428,#004e92,#000000);
+background-size:400% 400%;
+animation:bgMove 10s ease infinite;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.credit-box{
+width:90%;
+max-width:450px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+padding:30px;
+border-radius:25px;
+text-align:center;
+box-shadow:0 0 30px rgba(0,255,255,0.3);
+animation:fadeIn 1s ease;
+}
+
+.credit-box img{
+width:170px;
+height:170px;
+border-radius:50%;
+object-fit:cover;
+border:5px solid #00ffae;
+box-shadow:0 0 25px rgba(0,255,200,0.6);
+margin-bottom:20px;
+}
+
+.credit-box h1{
+font-size:35px;
+margin-bottom:10px;
+color:#00ffae;
+}
+
+.credit-box p{
+font-size:17px;
+line-height:1.7;
+opacity:0.9;
+}
+
+.socials{
+margin-top:20px;
+}
+
+.socials a{
+text-decoration:none;
+margin:10px;
+font-size:28px;
+color:white;
+transition:0.3s;
+}
+
+.socials a:hover{
+color:#00ffae;
+transform:scale(1.2);
+}
+
+.back-btn{
+margin-top:25px;
+padding:12px 20px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#00bcd4,#2196f3);
+color:white;
+font-weight:bold;
+cursor:pointer;
+font-size:15px;
+transition:0.3s;
+}
+
+.back-btn:hover{
+transform:scale(1.08);
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="credit-box">
+
+<img src="pranav.jpg">
+
+<h1>Pranav Hingane</h1>
+
+<p>
+Electronics Engineer ⚡ <br>
+IoT Innovator 🚀 <br>
+AI Project Developer 🤖 <br><br>
+
+Creator of Real Project Hub
+</p>
+
+<div class="socials">
+
+<a href="https://wa.me/919322018190">
+<i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<a href="#">
+<i class="fa-brands fa-instagram"></i>
+</a>
+
+<a href="#">
+<i class="fa-brands fa-github"></i>
+</a>
+
+</div>
+
+<button class="back-btn"
+onclick="window.location.href='index.html'">
+
+⬅ Back To Home
+
+</button>
+
+</div>
+
+</body>
+</html>
