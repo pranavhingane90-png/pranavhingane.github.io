@@ -17,6 +17,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 margin:0;
 padding:0;
 box-sizing:border-box;
+scroll-behavior:smooth;
 }
 
 body{
@@ -26,6 +27,7 @@ background-size:400% 400%;
 animation:bgMove 12s ease infinite;
 color:white;
 overflow-x:hidden;
+transition:1s;
 }
 
 /* ANIMATED BG */
@@ -34,6 +36,32 @@ overflow-x:hidden;
 0%{background-position:0% 50%;}
 50%{background-position:100% 50%;}
 100%{background-position:0% 50%;}
+}
+
+/* FLOATING PARTICLES */
+
+.particle{
+position:fixed;
+width:10px;
+height:10px;
+background:rgba(255,255,255,0.3);
+border-radius:50%;
+animation:float 10s linear infinite;
+z-index:-1;
+}
+
+@keyframes float{
+0%{
+transform:translateY(100vh) scale(0);
+opacity:0;
+}
+50%{
+opacity:1;
+}
+100%{
+transform:translateY(-10vh) scale(1.5);
+opacity:0;
+}
 }
 
 /* HEADER */
@@ -120,6 +148,65 @@ background:linear-gradient(45deg,#ff00cc,#3333ff);
 color:white;
 }
 
+/* CHATBOT BUTTON */
+
+.chatbot-btn{
+position:fixed;
+bottom:25px;
+right:25px;
+width:70px;
+height:70px;
+border-radius:50%;
+background:linear-gradient(45deg,#00e5ff,#00ff95);
+color:black;
+font-size:28px;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+animation:pulse 2s infinite;
+z-index:999;
+box-shadow:0 0 25px cyan;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.12);}
+100%{transform:scale(1);}
+}
+
+/* CHAT WINDOW */
+
+.chat-window{
+display:none;
+position:fixed;
+bottom:110px;
+right:20px;
+width:320px;
+background:rgba(0,0,0,0.9);
+border-radius:20px;
+padding:20px;
+z-index:999;
+box-shadow:0 0 25px cyan;
+animation:fadeIn 0.5s ease;
+}
+
+.chat-window h3{
+margin-bottom:15px;
+color:#00ffae;
+}
+
+.chat-window button{
+width:100%;
+margin-top:8px;
+}
+
+#botReply{
+margin-top:15px;
+color:#00ffae;
+font-size:15px;
+}
+
 /* SEARCH */
 
 .search-box{
@@ -163,6 +250,11 @@ width:180px;
 text-align:center;
 backdrop-filter:blur(10px);
 box-shadow:0 0 20px rgba(0,255,255,0.2);
+transition:0.4s;
+}
+
+.stat-box:hover{
+transform:translateY(-10px);
 }
 
 .stat-box h2{
@@ -338,6 +430,14 @@ opacity:1;
 
 <body>
 
+<!-- FLOATING PARTICLES -->
+
+<div class="particle" style="left:10%;animation-delay:0s;"></div>
+<div class="particle" style="left:30%;animation-delay:2s;"></div>
+<div class="particle" style="left:50%;animation-delay:4s;"></div>
+<div class="particle" style="left:70%;animation-delay:1s;"></div>
+<div class="particle" style="left:90%;animation-delay:3s;"></div>
+
 <!-- TOP TOOLS -->
 
 <div class="top-tools">
@@ -379,12 +479,17 @@ onclick="changeTheme()">
 onclick="window.scrollTo(0,document.body.scrollHeight)">
 ⬇ Projects
 </button>
-  
+
 <button class="detailsBtn"
 onclick="window.open('credits.html')">
 👑 Credits
 </button>
-  
+
+<button class="funBtn"
+onclick="window.open('games.html')">
+🎮 Games
+</button>
+
 </div>
 
 <p id="locationStatus" style="text-align:center;"></p>
@@ -545,6 +650,42 @@ onclick="showScore()">
 <h2 id="scoreResult"></h2>
 
 </div>
+
+</div>
+
+<!-- CHATBOT -->
+
+<div class="chatbot-btn"
+onclick="toggleChatbot()">
+🤖
+</div>
+
+<div class="chat-window"
+id="chatWindow">
+
+<h3>⚡ Pranav AI Bot</h3>
+
+<button onclick="botReply('price')">
+💰 Project Price
+</button>
+
+<button onclick="botReply('contact')">
+📞 Contact
+</button>
+
+<button onclick="botReply('projects')">
+🚀 Available Projects
+</button>
+
+<button onclick="botReply('owner')">
+👑 Who Created This?
+</button>
+
+<button onclick="botReply('support')">
+🛠 Support
+</button>
+
+<p id="botReply"></p>
 
 </div>
 
@@ -835,8 +976,60 @@ alert(quotes[Math.floor(Math.random()*quotes.length)]);
 
 function changeTheme(){
 
+const themes=[
+
+"linear-gradient(135deg,#1a0033,#000000,#003366)",
+
+"linear-gradient(135deg,#200122,#6f0000,#000000)",
+
+"linear-gradient(135deg,#0f0c29,#302b63,#24243e)"
+
+];
+
 document.body.style.background=
-"linear-gradient(135deg,#1a0033,#000000,#003366)";
+themes[Math.floor(Math.random()*themes.length)];
+
+}
+
+/* CHATBOT */
+
+function toggleChatbot(){
+
+const chat=
+document.getElementById("chatWindow");
+
+chat.style.display=
+chat.style.display==="block"
+? "none"
+: "block";
+
+}
+
+function botReply(type){
+
+let msg="";
+
+if(type==="price"){
+msg="💰 Projects start from ₹1999";
+}
+
+if(type==="contact"){
+msg="📞 WhatsApp: +91 9322018190";
+}
+
+if(type==="projects"){
+msg="🚀 IoT, AI, Robotics & Automation Projects Available";
+}
+
+if(type==="owner"){
+msg="👑 Created by Pranav Hingane";
+}
+
+if(type==="support"){
+msg="🛠 24/7 Support Available";
+}
+
+document.getElementById("botReply").innerHTML=msg;
 
 }
 
