@@ -27,45 +27,68 @@ height:100vh;
 overflow:hidden;
 }
 
+/* Animated Background */
+
 @keyframes bgMove{
 0%{background-position:0% 50%;}
 50%{background-position:100% 50%;}
 100%{background-position:0% 50%;}
 }
 
+/* Main Credit Box */
+
 .credit-box{
 width:90%;
 max-width:450px;
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(20px);
-padding:30px;
+padding:35px;
 border-radius:25px;
 text-align:center;
 box-shadow:0 0 30px rgba(0,255,255,0.3);
 animation:fadeIn 1s ease;
 }
 
+/* Profile Image */
+
 .credit-box img{
-width:170px;
-height:170px;
+width:190px;
+height:190px;
 border-radius:50%;
 object-fit:cover;
 border:5px solid #00ffae;
-box-shadow:0 0 25px rgba(0,255,200,0.6);
 margin-bottom:20px;
+animation:glow 2s infinite alternate;
 }
 
+/* Neon Glow Animation */
+
+@keyframes glow{
+from{
+box-shadow:0 0 20px #00ffae;
+}
+to{
+box-shadow:0 0 45px #00e5ff;
+}
+}
+
+/* Name */
+
 .credit-box h1{
-font-size:35px;
+font-size:38px;
 margin-bottom:10px;
 color:#00ffae;
 }
 
+/* Details */
+
 .credit-box p{
 font-size:17px;
-line-height:1.7;
-opacity:0.9;
+line-height:1.8;
+opacity:0.92;
 }
+
+/* Social Icons */
 
 .socials{
 margin-top:20px;
@@ -73,20 +96,22 @@ margin-top:20px;
 
 .socials a{
 text-decoration:none;
-margin:10px;
-font-size:28px;
+margin:12px;
+font-size:30px;
 color:white;
 transition:0.3s;
 }
 
 .socials a:hover{
 color:#00ffae;
-transform:scale(1.2);
+transform:scale(1.25);
 }
+
+/* Buttons */
 
 .back-btn{
 margin-top:25px;
-padding:12px 20px;
+padding:12px 22px;
 border:none;
 border-radius:12px;
 background:linear-gradient(45deg,#00bcd4,#2196f3);
@@ -99,7 +124,10 @@ transition:0.3s;
 
 .back-btn:hover{
 transform:scale(1.08);
+box-shadow:0 0 20px #00bcd4;
 }
+
+/* Fade Animation */
 
 @keyframes fadeIn{
 from{
@@ -120,21 +148,32 @@ transform:translateY(0);
 
 <div class="credit-box">
 
-<img src="pranav.jpg">
+<!-- YOUR IMAGE -->
+
+<img src="pranav.jpg" alt="Pranav Hingane">
+
+<!-- NAME -->
 
 <h1>Pranav Hingane</h1>
 
-<p>
-Electronics Engineer ⚡ <br>
-IoT Innovator 🚀 <br>
-AI Project Developer 🤖 <br><br>
+<!-- DETAILS -->
 
-Creator of Real Project Hub
+<p>
+
+⚡ Electronics Engineer <br>
+🚀 IoT Innovator <br>
+🤖 AI Project Developer <br>
+💡 Smart Systems Creator <br><br>
+
+Creator of <b>Real Project Hub</b>
+
 </p>
+
+<!-- SOCIAL LINKS -->
 
 <div class="socials">
 
-<a href="https://wa.me/919322018190">
+<a href="https://wa.me/919322018190" target="_blank">
 <i class="fa-brands fa-whatsapp"></i>
 </a>
 
@@ -146,7 +185,13 @@ Creator of Real Project Hub
 <i class="fa-brands fa-github"></i>
 </a>
 
+<a href="#">
+<i class="fa-brands fa-linkedin"></i>
+</a>
+
 </div>
+
+<!-- BACK BUTTON -->
 
 <button class="back-btn"
 onclick="window.location.href='index.html'">
