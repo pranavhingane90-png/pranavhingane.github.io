@@ -21,6 +21,20 @@ scroll-behavior:smooth;
 }
 
 body{
+  <!-- WELCOME SCREEN -->
+
+<div id="welcomeScreen">
+
+<h1 class="welcome-text">
+⚡ Welcome To <br>
+REAL PROJECT HUB
+</h1>
+
+<p class="welcome-sub">
+Created By Pranav Hingane 🚀
+</p>
+
+</div>
 font-family:'Segoe UI',sans-serif;
 background:linear-gradient(135deg,#000428,#004e92,#000000);
 background-size:400% 400%;
@@ -425,7 +439,75 @@ opacity:1;
 }
 
 </style>
+/* WELCOME SCREEN */
 
+#welcomeScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#000428,#004e92,#000000);
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:10000;
+animation:hideWelcome 2s forwards;
+}
+
+.welcome-text{
+font-size:55px;
+text-align:center;
+background:linear-gradient(to right,#00e5ff,#00ff95,#ffffff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:zoomText 1.5s ease;
+}
+
+.welcome-sub{
+margin-top:20px;
+font-size:20px;
+color:#00ffae;
+animation:fadeText 2s ease;
+}
+
+/* ANIMATIONS */
+
+@keyframes zoomText{
+0%{
+transform:scale(0.5);
+opacity:0;
+}
+100%{
+transform:scale(1);
+opacity:1;
+}
+}
+
+@keyframes fadeText{
+0%{
+opacity:0;
+}
+100%{
+opacity:1;
+}
+}
+
+@keyframes hideWelcome{
+0%{
+opacity:1;
+visibility:visible;
+}
+90%{
+opacity:1;
+}
+100%{
+opacity:0;
+visibility:hidden;
+display:none;
+}
+}
 </head>
 
 <body>
