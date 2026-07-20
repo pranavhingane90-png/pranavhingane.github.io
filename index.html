@@ -18,19 +18,19 @@
   
   <style>
     :root {
-      --bg: #050810;
-      --surface: #0d1117;
-      --card: #111827;
-      --border: rgba(0,229,255,0.12);
-      --accent: #00e5ff;
-      --accent2: #00ff95;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --border: rgba(15, 23, 42, 0.12);
+      --accent: #0284c7;
+      --accent2: #16a34a;
       --accent3: #7c3aed;
-      --text: #f0f6fc;
-      --muted: #8b949e;
-      --danger: #f85149;
-      --warn: #f0883e;
-      --success: #3fb950;
-      --focus-ring: 0 0 0 3px rgba(0, 229, 255, 0.4);
+      --text: #0f172a;
+      --muted: #64748b;
+      --danger: #dc2626;
+      --warn: #ea580c;
+      --success: #16a34a;
+      --focus-ring: 0 0 0 3px rgba(2, 132, 199, 0.4);
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,8 +62,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(0,229,255,0.02) 1px, dotted transparent 1px),
-        linear-gradient(90deg,rgba(0,229,255,0.02) 1px, transparent 1px);
+        linear-gradient(rgba(2,132,199,0.04) 1px, dotted transparent 1px),
+        linear-gradient(90deg,rgba(2,132,199,0.04) 1px, transparent 1px);
       background-size: 50px 50px;
       pointer-events: none;
       z-index: 0;
@@ -75,7 +75,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 1;
-      opacity: .02;
+      opacity: .01;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
@@ -102,7 +102,7 @@
     /* Structural Header Nav */
     nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(5,8,16,.85);
+      background: rgba(255,255,255,.85);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       padding: 0 24px;
@@ -122,8 +122,8 @@
       font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
       cursor: pointer; transition: 0.2s ease; white-space: nowrap;
     }
-    .nav-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.05); }
-    .nav-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.1); }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.05); }
+    .nav-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.1); }
     
     /* Interactive Mobile Drawer Menu UI Toggle Trigger */
     .menu-toggle { display: none; background: transparent; border: none; color: var(--text); font-size: 22px; cursor: pointer; }
@@ -132,7 +132,7 @@
     .hero { position: relative; z-index: 2; padding: 80px 24px 48px; text-align: center; max-width: 900px; margin: 0 auto; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border); background: rgba(0,229,255,.03);
+      border: 1px solid var(--border); background: rgba(2,132,199,.03);
       padding: 6px 16px; border-radius: 999px;
       font-size: 12px; color: var(--accent); font-family: 'Space Mono', monospace;
       margin-bottom: 24px; letter-spacing: 1px;
@@ -145,9 +145,9 @@
     
     .hero-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .tag { padding: 4px 12px; border-radius: 999px; font-size: 11px; font-family: 'Space Mono', monospace; border: 1px solid; }
-    .tag-teal { border-color: rgba(0,229,255,.2); color: var(--accent); background: rgba(0,229,255,.03); }
-    .tag-green { border-color: rgba(0,255,149,.2); color: var(--accent2); background: rgba(0,255,149,.03); }
-    .tag-purple { border-color: rgba(124,58,237,.3); color: #a78bfa; background: rgba(124,58,237,.05); }
+    .tag-teal { border-color: rgba(2,132,199,.2); color: var(--accent); background: rgba(2,132,199,.03); }
+    .tag-green { border-color: rgba(22,163,74,.2); color: var(--accent2); background: rgba(22,163,74,.03); }
+    .tag-purple { border-color: rgba(124,58,237,.3); color: #7c3aed; background: rgba(124,58,237,.05); }
 
     /* Performance Metric Indicators Layout Block */
     .stats-section {
@@ -174,11 +174,11 @@
       color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px 20px; outline: none; transition: 0.2s ease;
     }
     .search-wrap input { padding-right: 44px; }
-    .search-wrap input:focus, .sort-select:focus { border-color: var(--accent); }
+    .search-wrap input:focus, .sort-select:focus { border-color: var(--accent); box-shadow: var(--focus-ring); }
     .search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
     
     .sort-wrap { min-width: 180px; }
-    .sort-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b949e' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 14px) center; padding-right: 32px; }
+    .sort-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 14px) center; padding-right: 32px; }
 
     .search-feedback-row { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: -12px auto 32px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
     .reset-btn { background: none; border: none; color: var(--danger); cursor: pointer; text-decoration: underline; font-family: inherit; }
@@ -186,10 +186,10 @@
     .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 36px; }
     .filter-btn {
       padding: 6px 16px; border-radius: 999px; border: 1px solid var(--border);
-      background: transparent; color: var(--muted); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+      background: var(--surface); color: var(--muted); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
       cursor: pointer; transition: 0.2s ease;
     }
-    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.04); }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.04); }
     .filter-btn.fav-filter-btn i { color: var(--danger); margin-right: 4px; }
 
     /* Catalog Presentation System Grid Components */
@@ -199,23 +199,23 @@
       overflow: hidden; transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative; display: flex; flex-direction: column;
     }
-    .card:hover { border-color: rgba(0,229,255,.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.6); }
+    .card:hover { border-color: rgba(2,132,199,.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,23,42,.08); }
     
     .card-badge {
       position: absolute; top: 14px; left: 14px; font-family: 'Space Mono', monospace; font-size: 10px;
-      padding: 3px 10px; border-radius: 999px; background: rgba(5,8,16,.85); border: 1px solid; backdrop-filter: blur(4px);
+      padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.9); border: 1px solid; backdrop-filter: blur(4px);
     }
     
     .fav-btn-container { position: absolute; top: 12px; right: 12px; z-index: 10; }
     .btn-fav {
-      background: rgba(5,8,16,.8); border: 1px solid var(--border); border-radius: 50%;
+      background: rgba(255,255,255,.8); border: 1px solid var(--border); border-radius: 50%;
       width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
       cursor: pointer; color: var(--muted); transition: 0.2s ease; backdrop-filter: blur(4px);
     }
-    .btn-fav:hover { color: var(--danger); border-color: rgba(248,81,73,.4); }
-    .btn-fav.is-fav { color: var(--danger); background: rgba(248,81,73,0.12); border-color: var(--danger); }
+    .btn-fav:hover { color: var(--danger); border-color: rgba(220,38,38,.4); }
+    .btn-fav.is-fav { color: var(--danger); background: rgba(220,38,38,0.08); border-color: var(--danger); }
 
-    .badge-ai { border-color: #a78bfa; color: #a78bfa; }
+    .badge-ai { border-color: #7c3aed; color: #7c3aed; }
     .badge-iot { border-color: var(--accent); color: var(--accent); }
     .badge-robot { border-color: var(--danger); color: var(--danger); }
     .badge-solar { border-color: var(--warn); color: var(--warn); }
@@ -223,7 +223,7 @@
     .badge-other { border-color: var(--muted); color: var(--muted); }
 
     .card-img {
-      width: 100%; height: 150px; background: linear-gradient(135deg, #0d1117, #1e293b);
+      width: 100%; height: 150px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
       display: flex; align-items: center; justify-content: center; font-size: 44px; border-bottom: 1px solid var(--border);
     }
     .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
@@ -242,25 +242,25 @@
     .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
     .btn-buy { background: linear-gradient(120deg, #25D366, #128C7E); border: none; color: #fff; padding: 7px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .btn-buy:hover { opacity: .9; transform: scale(1.02); }
-    .btn-primary { background: linear-gradient(120deg, var(--accent), var(--accent2)); border: none; color: #050810; padding: 12px 24px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: linear-gradient(120deg, var(--accent), var(--accent2)); border: none; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .btn-primary:hover { opacity: .9; }
 
     /* Admin View Controls Dashboard Panels styling profiles */
     .admin-panel { display: none; background: var(--surface); border: 1px solid rgba(124,58,237,.3); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
-    .admin-panel h3 { color: #a78bfa; margin-bottom: 16px; font-size: 16px; font-family: 'Space Mono', monospace; }
+    .admin-panel h3 { color: #7c3aed; margin-bottom: 16px; font-size: 16px; font-family: 'Space Mono', monospace; }
     .admin-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .admin-panel input, .admin-panel select, .admin-panel textarea { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 10px 14px; outline: none; }
+    .admin-panel input, .admin-panel select, .admin-panel textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 10px 14px; outline: none; }
     .admin-panel textarea { grid-column: 1 / -1; height: 70px; resize: none; }
     
     /* Global Overlay System for Dynamic Modals */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(3,5,10,.85); backdrop-filter: blur(8px);
+      display: none; position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(8px);
       z-index: 9000; justify-content: center; align-items: center; padding: 20px;
     }
     .modal-box {
       background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
       padding: 32px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto;
-      position: relative; animation: modalFadeIn .25s cubic-bezier(0.16, 1, 0.3, 1) both;
+      position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); animation: modalFadeIn .25s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     @keyframes modalFadeIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -271,7 +271,7 @@
     /* Specialized Feature Content Presentation for Product Inspection Module */
     .detail-grid { display: flex; flex-direction: column; gap: 16px; }
     .detail-meta { display: flex; justify-content: space-between; align-items: center; font-family: 'Space Mono', monospace; border-bottom: 1px dashed var(--border); padding-bottom: 12px; }
-    .detail-specs-list { background: var(--card); padding: 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+    .detail-specs-list { background: var(--bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
     .detail-specs-list li { list-style: none; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--muted); }
     .detail-specs-list li i { color: var(--accent2); font-size: 11px; }
 
@@ -279,10 +279,10 @@
     .quiz-q { margin-bottom: 20px; }
     .quiz-q p { font-size: 15px; margin-bottom: 12px; font-weight: 600; }
     .quiz-opts { display: flex; gap: 8px; flex-wrap: wrap; }
-    .quiz-opt { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer; transition: 0.2s; }
+    .quiz-opt { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer; transition: 0.2s; }
     .quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-    .quiz-opt.correct { background: rgba(63,185,80,.15); border-color: var(--success); color: var(--success); }
-    .quiz-opt.wrong { background: rgba(248,81,73,.15); border-color: var(--danger); color: var(--danger); }
+    .quiz-opt.correct { background: rgba(22,163,74,.15); border-color: var(--success); color: var(--success); }
+    .quiz-opt.wrong { background: rgba(220,38,38,.15); border-color: var(--danger); color: var(--danger); }
     #scoreResult { text-align: center; margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 18px; color: var(--accent); }
 
     /* Static Layout Block Interfaces for Informational Profiles */
@@ -301,7 +301,7 @@
     .step-text p { font-size: 12px; color: var(--muted); }
 
     .testimonial-slider { display: flex; flex-direction: column; gap: 16px; }
-    .review-card { background: var(--card); padding: 16px; border-radius: 12px; border: 1px solid var(--border); position: relative; }
+    .review-card { background: var(--bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); position: relative; }
     .review-text { font-size: 13px; font-style: italic; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
     .review-user { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent2); text-align: right; }
 
@@ -311,31 +311,31 @@
     .comms-box h3 { font-size: 18px; margin-bottom: 16px; }
     .comms-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
     .comms-form { display: flex; flex-direction: column; gap: 12px; }
-    .comms-form input, .comms-form textarea { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px; outline: none; }
+    .comms-form input, .comms-form textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px; outline: none; }
     .comms-form textarea { height: 90px; resize: none; }
 
     /* Conversational Intelligence Assistant Component Node */
     .chatbot-btn {
       position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; color: #050810; font-size: 24px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; color: #ffffff; font-size: 24px;
       display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5000;
-      box-shadow: 0 4px 20px rgba(0,229,255,.2); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 20px rgba(2,132,199,.2); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .chatbot-btn:hover { transform: scale(1.06); }
     .chat-window {
       display: none; position: fixed; bottom: 98px; right: 28px; width: 320px;
       background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; z-index: 5000;
-      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+      box-shadow: 0 10px 40px rgba(15,23,42,.1);
     }
     .chat-window h3 { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; }
     .chat-window h3::after { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
     .chat-btns { display: flex; flex-direction: column; gap: 6px; }
-    .chat-opt { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 10px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left; }
-    .chat-opt:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.02); }
-    #botReply { margin-top: 12px; padding: 12px; background: rgba(0,229,255,.03); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--accent); line-height: 1.5; display: none; }
+    .chat-opt { background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 10px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left; }
+    .chat-opt:hover { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.02); }
+    #botReply { margin-top: 12px; padding: 12px; background: rgba(2,132,199,.03); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--accent); line-height: 1.5; display: none; }
 
     /* Floating Status Notification Alerts Layout */
-    #toast { position: fixed; bottom: 28px; left: 28px; z-index: 9999; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; font-size: 13px; opacity: 0; transform: translateY(10px); transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,.5); border-left: 3px solid var(--accent); }
+    #toast { position: fixed; bottom: 28px; left: 28px; z-index: 9999; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; font-size: 13px; opacity: 0; transform: translateY(10px); transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,.05); border-left: 3px solid var(--accent); color: var(--text); }
     #toast.show { opacity: 1; transform: translateY(0); }
 
     /* Structural Document Termination Components */
@@ -349,7 +349,7 @@
       .nav-links {
         display: none; position: absolute; top: 64px; left: 0; width: 100%;
         flex-direction: column; background: var(--bg); padding: 20px;
-        border-bottom: 1px solid var(--border); gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.8);
+        border-bottom: 1px solid var(--border); gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.05);
       }
       .nav-links.open { display: flex; }
       .hero { padding: 48px 16px 32px; }
@@ -507,7 +507,7 @@
     </section>
 
     <section class="info-card" aria-label="Client Verification Registry Records Section Block">
-      <h3><i class="fa-solid fa-user-check" style="color:#a78bfa;"></i> Peer Peer Operational Reviews</h3>
+      <h3><i class="fa-solid fa-user-check" style="color:var(--accent3);"></i> Peer Peer Operational Reviews</h3>
       <div class="testimonial-slider">
         <div class="review-card">
           <p class="review-text">"The firmware codebase for the IoT Energy Meter was exceptionally structured. Clean hardware abstraction layers."</p>
@@ -637,7 +637,7 @@ const baseRepositoryData = [
   {id:"p12", name:"Multi-Spectral Automated Agricultural Hydroponics System Array", emoji:"🌱", category:"Solar", price:"₹2,700", rawPrice:2700, desc:"Closed-loop cultivation controller tracking ambient pH scaling, total dissolved solids metrics, and managing dynamic multi-spectrum grow light schedules.", specs:["Dual processing master/slave microcontroller architecture grid","Analog pH probe signal conditioning amplifier circuit board","TDS tracking electrode driver filtering sensor network array","Solid-state high side switching lighting load controller circuits","Submersible low noise brushless pump fluid actuator loops"]},
   {id:"p13", name:"Brushless Direct Current (BLDC) Motor Sinusoidal Vector Driver", emoji:"🏎️", category:"Electric", price:"₹4,200", rawPrice:4200, desc:"High performance electric propulsion controller implementing Field Oriented Control (FOC) processing parameters for space vector modulation.", specs:["ARM Cortex-M4 32-bit floating point hardware micro core","Three-phase half-bridge gate driver circuit with bootstrap networks","Low side current shunt precision op-amp instrumentation arrays","High precision magnetic absolute angle encoder peripheral bus","Regenerative braking energy capture storage regulation blocks"]},
   {id:"p14", name:"Biometric Encrypted Hardware Cryptographic Key Vault Capsule", emoji:"🔑", category:"Smart", price:"₹3,100", rawPrice:3100, desc:"Offline cold storage secure device utilizing localized physical security architecture to manage cryptographic keys protected by biological traits match check profiles.", specs:["Secure hardware security module controller elements core chip","Capacitive absolute fingerprint imaging array scanning module","AES-256 localized electronic codebook hardware cipher blocks","OLED cryptographic status logs screen visual interface output","Physical tamper loop trigger self-destruct system logic sequence"]},
-  {id:"p15", name:"LoRaWAN Long Range Environmental Early Warning Telemetry Station", emoji:"📡", category:"IoT", price:"₹3,350", rawPrice:3350, desc:"Wide area mesh data collection station targeting hazardous environmental index monitoring profiles across massive ranges running off battery loops.", specs:["Ultra-low power sleep controller micro platform system hardware","Semtech SX1276 long range transceiver communication module radio","High precision particulate matter PM2.5 monitoring sensor element","Precision digital absolute pressure barometric sensor interface module","High capacity LiFePO4 battery array solar charger controller"]},
+  {id:"p15", name:"LoRaWAN Long Range Environmental Early Warning Telemetry Station", emoji:"📡", category:"IoT", price:"₹3,350", rawPrice:3350, desc:"Wide area mesh data collection station tracking hazardous environmental index monitoring profiles across massive ranges running off battery loops.", specs:["Ultra-low power sleep controller micro platform system hardware","Semtech SX1276 long range transceiver communication module radio","High precision particulate matter PM2.5 monitoring sensor element","Precision digital absolute pressure barometric sensor interface module","High capacity LiFePO4 battery array solar charger controller"]},
   {id:"p16", name:"Six-Legged Hexapod Biomimetic Terrain Exploration Robot Platform", emoji:"🕷️", category:"Robot", price:"₹5,200", rawPrice:5200, desc:"Multi-legged mechanical traversal engine executing spatial matrix walk configurations across jagged surface structures utilizing a dynamic multi-servo grid.", specs:["High channel count dedicated servo driver microcontroller architecture","18 units high torque metal gear internal servo actuator engines","Time-of-Flight lidar distance tracking spatial ranging sensor element","Real-time structural load checking strain gauge interface system loops","Wireless RF remote telemetry data link bridge operator transceiver"]}
 ];
 
@@ -784,13 +784,6 @@ function processFilterQuery() {
   displayCatalogView(processingList);
 }
 
-function clearFilters() {
-  document.getElementById("searchInput").value = "";
-  document.getElementById("sortSelect").value = "default";
-  const allTabBtn = document.querySelectorAll(".filter-bar .filter-btn")[0];
-  setDomainCategory("all", allTabBtn);
-}
-
 /* ---- DYNAMIC WISHLIST USER STATE MANAGEMENT INTERACTION INTERFACES ---- */
 function toggleWishlistState(id, triggerElement) {
   let list = fetchUserWishlistArray();
@@ -876,7 +869,7 @@ function handleInspectorModalKeyboardTrap(e) {
 function triggerAdminAccess() {
   const tokenInput = prompt("Enter developer dynamic environment authentication hash signature password phrase (Demo access bypass pass: 'admin'):");
   if (tokenInput === "admin") {
-    document.getElementById("adminPanel").style.style.display = "block";
+    document.getElementById("adminPanel").style.display = "block";
     document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
     triggerToastNotification("Authentication validation sequence complete. Extended operational configuration sandboxed views active.");
   } else if (tokenInput !== null) {
@@ -1050,11 +1043,18 @@ function triggerToastNotification(messagePayloadText) {
   setTimeout(() => panel.classList.remove("show"), 4000);
 }
 
+function clearFilters() {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("sortSelect").value = "default";
+  const allTabBtn = document.querySelectorAll(".filter-bar .filter-btn")[0];
+  setDomainCategory("all", allTabBtn);
+}
+
 /* ---- SYSTEM RUNTIME BOOT INITIALIZATION STAGED HOOKS LIFECYCLE ROUTINES ---- */
 document.addEventListener("DOMContentLoaded", () => {
   loadPersistedState();
   
-  // Dynamic interface interactions framework escape modal close bindings
+  // Bug fix: Corrected the administrative pane double .style mapping error from the dark template source code
   document.getElementById("quizModal").addEventListener("click", function(e) { if(e.target === this) closeQuizModal(); });
   document.getElementById("detailModal").addEventListener("click", function(e) { if(e.target === this) closeInspectorModal(); });
 });
