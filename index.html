@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Virtual Signals & Systems Laboratory</title>
+  <title>Real practical hub</title>
   
   <meta name="description" content="Interactive web-based Virtual Laboratory for Signals and Systems practicals, signal generation, convolution, Fourier analysis, and digital filtering.">
   
@@ -170,6 +170,7 @@
       background: linear-gradient(120deg, var(--accent), var(--accent2)); border: none; color: #050810;
       padding: 10px 18px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
       cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      text-decoration: none;
     }
     .btn-run:hover { opacity: 0.9; }
 
@@ -180,7 +181,27 @@
     }
     .theory-box h4 { font-family: 'Space Mono', monospace; color: var(--accent); margin-bottom: 6px; }
 
-    footer { border-top: 1px solid var(--border); padding: 30px 24px; text-align: center; color: var(--muted); font-size: 12px; font-family: 'Space Mono', monospace; margin-top: 60px; }
+    /* Code Snippet Box */
+    .matlab-box {
+      background: #050810; border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+      font-family: 'Space Mono', monospace; font-size: 12px; color: #00ff95; overflow-x: auto;
+      white-space: pre-wrap; line-height: 1.5; margin-top: 10px;
+    }
+
+    /* Footer & Social Contacts */
+    footer { border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; color: var(--muted); font-size: 13px; margin-top: 60px; background: var(--surface); }
+    .creator-info { margin-bottom: 16px; font-family: 'Space Mono', monospace; color: var(--text); }
+    .creator-info span { color: var(--accent); font-weight: 700; }
+    
+    .social-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--card); color: var(--text);
+      text-decoration: none; font-size: 13px; font-family: 'Space Mono', monospace; transition: 0.3s ease;
+    }
+    .social-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .social-btn.wa:hover { border-color: #25D366; color: #25D366; }
+    .social-btn.insta:hover { border-color: #E1306C; color: #E1306C; }
   </style>
 </head>
 <body>
@@ -199,13 +220,14 @@
     <button class="nav-btn" onclick="switchLab('fourier')"><i class="fa-solid fa-chart-line"></i> Fourier FFT</button>
     <button class="nav-btn" onclick="switchLab('sample')"><i class="fa-solid fa-braille"></i> Sampling</button>
     <button class="nav-btn" onclick="switchLab('filter')"><i class="fa-solid fa-filter"></i> Filtering</button>
+    <button class="nav-btn" onclick="switchLab('matlab')"><i class="fa-solid fa-code"></i> MATLAB Code</button>
   </div>
 </nav>
 
 <header class="hero">
   <div class="hero-badge">ACADEMIC VIRTUAL SIMULATOR PLATFORM</div>
   <h1>Interactive <span class="grad">Signals &amp; Systems</span> Practical Lab</h1>
-  <p>Perform real-time continuous and discrete signal experiments, convolution calculations, spectral FFT analysis, sampling reconstruction, and noise filtering directly in your browser.</p>
+  <p>Perform real-time ENTC signal processing experiments, convolution calculations, spectral FFT analysis, sampling reconstruction, and custom MATLAB scripts directly in your browser.</p>
 </header>
 
 <main class="main-workspace">
@@ -217,13 +239,14 @@
     <button class="tab-btn" id="tab-fourier" onclick="switchLab('fourier')"><i class="fa-solid fa-chart-simple"></i> 3. Fourier Analysis</button>
     <button class="tab-btn" id="tab-sample" onclick="switchLab('sample')"><i class="fa-solid fa-border-none"></i> 4. Nyquist Sampling</button>
     <button class="tab-btn" id="tab-filter" onclick="switchLab('filter')"><i class="fa-solid fa-filter"></i> 5. Noise &amp; FIR Filter</button>
+    <button class="tab-btn" id="tab-matlab" onclick="switchLab('matlab')"><i class="fa-solid fa-code"></i> 6. MATLAB Program</button>
   </div>
 
   <!-- PRACTICAL 1: SIGNAL SYNTHESIS -->
   <section class="lab-module active" id="module-gen">
     <div class="module-header">
       <h2><i class="fa-solid fa-wave-square"></i> Practical 1: Signal Synthesis &amp; Representation</h2>
-      <p>Generate, visualize, and alter Continuous $x(t)$ and Discrete-time $x[n]$ fundamental signals.</p>
+      <p>Generate, visualize, and alter Continuous $x(t)$ and Discrete-time $x[n]$ fundamental ENTC signals.</p>
     </div>
     <div class="lab-grid">
       <div class="controls-card">
@@ -235,13 +258,15 @@
           </select>
         </div>
         <div class="control-group">
-          <label>Waveform Type</label>
+          <label>ENTC Waveform Type</label>
           <select id="genWave" onchange="runSignalGen()">
             <option value="sine">Sine Wave</option>
             <option value="square">Square Wave</option>
             <option value="sawtooth">Sawtooth Wave</option>
             <option value="step">Unit Step u(t)</option>
             <option value="impulse">Unit Impulse δ(t)</option>
+            <option value="ramp">Unit Ramp r(t)</option>
+            <option value="sinc">Sinc Signal sinc(t)</option>
             <option value="exponential">Decaying Exponential</option>
           </select>
         </div>
@@ -264,18 +289,13 @@
         </div>
       </div>
     </div>
-    <div class="theory-box">
-      <h4>Mathematical Theory Reference:</h4>
-      Continuous sinusoidal standard representation: $x(t) = A \cdot \sin(2\pi f t + \phi)$. <br>
-      Discrete-time sequence representation: $x[n] = A \cdot \sin(\Omega n + \phi)$, sampled at discrete integer indices $n$.
-    </div>
   </section>
 
   <!-- PRACTICAL 2: CONVOLUTION -->
   <section class="lab-module" id="module-conv">
     <div class="module-header">
       <h2><i class="fa-solid fa-square-root-variable"></i> Practical 2: Linear Convolution Visualizer</h2>
-      <p>Compute and observe the step-by-step convolution response $y[n] = x[n] * h[n]$ between input signal $x[n]$ and impulse response $h[n]$.</p>
+      <p>Compute and observe response $y[n] = x[n] * h[n]$ between input signal $x[n]$ and impulse response $h[n]$.</p>
     </div>
     <div class="lab-grid">
       <div class="controls-card">
@@ -295,7 +315,7 @@
             <option value="invert">Inverted Pulse [-1, 1, -1]</option>
           </select>
         </div>
-        <button class="btn-run" onclick="runConvolution()"><i class="fa-solid fa-play"></i> Compute $y[n] = x[n] * h[n]$</button>
+        <button class="btn-run" onclick="runConvolution()"><i class="fa-solid fa-play"></i> Compute Convolution</button>
       </div>
       <div class="visualizer-card">
         <div class="canvas-container">
@@ -303,18 +323,13 @@
         </div>
       </div>
     </div>
-    <div class="theory-box">
-      <h4>Mathematical Theory Reference:</h4>
-      Discrete Linear Convolution Equation: $y[n] = \sum_{k=-\infty}^{\infty} x[k] \cdot h[n - k]$. <br>
-      Length of output sequence $y[n]$ is given by $L_y = L_x + L_h - 1$.
-    </div>
   </section>
 
   <!-- PRACTICAL 3: FOURIER ANALYSIS -->
   <section class="lab-module" id="module-fourier">
     <div class="module-header">
       <h2><i class="fa-solid fa-chart-line"></i> Practical 3: Fourier Spectrum Analysis (FFT)</h2>
-      <p>Decompose composite time-domain signals into their corresponding discrete frequency spectrum.</p>
+      <p>Decompose composite signals into their corresponding frequency spectrum.</p>
     </div>
     <div class="lab-grid">
       <div class="controls-card">
@@ -326,14 +341,6 @@
           <label>Component 2 Freq (Hz): <span id="f2Val">12</span></label>
           <input type="range" id="f2" min="1" max="50" value="12" oninput="runFourier()">
         </div>
-        <div class="control-group">
-          <label>Add Gaussian Noise</label>
-          <select id="fourierNoise" onchange="runFourier()">
-            <option value="0">Clean Signal</option>
-            <option value="0.5">Low Noise</option>
-            <option value="1.5">High Noise</option>
-          </select>
-        </div>
       </div>
       <div class="visualizer-card">
         <div class="canvas-container">
@@ -341,17 +348,13 @@
         </div>
       </div>
     </div>
-    <div class="theory-box">
-      <h4>Mathematical Theory Reference:</h4>
-      Discrete Fourier Transform (DFT): $X(k) = \sum_{n=0}^{N-1} x(n) \cdot e^{-j 2\pi k n / N}$.
-    </div>
   </section>
 
-  <!-- PRACTICAL 4: SAMPLING THEOREMS -->
+  <!-- PRACTICAL 4: SAMPLING -->
   <section class="lab-module" id="module-sample">
     <div class="module-header">
-      <h2><i class="fa-solid fa-border-none"></i> Practical 4: Nyquist-Shannon Sampling &amp; Aliasing</h2>
-      <p>Analyze the effect of sample rate variation relative to Nyquist criteria ($f_s \ge 2 f_{max}$).</p>
+      <h2><i class="fa-solid fa-border-none"></i> Practical 4: Nyquist-Shannon Sampling</h2>
+      <p>Analyze sampling rate variation relative to Nyquist criteria ($f_s \ge 2 f_{max}$).</p>
     </div>
     <div class="lab-grid">
       <div class="controls-card">
@@ -370,27 +373,19 @@
         </div>
       </div>
     </div>
-    <div class="theory-box">
-      <h4>Mathematical Theory Reference:</h4>
-      Nyquist Criterion: To prevent aliasing, sampling frequency $f_s$ must satisfy $f_s \ge 2 \cdot f_{max}$. If $f_s < 2 f_{max}$, high frequencies alias into lower frequency bands.
-    </div>
   </section>
 
-  <!-- PRACTICAL 5: NOISE FILTERING -->
+  <!-- PRACTICAL 5: FILTERING -->
   <section class="lab-module" id="module-filter">
     <div class="module-header">
-      <h2><i class="fa-solid fa-filter"></i> Practical 5: Signal Noise Suppression &amp; FIR Filtering</h2>
-      <p>Pass corrupted noisy signals through digital Moving Average Low-Pass FIR filters.</p>
+      <h2><i class="fa-solid fa-filter"></i> Practical 5: Signal Noise Suppression</h2>
+      <p>Pass noisy signals through digital Moving Average Low-Pass FIR filters.</p>
     </div>
     <div class="lab-grid">
       <div class="controls-card">
         <div class="control-group">
           <label>Filter Window Size (N): <span id="filtWinVal">5</span></label>
           <input type="range" id="filtWin" min="1" max="25" value="5" oninput="runFilter()">
-        </div>
-        <div class="control-group">
-          <label>Noise Level: <span id="filtNoiseVal">0.8</span></label>
-          <input type="range" id="filtNoise" min="0.1" max="2.0" step="0.1" value="0.8" oninput="runFilter()">
         </div>
       </div>
       <div class="visualizer-card">
@@ -399,21 +394,66 @@
         </div>
       </div>
     </div>
-    <div class="theory-box">
-      <h4>Mathematical Theory Reference:</h4>
-      $M$-Point Moving Average Filter Equation: $y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k]$. Smooths out rapid high-frequency noise transients.
+  </section>
+
+  <!-- PRACTICAL 6: CUSTOM MATLAB CODE -->
+  <section class="lab-module" id="module-matlab">
+    <div class="module-header">
+      <h2><i class="fa-solid fa-code"></i> Custom MATLAB Program Section</h2>
+      <p>Run or copy standard ENTC Signals MATLAB scripts for your practical submission.</p>
+    </div>
+    <div class="matlab-box">
+% =========================================================
+% Practical 1: ENTC Fundamental Signal Generation
+% Created by: ER. Pranav Hingane
+% Contact: pranavhingane90@gmail.com
+% =========================================================
+clc; clear; close all;
+
+fs = 1000;              % Sampling frequency
+t = -1:1/fs:1;          % Time vector
+
+% ENTC Waveforms
+unit_step = double(t >= 0);
+unit_impulse = double(t == 0);
+unit_ramp = t .* unit_step;
+sine_wave = sin(2*pi*5*t);
+sinc_signal = sinc(2*5*t);
+
+% Plotting
+figure('Name', 'ENTC Standard Signals');
+subplot(3,2,1); plot(t, unit_step); title('Unit Step u(t)'); grid on;
+subplot(3,2,2); stem(t, unit_impulse); title('Unit Impulse \delta(t)'); grid on;
+subplot(3,2,3); plot(t, unit_ramp); title('Unit Ramp r(t)'); grid on;
+subplot(3,2,4); plot(t, sine_wave); title('Sine Wave'); grid on;
+subplot(3,2,5); plot(t, sinc_signal); title('Sinc Wave'); grid on;
     </div>
   </section>
 
 </main>
 
 <footer>
-  <p>© 2026 Virtual Signals &amp; Systems Practical Laboratory Suite</p>
-  <p style="margin-top:6px; font-size:11px; color:var(--accent);">Designed for Electronics, Communication &amp; Systems Engineering Practicals</p>
+  <div class="creator-info">
+    Created by: <span>ER. Pranav Hingane</span>
+  </div>
+  
+  <div class="social-links">
+    <a href="https://wa.me/919322018190" target="_blank" class="social-btn wa">
+      <i class="fa-brands fa-whatsapp"></i> WhatsApp
+    </a>
+    <a href="https://instagram.com/pranav_hingane" target="_blank" class="social-btn insta">
+      <i class="fa-brands fa-instagram"></i> @pranav_hingane
+    </a>
+    <a href="mailto:pranavhingane90@gmail.com" class="social-btn">
+      <i class="fa-solid fa-envelope"></i> Email Me
+    </a>
+    <a href="tel:+919322018190" class="social-btn">
+      <i class="fa-solid fa-phone"></i> +91 9322018190
+    </a>
+  </div>
 </footer>
 
 <script>
-/* ---- UI NAVIGATION & TAB SWITCHING ---- */
 function switchLab(labKey) {
   document.querySelectorAll('.lab-module').forEach(m => m.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -432,7 +472,6 @@ function switchLab(labKey) {
   }, 50);
 }
 
-/* Helper Canvas Context setup */
 function setupCanvas(canvasId) {
   const canvas = document.getElementById(canvasId);
   const rect = canvas.parentElement.getBoundingClientRect();
@@ -443,19 +482,16 @@ function setupCanvas(canvasId) {
   return { ctx, w: rect.width, h: rect.height };
 }
 
-/* Clear & Draw Grid */
 function drawAxes(ctx, w, h) {
   ctx.clearRect(0, 0, w, h);
   ctx.strokeStyle = 'rgba(0,229,255,0.1)';
   ctx.lineWidth = 1;
-
   ctx.beginPath();
   ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2);
   ctx.moveTo(40, 0); ctx.lineTo(40, h);
   ctx.stroke();
 }
 
-/* ---- PRACTICAL 1: SIGNAL GENERATOR ---- */
 function runSignalGen() {
   const domain = document.getElementById('genDomain').value;
   const wave = document.getElementById('genWave').value;
@@ -486,8 +522,10 @@ function runSignalGen() {
       if (wave === 'sine') y = amp * Math.sin(2 * Math.PI * freq * t + phase);
       else if (wave === 'square') y = amp * Math.sign(Math.sin(2 * Math.PI * freq * t + phase));
       else if (wave === 'sawtooth') y = amp * (2 * (t * freq - Math.floor(0.5 + t * freq)));
-      else if (wave === 'step') y = t >= 0.5 ? amp : 0;
-      else if (wave === 'impulse') y = Math.abs(x - 100) < 2 ? amp : 0;
+      else if (wave === 'step') y = t >= 0.2 ? amp : 0;
+      else if (wave === 'impulse') y = Math.abs(x - 60) < 2 ? amp : 0;
+      else if (wave === 'ramp') y = t >= 0 ? amp * t : 0;
+      else if (wave === 'sinc') y = t === 0 ? amp : amp * (Math.sin(Math.PI * freq * t) / (Math.PI * freq * t));
       else if (wave === 'exponential') y = amp * Math.exp(-t * freq);
 
       let canvasY = centerY - y * scaleY;
@@ -496,7 +534,6 @@ function runSignalGen() {
     }
     ctx.stroke();
   } else {
-    // Discrete Stem Plot
     const step = 16;
     for (let x = 40; x < w; x += step) {
       let n = (x - 40) / step;
@@ -508,6 +545,8 @@ function runSignalGen() {
       else if (wave === 'sawtooth') y = amp * (2 * (t * freq - Math.floor(0.5 + t * freq)));
       else if (wave === 'step') y = n >= 5 ? amp : 0;
       else if (wave === 'impulse') y = n === 5 ? amp : 0;
+      else if (wave === 'ramp') y = n >= 0 ? amp * (n / 10) : 0;
+      else if (wave === 'sinc') y = t === 0 ? amp : amp * (Math.sin(Math.PI * freq * t) / (Math.PI * freq * t));
       else if (wave === 'exponential') y = amp * Math.exp(-t * freq);
 
       let canvasY = centerY - y * scaleY;
@@ -525,7 +564,6 @@ function runSignalGen() {
   }
 }
 
-/* ---- PRACTICAL 2: CONVOLUTION ---- */
 function runConvolution() {
   const typeX = document.getElementById('convX').value;
   const typeH = document.getElementById('convH').value;
@@ -572,11 +610,9 @@ function runConvolution() {
   });
 }
 
-/* ---- PRACTICAL 3: FOURIER Spectrum ---- */
 function runFourier() {
   const f1 = parseFloat(document.getElementById('f1').value);
   const f2 = parseFloat(document.getElementById('f2').value);
-  const noiseVal = parseFloat(document.getElementById('fourierNoise').value);
 
   document.getElementById('f1Val').textContent = f1;
   document.getElementById('f2Val').textContent = f2;
@@ -584,30 +620,21 @@ function runFourier() {
   const { ctx, w, h } = setupCanvas('canvasFourier');
   drawAxes(ctx, w, h);
 
-  ctx.fillStyle = '#8b949e';
-  ctx.font = '11px Space Mono';
-  ctx.fillText("Time Domain x(t) = sin(2πf1 t) + sin(2πf2 t)", 50, 20);
-
-  // Time Domain Plot
   ctx.beginPath();
   ctx.strokeStyle = '#00e5ff';
   for (let px = 40; px < w; px++) {
     let t = (px - 40) / 400;
     let signal = Math.sin(2 * Math.PI * f1 * t) + Math.sin(2 * Math.PI * f2 * t);
-    if(noiseVal > 0) signal += (Math.random() - 0.5) * noiseVal;
     let py = h / 4 - signal * 20;
     if (px === 40) ctx.moveTo(px, py);
     else ctx.lineTo(px, py);
   }
   ctx.stroke();
 
-  // Frequency Domain DFT Bars
-  ctx.fillText("Frequency Spectrum |X(f)|", 50, h / 2 + 20);
   for (let freq = 1; freq <= 30; freq++) {
     let mag = 0;
     if (Math.abs(freq - f1) < 0.5) mag = 60;
     if (Math.abs(freq - f2) < 0.5) mag = 60;
-    if (noiseVal > 0) mag += Math.random() * noiseVal * 10;
 
     let bx = 50 + freq * 14;
     let by = h - 20 - mag;
@@ -617,7 +644,6 @@ function runFourier() {
   }
 }
 
-/* ---- PRACTICAL 4: SAMPLING ---- */
 function runSampling() {
   const f_max = parseFloat(document.getElementById('sampleSigFreq').value);
   const f_s = parseFloat(document.getElementById('sampleRate').value);
@@ -628,7 +654,6 @@ function runSampling() {
   const { ctx, w, h } = setupCanvas('canvasSample');
   drawAxes(ctx, w, h);
 
-  // Continuous original signal
   ctx.beginPath();
   ctx.strokeStyle = 'rgba(255,255,255,0.2)';
   for (let px = 40; px < w; px++) {
@@ -640,7 +665,6 @@ function runSampling() {
   }
   ctx.stroke();
 
-  // Discrete Sampled Points
   const Ts = 1 / f_s;
   for (let t = 0; t < 2; t += Ts) {
     let px = 40 + t * 200;
@@ -661,13 +685,9 @@ function runSampling() {
   }
 }
 
-/* ---- PRACTICAL 5: FILTERING ---- */
 function runFilter() {
   const N = parseInt(document.getElementById('filtWin').value);
-  const noiseAmt = parseFloat(document.getElementById('filtNoise').value);
-
   document.getElementById('filtWinVal').textContent = N;
-  document.getElementById('filtNoiseVal').textContent = noiseAmt.toFixed(1);
 
   const { ctx, w, h } = setupCanvas('canvasFilter');
   drawAxes(ctx, w, h);
@@ -678,11 +698,10 @@ function runFilter() {
   for (let px = 40; px < w; px++) {
     let t = (px - 40) / 100;
     let clean = Math.sin(2 * Math.PI * 2 * t);
-    let noisy = clean + (Math.random() - 0.5) * noiseAmt;
+    let noisy = clean + (Math.random() - 0.5) * 0.8;
     rawSignal.push(noisy);
   }
 
-  // Moving Average FIR Filter
   for (let i = 0; i < rawSignal.length; i++) {
     let sum = 0;
     let count = 0;
@@ -695,7 +714,6 @@ function runFilter() {
     filteredSignal.push(sum / count);
   }
 
-  // Plot Noisy
   ctx.beginPath();
   ctx.strokeStyle = 'rgba(248,81,73,0.5)';
   rawSignal.forEach((val, idx) => {
@@ -706,7 +724,6 @@ function runFilter() {
   });
   ctx.stroke();
 
-  // Plot Filtered
   ctx.beginPath();
   ctx.strokeStyle = '#00ff95';
   ctx.lineWidth = 2;
@@ -719,7 +736,6 @@ function runFilter() {
   ctx.stroke();
 }
 
-/* Init Lifecycle Hooks */
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     switchLab('gen');
