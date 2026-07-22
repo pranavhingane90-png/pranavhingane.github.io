@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pranav Project Hub | Engineering &amp; IoT Portfolio</title>
+  <title>Virtual Signals & Systems Laboratory</title>
   
-  <!-- SEO & Open Graph Meta Tags -->
-  <meta name="description" content="Explore and acquire production-ready Engineering, IoT, AI, and Robotics projects with full source code by Er. Pranav Hingane. Ready-to-deploy solutions.">
-  <meta property="og:title" content="Pranav Project Hub | Engineering &amp; IoT Portfolio">
-  <meta property="og:description" content="Explore and acquire production-ready Engineering, IoT, AI, and Robotics projects with full source code. Ready-to-deploy solutions.">
-  <meta property="og:type" content="website">
+  <meta name="description" content="Interactive web-based Virtual Laboratory for Signals and Systems practicals, signal generation, convolution, Fourier analysis, and digital filtering.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,19 +14,18 @@
   
   <style>
     :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --card: #ffffff;
-      --border: rgba(15, 23, 42, 0.12);
-      --accent: #0284c7;
-      --accent2: #16a34a;
+      --bg: #050810;
+      --surface: #0d1117;
+      --card: #111827;
+      --border: rgba(0,229,255,0.12);
+      --accent: #00e5ff;
+      --accent2: #00ff95;
       --accent3: #7c3aed;
-      --text: #0f172a;
-      --muted: #64748b;
-      --danger: #dc2626;
-      --warn: #ea580c;
-      --success: #16a34a;
-      --focus-ring: 0 0 0 3px rgba(2, 132, 199, 0.4);
+      --text: #f0f6fc;
+      --muted: #8b949e;
+      --danger: #f85149;
+      --warn: #f0883e;
+      --success: #3fb950;
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,39 +39,22 @@
       min-height: 100vh;
     }
 
-    /* Accessibility Focus Ring */
     *:focus-visible {
       outline: 2px dashed var(--accent);
       outline-offset: 4px;
     }
 
-    /* Reduced Motion Preference */
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      #welcomeScreen, .card, .chatbot-btn, .modal-box { animation: none !important; transition: none !important; }
-    }
-
-    /* Grid Background Grid Layer */
+    /* Grid Background */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(2,132,199,0.04) 1px, dotted transparent 1px),
-        linear-gradient(90deg,rgba(2,132,199,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg,rgba(0,229,255,0.02) 1px, transparent 1px);
       background-size: 50px 50px;
       pointer-events: none;
       z-index: 0;
-    }
-
-    /* Noise Layer */
-    .noise {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      opacity: .01;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
     /* Splash Screen */
@@ -85,31 +63,31 @@
       background: var(--bg);
       display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 16px;
       z-index: 10000;
-      animation: hideWelcome 2.2s ease-in-out forwards;
+      animation: hideWelcome 1.5s ease-in-out forwards;
     }
     .welcome-logo {
-      font-size: 72px; font-family: 'Space Mono', monospace; font-weight: 700;
+      font-size: 56px; font-family: 'Space Mono', monospace; font-weight: 700;
       background: linear-gradient(120deg, var(--accent), var(--accent2));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .welcome-sub { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
+    .welcome-sub { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
     .welcome-bar {
       width: 160px; height: 2px;
       background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
     }
-    @keyframes hideWelcome { 0%, 85% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
+    @keyframes hideWelcome { 0%, 80% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; pointer-events: none; } }
 
-    /* Structural Header Nav */
+    /* Header Nav */
     nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,.85);
+      background: rgba(5,8,16,.85);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       padding: 0 24px;
       display: flex; align-items: center; justify-content: space-between; height: 65px;
     }
     .nav-logo {
-      font-family: 'Space Mono', monospace; font-weight: 700; font-size: 20px;
+      font-family: 'Space Mono', monospace; font-weight: 700; font-size: 18px;
       color: var(--accent); letter-spacing: -1px;
       display: flex; align-items: center; gap: 8px;
     }
@@ -122,941 +100,630 @@
       font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
       cursor: pointer; transition: 0.2s ease; white-space: nowrap;
     }
-    .nav-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.05); }
-    .nav-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.1); }
-    
-    /* Interactive Mobile Drawer Menu UI Toggle Trigger */
-    .menu-toggle { display: none; background: transparent; border: none; color: var(--text); font-size: 22px; cursor: pointer; }
+    .nav-btn:hover, .nav-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.05); }
 
-    /* Landing Context Banner */
-    .hero { position: relative; z-index: 2; padding: 80px 24px 48px; text-align: center; max-width: 900px; margin: 0 auto; }
+    /* Hero Section */
+    .hero { position: relative; z-index: 2; padding: 60px 24px 32px; text-align: center; max-width: 900px; margin: 0 auto; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border); background: rgba(2,132,199,.03);
+      border: 1px solid var(--border); background: rgba(0,229,255,.03);
       padding: 6px 16px; border-radius: 999px;
       font-size: 12px; color: var(--accent); font-family: 'Space Mono', monospace;
-      margin-bottom: 24px; letter-spacing: 1px;
+      margin-bottom: 20px; letter-spacing: 1px;
     }
-    .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.4s infinite; }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: blink 1.4s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
-    .hero h1 { font-size: clamp(36px, 6vw, 72px); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 16px; }
+    .hero h1 { font-size: clamp(32px, 5vw, 60px); font-weight: 800; line-height: 1.1; letter-spacing: -1px; margin-bottom: 16px; }
     .hero h1 .grad { background: linear-gradient(120deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 16px; color: var(--muted); max-width: 600px; margin: 0 auto 28px; line-height: 1.6; }
+    .hero p { font-size: 15px; color: var(--muted); max-width: 680px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* Workspace Section */
+    .main-workspace { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 0 24px 60px; }
     
-    .hero-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .tag { padding: 4px 12px; border-radius: 999px; font-size: 11px; font-family: 'Space Mono', monospace; border: 1px solid; }
-    .tag-teal { border-color: rgba(2,132,199,.2); color: var(--accent); background: rgba(2,132,199,.03); }
-    .tag-green { border-color: rgba(22,163,74,.2); color: var(--accent2); background: rgba(22,163,74,.03); }
-    .tag-purple { border-color: rgba(124,58,237,.3); color: #7c3aed; background: rgba(124,58,237,.05); }
-
-    /* Performance Metric Indicators Layout Block */
-    .stats-section {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
-      background: var(--border); max-width: 900px; margin: 0 auto 48px;
+    /* Lab Selection Tabs */
+    .lab-tabs {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 32px;
+      border-bottom: 1px solid var(--border); padding-bottom: 16px;
     }
-    .stat-item { background: var(--surface); padding: 24px 16px; text-align: center; }
-    .stat-num { font-family: 'Space Mono', monospace; font-size: 32px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 4px; }
-    .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-
-    /* Core Application Control Controls & Grid Interfaces */
-    .section { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
-    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
-    .section-header h2 { font-size: 24px; font-weight: 600; }
-    .section-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); border: 1px solid var(--accent); padding: 2px 6px; border-radius: 4px; }
-
-    .search-sort-bar {
-      display: flex; gap: 16px; max-width: 700px; margin: 0 auto 24px; align-items: center; flex-wrap: wrap;
-    }
-    .search-wrap { position: relative; flex: 1; min-width: 260px; }
-    .search-wrap input, .sort-select {
-      width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px 20px; outline: none; transition: 0.2s ease;
-    }
-    .search-wrap input { padding-right: 44px; }
-    .search-wrap input:focus, .sort-select:focus { border-color: var(--accent); box-shadow: var(--focus-ring); }
-    .search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-    
-    .sort-wrap { min-width: 180px; }
-    .sort-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 14px) center; padding-right: 32px; }
-
-    .search-feedback-row { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: -12px auto 32px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
-    .reset-btn { background: none; border: none; color: var(--danger); cursor: pointer; text-decoration: underline; font-family: inherit; }
-
-    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 36px; }
-    .filter-btn {
-      padding: 6px 16px; border-radius: 999px; border: 1px solid var(--border);
+    .tab-btn {
+      padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
       background: var(--surface); color: var(--muted); font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: 0.2s ease;
+      cursor: pointer; transition: 0.2s ease; display: flex; align-items: center; gap: 8px;
     }
-    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.04); }
-    .filter-btn.fav-filter-btn i { color: var(--danger); margin-right: 4px; }
+    .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+    .tab-btn.active { border-color: var(--accent); color: #050810; background: linear-gradient(120deg, var(--accent), var(--accent2)); font-weight: 700; }
 
-    /* Catalog Presentation System Grid Components */
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 24px; }
-    .card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-      overflow: hidden; transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative; display: flex; flex-direction: column;
+    /* Practical Module Container */
+    .lab-module { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+    .lab-module.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .module-header { margin-bottom: 24px; border-bottom: 1px dashed var(--border); padding-bottom: 16px; }
+    .module-header h2 { font-size: 22px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+    .module-header p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    /* Control Panel & Visualization Grid */
+    .lab-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+    @media(max-width: 900px) { .lab-grid { grid-template-columns: 1fr; } }
+
+    .controls-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+      display: flex; flex-direction: column; gap: 18px;
     }
-    .card:hover { border-color: rgba(2,132,199,.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,23,42,.08); }
-    
-    .card-badge {
-      position: absolute; top: 14px; left: 14px; font-family: 'Space Mono', monospace; font-size: 10px;
-      padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.9); border: 1px solid; backdrop-filter: blur(4px);
+    .control-group { display: flex; flex-direction: column; gap: 6px; }
+    .control-group label { font-size: 12px; font-family: 'Space Mono', monospace; color: var(--accent2); display: flex; justify-content: space-between; }
+    .control-group select, .control-group input[type="number"] {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); padding: 8px 12px; font-family: 'Syne', sans-serif; font-size: 13px; outline: none;
     }
-    
-    .fav-btn-container { position: absolute; top: 12px; right: 12px; z-index: 10; }
-    .btn-fav {
-      background: rgba(255,255,255,.8); border: 1px solid var(--border); border-radius: 50%;
-      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--muted); transition: 0.2s ease; backdrop-filter: blur(4px);
+    .control-group input[type="range"] { accent-color: var(--accent); cursor: pointer; }
+
+    .visualizer-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+      display: flex; flex-direction: column; gap: 16px; min-height: 400px;
     }
-    .btn-fav:hover { color: var(--danger); border-color: rgba(220,38,38,.4); }
-    .btn-fav.is-fav { color: var(--danger); background: rgba(220,38,38,0.08); border-color: var(--danger); }
+    .canvas-container { position: relative; width: 100%; flex: 1; min-height: 320px; background: #050810; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; }
 
-    .badge-ai { border-color: #7c3aed; color: #7c3aed; }
-    .badge-iot { border-color: var(--accent); color: var(--accent); }
-    .badge-robot { border-color: var(--danger); color: var(--danger); }
-    .badge-solar { border-color: var(--warn); color: var(--warn); }
-    .badge-ev { border-color: var(--accent2); color: var(--accent2); }
-    .badge-other { border-color: var(--muted); color: var(--muted); }
-
-    .card-img {
-      width: 100%; height: 150px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-      display: flex; align-items: center; justify-content: center; font-size: 44px; border-bottom: 1px solid var(--border);
+    /* Action Buttons */
+    .btn-run {
+      background: linear-gradient(120deg, var(--accent), var(--accent2)); border: none; color: #050810;
+      padding: 10px 18px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
-    .card-body h3 { font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--text); }
-    .card-body p { font-size: 13px; color: var(--muted); line-height: 1.5; flex: 1; }
-    
-    .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border); }
-    .price { font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent2); }
-    .card-actions { display: flex; gap: 8px; }
-    
-    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 15px; grid-column: 1/-1; }
-    .no-results span { display: block; font-size: 42px; margin-bottom: 12px; }
+    .btn-run:hover { opacity: 0.9; }
 
-    /* Buttons Configuration Elements styling profiles */
-    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 7px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-buy { background: linear-gradient(120deg, #25D366, #128C7E); border: none; color: #fff; padding: 7px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-    .btn-buy:hover { opacity: .9; transform: scale(1.02); }
-    .btn-primary { background: linear-gradient(120deg, var(--accent), var(--accent2)); border: none; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .btn-primary:hover { opacity: .9; }
-
-    /* Admin View Controls Dashboard Panels styling profiles */
-    .admin-panel { display: none; background: var(--surface); border: 1px solid rgba(124,58,237,.3); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
-    .admin-panel h3 { color: #7c3aed; margin-bottom: 16px; font-size: 16px; font-family: 'Space Mono', monospace; }
-    .admin-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .admin-panel input, .admin-panel select, .admin-panel textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 10px 14px; outline: none; }
-    .admin-panel textarea { grid-column: 1 / -1; height: 70px; resize: none; }
-    
-    /* Global Overlay System for Dynamic Modals */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(8px);
-      z-index: 9000; justify-content: center; align-items: center; padding: 20px;
+    /* Formula & Theory Block */
+    .theory-box {
+      margin-top: 24px; background: rgba(0,229,255,0.02); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px; font-size: 13px; color: var(--muted); line-height: 1.6;
     }
-    .modal-box {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-      padding: 32px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto;
-      position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); animation: modalFadeIn .25s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-    @keyframes modalFadeIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-    .modal-header h2 { font-size: 22px; font-weight: 700; }
-    .modal-close { background: transparent; border: 1px solid var(--border); color: var(--muted); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .modal-close:hover { border-color: var(--danger); color: var(--danger); }
+    .theory-box h4 { font-family: 'Space Mono', monospace; color: var(--accent); margin-bottom: 6px; }
 
-    /* Specialized Feature Content Presentation for Product Inspection Module */
-    .detail-grid { display: flex; flex-direction: column; gap: 16px; }
-    .detail-meta { display: flex; justify-content: space-between; align-items: center; font-family: 'Space Mono', monospace; border-bottom: 1px dashed var(--border); padding-bottom: 12px; }
-    .detail-specs-list { background: var(--bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
-    .detail-specs-list li { list-style: none; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--muted); }
-    .detail-specs-list li i { color: var(--accent2); font-size: 11px; }
-
-    /* IQ Interactive Evaluation Layout Subsystem Blocks */
-    .quiz-q { margin-bottom: 20px; }
-    .quiz-q p { font-size: 15px; margin-bottom: 12px; font-weight: 600; }
-    .quiz-opts { display: flex; gap: 8px; flex-wrap: wrap; }
-    .quiz-opt { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer; transition: 0.2s; }
-    .quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-    .quiz-opt.correct { background: rgba(22,163,74,.15); border-color: var(--success); color: var(--success); }
-    .quiz-opt.wrong { background: rgba(220,38,38,.15); border-color: var(--danger); color: var(--danger); }
-    #scoreResult { text-align: center; margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 18px; color: var(--accent); }
-
-    /* Static Layout Block Interfaces for Informational Profiles */
-    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; margin-top: 48px; }
-    .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
-    .info-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    
-    .faq-item { margin-bottom: 16px; }
-    .faq-item h4 { font-size: 14px; color: var(--accent); margin-bottom: 6px; }
-    .faq-item p { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
-    .steps-list { display: flex; flex-direction: column; gap: 16px; }
-    .step-node { display: flex; gap: 12px; }
-    .step-num-icon { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--accent2); color: var(--accent2); display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 12px; flex-shrink: 0; }
-    .step-text h4 { font-size: 14px; margin-bottom: 2px; }
-    .step-text p { font-size: 12px; color: var(--muted); }
-
-    .testimonial-slider { display: flex; flex-direction: column; gap: 16px; }
-    .review-card { background: var(--bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); position: relative; }
-    .review-text { font-size: 13px; font-style: italic; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
-    .review-user { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent2); text-align: right; }
-
-    /* Unified Content Access Form Component Groups */
-    .comms-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
-    .comms-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
-    .comms-box h3 { font-size: 18px; margin-bottom: 16px; }
-    .comms-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
-    .comms-form { display: flex; flex-direction: column; gap: 12px; }
-    .comms-form input, .comms-form textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px; outline: none; }
-    .comms-form textarea { height: 90px; resize: none; }
-
-    /* Conversational Intelligence Assistant Component Node */
-    .chatbot-btn {
-      position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; color: #ffffff; font-size: 24px;
-      display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5000;
-      box-shadow: 0 4px 20px rgba(2,132,199,.2); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .chatbot-btn:hover { transform: scale(1.06); }
-    .chat-window {
-      display: none; position: fixed; bottom: 98px; right: 28px; width: 320px;
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; z-index: 5000;
-      box-shadow: 0 10px 40px rgba(15,23,42,.1);
-    }
-    .chat-window h3 { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: 'Space Mono', monospace; }
-    .chat-window h3::after { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
-    .chat-btns { display: flex; flex-direction: column; gap: 6px; }
-    .chat-opt { background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 10px 14px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left; }
-    .chat-opt:hover { border-color: var(--accent); color: var(--accent); background: rgba(2,132,199,.02); }
-    #botReply { margin-top: 12px; padding: 12px; background: rgba(2,132,199,.03); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--accent); line-height: 1.5; display: none; }
-
-    /* Floating Status Notification Alerts Layout */
-    #toast { position: fixed; bottom: 28px; left: 28px; z-index: 9999; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; font-size: 13px; opacity: 0; transform: translateY(10px); transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,.05); border-left: 3px solid var(--accent); color: var(--text); }
-    #toast.show { opacity: 1; transform: translateY(0); }
-
-    /* Structural Document Termination Components */
-    footer { position: relative; z-index: 2; border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; color: var(--muted); font-size: 12px; font-family: 'Space Mono', monospace; margin-top: 60px; }
-    footer a { color: var(--accent); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* Media Adaptive Layout Breakpoint Rules Expressions */
-    @media(max-width: 768px) {
-      .menu-toggle { display: block; }
-      .nav-links {
-        display: none; position: absolute; top: 64px; left: 0; width: 100%;
-        flex-direction: column; background: var(--bg); padding: 20px;
-        border-bottom: 1px solid var(--border); gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.05);
-      }
-      .nav-links.open { display: flex; }
-      .hero { padding: 48px 16px 32px; }
-      .search-sort-bar { flex-direction: column; align-items: stretch; }
-      .sort-wrap { min-width: 100%; }
-      .comms-section { grid-template-columns: 1fr; }
-    }
+    footer { border-top: 1px solid var(--border); padding: 30px 24px; text-align: center; color: var(--muted); font-size: 12px; font-family: 'Space Mono', monospace; margin-top: 60px; }
   </style>
 </head>
 <body>
 
-<div class="noise"></div>
-
-<!-- Splash welcome loading module screen -->
-<div id="welcomeScreen" role="presentation">
-  <div class="welcome-logo">RPH</div>
-  <p class="welcome-sub">Pranav Hingane · Project Hub</p>
+<div id="welcomeScreen">
+  <div class="welcome-logo">VIRTUAL LAB</div>
+  <p class="welcome-sub">Signals &amp; Systems Interactive Suite</p>
   <div class="welcome-bar"></div>
 </div>
 
-<!-- Header Navigation Systems Container -->
-<nav role="navigation" aria-label="Main Navigation">
-  <div class="nav-logo">⚡ <span>RPH</span></div>
-  <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle Navigation Menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
-  <div class="nav-links" id="navLinks">
-    <button class="nav-btn" onclick="getLocation()"><i class="fa-solid fa-location-dot"></i> Set Location</button>
-    <button class="nav-btn" onclick="triggerAdminAccess()"><i class="fa-solid fa-gear"></i> Admin Area</button>
-    <button class="nav-btn" onclick="openQuiz()"><i class="fa-solid fa-brain"></i> ECE IQ Test</button>
-    <button class="nav-btn" onclick="showJoke()"><i class="fa-solid fa-face-smile"></i> Dev Joke</button>
-    <button class="nav-btn" onclick="showQuote()"><i class="fa-solid fa-lightbulb"></i> Quote</button>
-    <button class="nav-btn" onclick="window.open('https://wa.me/919322018190', '_blank')"><i class="fa-brands fa-whatsapp"></i> Chat Support</button>
+<nav>
+  <div class="nav-logo">⚡ <span>SIGSYS</span> V-LAB</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="switchLab('gen')"><i class="fa-solid fa-wave-square"></i> Generator</button>
+    <button class="nav-btn" onclick="switchLab('conv')"><i class="fa-solid fa-square-root-variable"></i> Convolution</button>
+    <button class="nav-btn" onclick="switchLab('fourier')"><i class="fa-solid fa-chart-line"></i> Fourier FFT</button>
+    <button class="nav-btn" onclick="switchLab('sample')"><i class="fa-solid fa-braille"></i> Sampling</button>
+    <button class="nav-btn" onclick="switchLab('filter')"><i class="fa-solid fa-filter"></i> Filtering</button>
   </div>
 </nav>
 
-<!-- Context Presentation Structural Section Banner Header -->
 <header class="hero">
-  <div class="hero-badge">LIVE · 20+ FEATURED EXPERIMENTAL BLUEPRINTS</div>
-  <h1>Production-Ready <br><span class="grad">Project Architecture</span></h1>
-  <p>Academic &amp; Industrial hardware/software configurations built by Er. Pranav Hingane. Full clean schemas, hardware component checklists, and source codes included.</p>
-  <div class="hero-tags">
-    <span class="tag tag-teal">Embedded Systems</span>
-    <span class="tag tag-green">AI Models</span>
-    <span class="tag tag-purple">Automation Topologies</span>
-    <span class="tag tag-teal">IoT Infrastructures</span>
-  </div>
+  <div class="hero-badge">ACADEMIC VIRTUAL SIMULATOR PLATFORM</div>
+  <h1>Interactive <span class="grad">Signals &amp; Systems</span> Practical Lab</h1>
+  <p>Perform real-time continuous and discrete signal experiments, convolution calculations, spectral FFT analysis, sampling reconstruction, and noise filtering directly in your browser.</p>
 </header>
 
-<!-- Performance Metric Indicators Grid Layout Block -->
-<div class="section" style="padding-bottom: 24px;">
-  <section class="stats-section" aria-label="Portfolio Statistics">
-    <div class="stat-item"><span class="stat-num">20+</span><span class="stat-label">Verified Designs</span></div>
-    <div class="stat-item"><span class="stat-num">8+</span><span class="stat-label">Core Fields</span></div>
-    <div class="stat-item"><span class="stat-num">100%</span><span class="stat-label">Open Source Code</span></div>
-    <div class="stat-item"><span class="stat-num">Direct</span><span class="stat-label">WhatsApp Delivery</span></div>
-  </section>
-</div>
+<main class="main-workspace">
 
-<!-- Main Application Interface Worksurface Wrapper Container Element -->
-<main class="section">
-  <div class="section-header">
-    <span class="section-num">01</span>
-    <h2>Hardware &amp; Software Blueprints</h2>
+  <!-- LAB TABS -->
+  <div class="lab-tabs">
+    <button class="tab-btn active" id="tab-gen" onclick="switchLab('gen')"><i class="fa-solid fa-wave-square"></i> 1. Signal Synthesis</button>
+    <button class="tab-btn" id="tab-conv" onclick="switchLab('conv')"><i class="fa-solid fa-bolt"></i> 2. Convolution Engine</button>
+    <button class="tab-btn" id="tab-fourier" onclick="switchLab('fourier')"><i class="fa-solid fa-chart-simple"></i> 3. Fourier Analysis</button>
+    <button class="tab-btn" id="tab-sample" onclick="switchLab('sample')"><i class="fa-solid fa-border-none"></i> 4. Nyquist Sampling</button>
+    <button class="tab-btn" id="tab-filter" onclick="switchLab('filter')"><i class="fa-solid fa-filter"></i> 5. Noise &amp; FIR Filter</button>
   </div>
 
-  <!-- Search & Sorting Workspace Controls Group -->
-  <div class="search-sort-bar">
-    <div class="search-wrap">
-      <input type="text" id="searchInput" placeholder="Search parameters, domains, chipsets..." oninput="processFilterQuery()" aria-label="Search Projects">
-      <span class="search-icon" aria-hidden="true"><i class="fa-solid fa-magnifying-glass"></i></span>
+  <!-- PRACTICAL 1: SIGNAL SYNTHESIS -->
+  <section class="lab-module active" id="module-gen">
+    <div class="module-header">
+      <h2><i class="fa-solid fa-wave-square"></i> Practical 1: Signal Synthesis &amp; Representation</h2>
+      <p>Generate, visualize, and alter Continuous $x(t)$ and Discrete-time $x[n]$ fundamental signals.</p>
     </div>
-    
-    <div class="sort-wrap">
-      <select id="sortSelect" class="sort-select" onchange="processFilterQuery()" aria-label="Sort projects selection criteria">
-        <option value="default">Default Arrangement</option>
-        <option value="priceAsc">Price: Low to High</option>
-        <option value="priceDesc">Price: High to Low</option>
-        <option value="nameAsc">Alphabetical: A-Z</option>
-      </select>
+    <div class="lab-grid">
+      <div class="controls-card">
+        <div class="control-group">
+          <label>Domain Type</label>
+          <select id="genDomain" onchange="runSignalGen()">
+            <option value="continuous">Continuous Time x(t)</option>
+            <option value="discrete">Discrete Time x[n]</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Waveform Type</label>
+          <select id="genWave" onchange="runSignalGen()">
+            <option value="sine">Sine Wave</option>
+            <option value="square">Square Wave</option>
+            <option value="sawtooth">Sawtooth Wave</option>
+            <option value="step">Unit Step u(t)</option>
+            <option value="impulse">Unit Impulse δ(t)</option>
+            <option value="exponential">Decaying Exponential</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Amplitude (A): <span id="genAmpVal">1.0</span></label>
+          <input type="range" id="genAmp" min="0.1" max="5" step="0.1" value="1" oninput="runSignalGen()">
+        </div>
+        <div class="control-group">
+          <label>Frequency (Hz): <span id="genFreqVal">2</span></label>
+          <input type="range" id="genFreq" min="1" max="20" step="1" value="2" oninput="runSignalGen()">
+        </div>
+        <div class="control-group">
+          <label>Phase Shift (rad): <span id="genPhaseVal">0.0</span></label>
+          <input type="range" id="genPhase" min="0" max="3.14" step="0.1" value="0" oninput="runSignalGen()">
+        </div>
+      </div>
+      <div class="visualizer-card">
+        <div class="canvas-container">
+          <canvas id="canvasGen"></canvas>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <!-- Feedback Line items metadata data logs -->
-  <div class="search-feedback-row">
-    <div id="searchCount" aria-live="polite"></div>
-    <div id="resetSearchContainer" style="display:none;">
-      <button class="reset-btn" onclick="clearFilters()">Clear parameters reset filters</button>
+    <div class="theory-box">
+      <h4>Mathematical Theory Reference:</h4>
+      Continuous sinusoidal standard representation: $x(t) = A \cdot \sin(2\pi f t + \phi)$. <br>
+      Discrete-time sequence representation: $x[n] = A \cdot \sin(\Omega n + \phi)$, sampled at discrete integer indices $n$.
     </div>
-  </div>
-
-  <!-- Domain Domain Categories Filtration Matrix Row Elements -->
-  <div class="filter-bar" role="tablist" aria-label="Project domain categories filters">
-    <button class="filter-btn active" onclick="setDomainCategory('all', this)" role="tab" aria-selected="true">All Topologies</button>
-    <button class="filter-btn" onclick="setDomainCategory('AI', this)" role="tab" aria-selected="false">Artificial Intelligence</button>
-    <button class="filter-btn" onclick="setDomainCategory('IoT', this)" role="tab" aria-selected="false">IoT Networks</button>
-    <button class="filter-btn" onclick="setDomainCategory('Robot', this)" role="tab" aria-selected="false">Robotics</button>
-    <button class="filter-btn" onclick="setDomainCategory('Solar', this)" role="tab" aria-selected="false">Solar Tech</button>
-    <button class="filter-btn" onclick="setDomainCategory('Electric', this)" role="tab" aria-selected="false">EV Frameworks</button>
-    <button class="filter-btn" onclick="setDomainCategory('Smart', this)" role="tab" aria-selected="false">Smart Systems</button>
-    <button class="filter-btn fav-filter-btn" onclick="setDomainCategory('wishlist', this)" role="tab" aria-selected="false"><i class="fa-solid fa-heart"></i> Saved Wishlist</button>
-  </div>
-
-  <!-- Client-side Protective Admin dashboard interactive control module pane -->
-  <section class="admin-panel" id="adminPanel" aria-label="Administrative Configuration Panel">
-    <h3>⚙ Operational Sandbox Control (Admin Client Dashboard)</h3>
-    <div class="admin-form-grid">
-      <input type="text" id="admName" placeholder="Project Title Name *">
-      <select id="admCategory">
-        <option value="IoT">IoT Systems</option>
-        <option value="AI">AI Frameworks</option>
-        <option value="Robot">Robotics Architecture</option>
-        <option value="Solar">Solar Applications</option>
-        <option value="Electric">Electric Vehicle (EV)</option>
-        <option value="Smart">Smart Infrastructures</option>
-      </select>
-      <input type="text" id="admPrice" placeholder="Price (e.g., ₹2,500) *">
-      <input type="text" id="admEmoji" placeholder="Designator Icon/Emoji (e.g., 🧪)">
-      <textarea id="admDesc" placeholder="Full architectural brief specification descriptions..."></textarea>
-    </div>
-    <button class="btn-primary" onclick="commitAdminProjectData()">Add Node Blueprint Entry to Repository</button>
   </section>
 
-  <!-- Principal Dynamic Component Cards Layout Grid Presentation Block -->
-  <div class="projects-grid" id="projectContainer"></div>
-
-  <!-- Framework Information Section Layers -->
-  <div class="info-grid">
-    <section class="info-card" aria-label="Frequently Asked Questions Section">
-      <h3><i class="fa-solid fa-circle-question" style="color:var(--accent);"></i> Architectural Blueprint FAQ</h3>
-      <div class="faq-item">
-        <h4>What does each system node package contain?</h4>
-        <p>Every implementation bundle delivers commented modular source codes, logic block diagrams, breadboard/PCB traces, and localized component specification reference guides.</p>
-      </div>
-      <div class="faq-item">
-        <h4>Can I request custom hardware parameter changes?</h4>
-        <p>Yes. Contact via WhatsApp. Custom peripheral matching, firmware adaptions, and component recalibration processes can be custom targeted.</p>
-      </div>
-    </section>
-
-    <section class="info-card" aria-label="Procedural Deployment Guideline Nodes Block">
-      <h3><i class="fa-solid fa-microchip" style="color:var(--accent2);"></i> Operational Infrastructure Flow</h3>
-      <div class="steps-list">
-        <div class="step-node">
-          <div class="step-num-icon">01</div>
-          <div class="step-text"><h4>Select Topology Model</h4><p>Browse through core catalog vectors filtering by processing requirements.</p></div>
+  <!-- PRACTICAL 2: CONVOLUTION -->
+  <section class="lab-module" id="module-conv">
+    <div class="module-header">
+      <h2><i class="fa-solid fa-square-root-variable"></i> Practical 2: Linear Convolution Visualizer</h2>
+      <p>Compute and observe the step-by-step convolution response $y[n] = x[n] * h[n]$ between input signal $x[n]$ and impulse response $h[n]$.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="controls-card">
+        <div class="control-group">
+          <label>Input x[n]</label>
+          <select id="convX" onchange="runConvolution()">
+            <option value="rect">Rectangular Pulse [1, 1, 1, 1]</option>
+            <option value="ramp">Ramp Sequence [1, 2, 3, 4]</option>
+            <option value="step">Decaying [4, 3, 2, 1]</option>
+          </select>
         </div>
-        <div class="step-node">
-          <div class="step-num-icon">02</div>
-          <div class="step-text"><h4>Verification Checkpoint</h4><p>Inspect specifications modal view details verification matrix checks.</p></div>
+        <div class="control-group">
+          <label>Impulse Response h[n]</label>
+          <select id="convH" onchange="runConvolution()">
+            <option value="rect">Rectangular Pulse [1, 1, 1]</option>
+            <option value="delta">Unit Impulse [1, 0, 0]</option>
+            <option value="invert">Inverted Pulse [-1, 1, -1]</option>
+          </select>
         </div>
-        <div class="step-node">
-          <div class="step-num-icon">03</div>
-          <div class="step-text"><h4>Secure Pipeline Delivery</h4><p>Finalize deployment package checkout pathways direct securely into WhatsApp.</p></div>
+        <button class="btn-run" onclick="runConvolution()"><i class="fa-solid fa-play"></i> Compute $y[n] = x[n] * h[n]$</button>
+      </div>
+      <div class="visualizer-card">
+        <div class="canvas-container">
+          <canvas id="canvasConv"></canvas>
         </div>
       </div>
-    </section>
+    </div>
+    <div class="theory-box">
+      <h4>Mathematical Theory Reference:</h4>
+      Discrete Linear Convolution Equation: $y[n] = \sum_{k=-\infty}^{\infty} x[k] \cdot h[n - k]$. <br>
+      Length of output sequence $y[n]$ is given by $L_y = L_x + L_h - 1$.
+    </div>
+  </section>
 
-    <section class="info-card" aria-label="Client Verification Registry Records Section Block">
-      <h3><i class="fa-solid fa-user-check" style="color:var(--accent3);"></i> Peer Peer Operational Reviews</h3>
-      <div class="testimonial-slider">
-        <div class="review-card">
-          <p class="review-text">"The firmware codebase for the IoT Energy Meter was exceptionally structured. Clean hardware abstraction layers."</p>
-          <p class="review-user">— Rahul P., ECE Researcher</p>
+  <!-- PRACTICAL 3: FOURIER ANALYSIS -->
+  <section class="lab-module" id="module-fourier">
+    <div class="module-header">
+      <h2><i class="fa-solid fa-chart-line"></i> Practical 3: Fourier Spectrum Analysis (FFT)</h2>
+      <p>Decompose composite time-domain signals into their corresponding discrete frequency spectrum.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="controls-card">
+        <div class="control-group">
+          <label>Component 1 Freq (Hz): <span id="f1Val">5</span></label>
+          <input type="range" id="f1" min="1" max="25" value="5" oninput="runFourier()">
         </div>
-        <div class="review-card">
-          <p class="review-text">"The battery system topology was highly detailed. Excellent cell impedance calculations mapping profiles."</p>
-          <p class="review-user">— Amit S., Systems Engineer</p>
+        <div class="control-group">
+          <label>Component 2 Freq (Hz): <span id="f2Val">12</span></label>
+          <input type="range" id="f2" min="1" max="50" value="12" oninput="runFourier()">
+        </div>
+        <div class="control-group">
+          <label>Add Gaussian Noise</label>
+          <select id="fourierNoise" onchange="runFourier()">
+            <option value="0">Clean Signal</option>
+            <option value="0.5">Low Noise</option>
+            <option value="1.5">High Noise</option>
+          </select>
         </div>
       </div>
-    </section>
-  </div>
-
-  <!-- Communications & Data Collection Layer Elements Group Sections -->
-  <div class="comms-section">
-    <section class="comms-box" aria-label="Custom Blueprint Quotation Request Form Channel">
-      <h3><i class="fa-solid fa-paper-plane" style="color:var(--accent);"></i> Custom Engineering Request</h3>
-      <p>Need a custom system topology designed from the ground up? Submit your custom hardware constraints parameters directly via email pipeline alternative paths.</p>
-      <form class="comms-form" onsubmit="executeMailtoPipeline(event)">
-        <input type="text" id="msgSubject" placeholder="Core Domain Domain Vector (e.g., STM32 Brushless Motor Control)" required>
-        <textarea id="msgBody" placeholder="Specify processing chips, sensor payloads, communications protocol rules, and operational constraints..." required></textarea>
-        <button type="submit" class="btn-primary" style="width:100%;">Transmit Mailto Pipeline Request</button>
-      </form>
-    </section>
-
-    <section class="comms-box" aria-label="Subscription Node Channel Framework">
-      <h3><i class="fa-solid fa-envelope-open-text" style="color:var(--accent2);"></i> Tech Newsletter Pipeline</h3>
-      <p>Subscribe to receive architectural updates, optimization tutorials, firmware patches, and circuit layout trace designs directly to your inbox.</p>
-      <div class="comms-form">
-        <input type="email" id="newsletterEmail" placeholder="developer@domain.io" aria-label="Newsletter email input field box">
-        <button class="btn-primary" onclick="commitNewsletterRegistration()" style="width:100%;">Register Subscription Frame</button>
+      <div class="visualizer-card">
+        <div class="canvas-container">
+          <canvas id="canvasFourier"></canvas>
+        </div>
       </div>
-    </section>
-  </div>
+    </div>
+    <div class="theory-box">
+      <h4>Mathematical Theory Reference:</h4>
+      Discrete Fourier Transform (DFT): $X(k) = \sum_{n=0}^{N-1} x(n) \cdot e^{-j 2\pi k n / N}$.
+    </div>
+  </section>
+
+  <!-- PRACTICAL 4: SAMPLING THEOREMS -->
+  <section class="lab-module" id="module-sample">
+    <div class="module-header">
+      <h2><i class="fa-solid fa-border-none"></i> Practical 4: Nyquist-Shannon Sampling &amp; Aliasing</h2>
+      <p>Analyze the effect of sample rate variation relative to Nyquist criteria ($f_s \ge 2 f_{max}$).</p>
+    </div>
+    <div class="lab-grid">
+      <div class="controls-card">
+        <div class="control-group">
+          <label>Signal Frequency f_max: <span id="sigFreqVal">5</span> Hz</label>
+          <input type="range" id="sampleSigFreq" min="1" max="10" value="5" oninput="runSampling()">
+        </div>
+        <div class="control-group">
+          <label>Sampling Rate f_s: <span id="sampRateVal">12</span> Hz</label>
+          <input type="range" id="sampleRate" min="2" max="40" value="12" oninput="runSampling()">
+        </div>
+      </div>
+      <div class="visualizer-card">
+        <div class="canvas-container">
+          <canvas id="canvasSample"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="theory-box">
+      <h4>Mathematical Theory Reference:</h4>
+      Nyquist Criterion: To prevent aliasing, sampling frequency $f_s$ must satisfy $f_s \ge 2 \cdot f_{max}$. If $f_s < 2 f_{max}$, high frequencies alias into lower frequency bands.
+    </div>
+  </section>
+
+  <!-- PRACTICAL 5: NOISE FILTERING -->
+  <section class="lab-module" id="module-filter">
+    <div class="module-header">
+      <h2><i class="fa-solid fa-filter"></i> Practical 5: Signal Noise Suppression &amp; FIR Filtering</h2>
+      <p>Pass corrupted noisy signals through digital Moving Average Low-Pass FIR filters.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="controls-card">
+        <div class="control-group">
+          <label>Filter Window Size (N): <span id="filtWinVal">5</span></label>
+          <input type="range" id="filtWin" min="1" max="25" value="5" oninput="runFilter()">
+        </div>
+        <div class="control-group">
+          <label>Noise Level: <span id="filtNoiseVal">0.8</span></label>
+          <input type="range" id="filtNoise" min="0.1" max="2.0" step="0.1" value="0.8" oninput="runFilter()">
+        </div>
+      </div>
+      <div class="visualizer-card">
+        <div class="canvas-container">
+          <canvas id="canvasFilter"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="theory-box">
+      <h4>Mathematical Theory Reference:</h4>
+      $M$-Point Moving Average Filter Equation: $y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k]$. Smooths out rapid high-frequency noise transients.
+    </div>
+  </section>
+
 </main>
 
-<!-- Target Window Components Elements Blocks System Modals -->
-<!-- Global Multi-Purpose Data Inspector View Modal -->
-<div id="detailModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h2 id="modalTitle">Blueprint Specifications Matrix</h2>
-      <button class="modal-close" onclick="closeInspectorModal()" aria-label="Close modal view overlay panel Window">✕</button>
-    </div>
-    <div id="inspectorContent" class="detail-grid"></div>
-  </div>
-</div>
-
-<!-- Evaluation System IQ Interface Matrix Modal Window Overlay Panel -->
-<div id="quizModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="quizModalTitle">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h2 id="quizModalTitle">🧠 Electronics &amp; Logic Matrix Evaluation</h2>
-      <button class="modal-close" onclick="closeQuizModal()" aria-label="Close evaluation view panel modal window">✕</button>
-    </div>
-    <div id="quizContentArea">
-      <div class="quiz-q">
-        <p>1️⃣ What is the mathematical reciprocal calculation value relation of capacitive impedance expression profiles?</p>
-        <div class="quiz-opts">
-          <button class="quiz-opt" onclick="processQuizSelection(this,true)">1 / (2πfC)</button>
-          <button class="quiz-opt" onclick="processQuizSelection(this,false)">2πfL</button>
-          <button class="quiz-opt" onclick="processQuizSelection(this,false)">I²R</button>
-        </div>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
-      <div class="quiz-q">
-        <p>2️⃣ Which semiconductor element structure configuration forms the core logic pathways of an ESP32 processing core framework?</p>
-        <div class="quiz-opts">
-          <button class="quiz-opt" onclick="processQuizSelection(this,true)">Xtensa Dual-Core 32-bit</button>
-          <button class="quiz-opt" onclick="processQuizSelection(this,false)">ARM Cortex-M0+</button>
-          <button class="quiz-opt" onclick="processQuizSelection(this,false)">AVR RISC 8-bit architecture</button>
-        </div>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
-      <div class="quiz-q">
-        <p>3️⃣ What signal conditioning configuration phase resolves high frequency transient noise injection on a common sensor node?</p>
-        <div class="quiz-opts">
-          <button class="quiz-opt" onclick="processQuizSelection(this,true)">Low-Pass RC Network</button>
-          <button class="quiz-opt" onclick="processQuizSelection(this,false)">High-Pass Active Operational Amplifier</button>
-          <button class="quiz-opt" onclick="processQuizSelection(this,false)">Schmitt Trigger</button>
-        </div>
-      </div>
-      <div style="margin-top:24px; display:flex; gap:12px; align-items:center;">
-        <button class="btn-primary" onclick="computeEvaluationScore()">Compute Matrix Results Score</button>
-        <div id="scoreResult" style="margin-top:0;"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Conversational Intelligence Agent Interfaces Layer Box elements -->
-<button class="chatbot-btn" onclick="toggleChatAssistantOverlay()" aria-label="Toggle AI Assistance System Bot Overlay Panel"><i class="fa-solid fa-robot"></i></button>
-<div class="chat-window" id="chatWindow" role="region" aria-label="AI Conversational Assistant">
-  <h3>⚡ System Agent Interface</h3>
-  <div class="chat-btns">
-    <button class="chat-opt" onclick="executeBotResponseMapping('pricing')">💰 Topology Asset Value Structure</button>
-    <button class="chat-opt" onclick="executeBotResponseMapping('delivery')">📦 Delivery Mechanics Pipeline</button>
-    <button class="chat-opt" onclick="executeBotResponseMapping('domains')">🚀 Core Processing Domain Vectors</button>
-    <button class="chat-opt" onclick="executeBotResponseMapping('architecture')">👑 Engineering Management Lead</button>
-  </div>
-  <div id="botReply" aria-live="polite"></div>
-</div>
-
-<!-- Floating Notification Alert Layer elements status panels logs -->
-<div id="toast" role="alert" aria-live="assertive"></div>
-
-<!-- Structural Document Footer Block Element -->
-<footer role="contentinfo">
-  <p>© 2026 <a href="https://wa.me/919322018190" target="_blank">Er. Pranav Hingane</a> · Real Project Hub · Repository Control Systems Framework. All Rights Reserved.</p>
-  <p style="margin-top:10px; font-size:11px; color:var(--accent);">Electronics &amp; Communication Engineering Architecture • Core Firmware • Hardware Integration Topologies</p>
+<footer>
+  <p>© 2026 Virtual Signals &amp; Systems Practical Laboratory Suite</p>
+  <p style="margin-top:6px; font-size:11px; color:var(--accent);">Designed for Electronics, Communication &amp; Systems Engineering Practicals</p>
 </footer>
 
 <script>
-/* ---- CORE SYSTEM DATABASE CATALOG ENTRIES ARRAY MODULAR NODES ---- */
-const baseRepositoryData = [
-  {id:"p1", name:"Smart Energy Infrastructure Metering System via IoT", emoji:"⚡", category:"IoT", price:"₹2,499", rawPrice:2499, desc:"Real-time single-phase electrical metrics analytics node utilizing ESP32 engine framework. Integrates a dedicated PZEM-004T isolation sensing element module to parse active current loads, voltage drops, real power coefficients, and cumulative power curves.", specs:["ESP32 DevKit Node MCU V1 Base Core","PZEM-004T Current/Voltage sensor module array","Blynk Cloud MQTT Telemetry streaming dashboard profile","Over-Current safety solid-state relay interrupter routine","Local I2C SSD1306 OLED visual hardware output layer"]},
-  {id:"p2", name:"Autonomous Navigation Delivery Unmanned Aerial Vehicle (UAV)", emoji:"🚁", category:"Robot", price:"₹5,999", rawPrice:5999, desc:"Quad-copter aviation platform optimized for payload delivery tracking matrices. Driven by a micro-coded flight controller running autonomous pathfinding algorithms based on telemetry tracking.", specs:["Pixhawk 2.4.8 open autopilot processing unit core","Neo-M8N high precision GPS constellation tracking layer","40A Brushless ESC telemetry mapping matrices speed elements","Ultrasonic down-facing altitude control sensors range check","Carbon fiber composite structural frame stress points"]},
-  {id:"p3", name:"Computer Vision Embedded Convolutional Neural Network Face Gate", emoji:"🤖", category:"AI", price:"₹4,999", rawPrice:4999, desc:"High-speed localized facial identification system deploying custom weight sets on convolutional network matrices. Intended for secure industrial localized gate validation checkpoints.", specs:["Raspberry Pi 4 Model B (4GB RAM) edge compute module","Sony IMX219 Camera sensor unit component array","OpenCV framework engine with localized face landmark detection models","Python background optimization matrix worker daemon loops","High current solenoid door latch latch driver networks"]},
-  {id:"p4", name:"Maximum Power Point Tracking (MPPT) Solar Micro-Grid Controller", emoji:"☀️", category:"Solar", price:"₹2,200", rawPrice:2200, desc:"Highly efficient synchronous buck converter driver executing an optimized Perturb and Observe loop logic framework. Maximizes photovoltaic conversion configurations across varying system thermal loads.", specs:["Arduino Nano ATmega328P reference core system","High efficiency logic-level N-Channel MOSFET stage gate switch array","ACS712 linear Hall-effect current monitor sensor array","Wide range step-down buck converter inductive power stage","Thermal monitoring automatic overload low power throttle loop"]},
-  {id:"p5", name:"Bio-Telemetry Wireless Patient Diagnostics Smart Node Array", emoji:"❤️", category:"IoT", price:"₹2,850", rawPrice:2850, desc:"Multi-sensor health screening peripheral tracking array processing real-time bio-electrical signals. Incorporates hardware safety isolation channels to guard low-voltage logic parameters.", specs:["ESP8266 Wi-Fi enabled microchip system element node","MAX30102 high sensitivity pulse oximeter optical sensor array","AD8232 single-lead ECG front-end analog signal processor block","I2C peripheral array bus architecture data lanes","Secure data link streaming to telemetry dash nodes layer"]},
-  {id:"p6", name:"Lithium-Ion Pack Smart Battery Management System (BMS)", emoji:"🔋", category:"Electric", price:"₹3,800", rawPrice:3800, desc:"Intelligent management controller designed for multi-cell pack setups. Continuously calculates State-of-Charge matrix values and runs programmatic passive cell balancing shunts.", specs:["ATMega328P instrumentation master processor engine block","Multi-channel analog front-end voltage tap balance matrix","Solid-state high current power paths safety disconnect nodes","NTC thermistor multi-point pack temperature probes configuration","Isolated CAN / UART monitoring terminal data streams output"]},
-  {id:"p7", name:"Adaptive Neural Congestion Control Traffic Routing Engine", emoji:"🚦", category:"AI", price:"₹4,600", rawPrice:4600, desc:"Real-time spatial video capture pipeline that monitors multi-lane junction load metrics. Deploys background predictive deep learning models to dynamically calculate signal timings.", specs:["Jetson Nano Developer Kit core system edge hardware node","High-definition wide-angle optics tracking nodes capture sensor","YOLOv8 nano target classification pipeline weight compilation","Industrial isolated optically isolated driver relay control interfaces","Hardware fallback timer sequencing firmware modules watchdogs"]},
-  {id:"p8", name:"Six Axis Degrees of Freedom (6-DOF) Kinematic Robotic Arm Engine", emoji:"🦾", category:"Robot", price:"₹3,499", rawPrice:3499, desc:"Articulated positional mechanical arm executing geometric inverse kinematics code calculations. Features precise closed-loop absolute coordinate transformations.", specs:["PCA9685 16-Channel 12-bit PWM I2C controller driver module","MG996R high torque metal gear actuator servo assemblies","Bluetooth HC-05 serial bridge interface communication pipeline","Localized instruction save stack array volatile memory caching","Anodized aluminum structure mechanical bracket links components"]},
-  {id:"p9", name:"Decentralized Secure Multi-Node Smart Home Mesh Grid", emoji:"🏠", category:"Smart", price:"₹2,300", rawPrice:2300, desc:"Resilient home automation ecosystem that utilizes self-healing communication structures across RF boundaries, completely bypassing centralized internet vulnerabilities.", specs:["ESP32 microcontroller nodes running ESP-NOW mesh network stack","Optically isolated triac drivers control high voltage AC loads","Distributed structural failover mesh master nodes redundancy layers","Capacitive human presence detection sensors grid arrays","Hardware internal EEPROM variable non-volatile state recall profiles"]},
-  {id:"p10", name:"Intelligent Auto-Dimming Municipality Street Light Topology", emoji:"💡", category:"Smart", price:"₹1,850", rawPrice:1850, desc:"High power municipal lamp network topology driving step-less power scaling outputs depending on traffic density metrics and ambient light levels.", specs:["ATmega328P main automation processor control core","Cadmium-Free high stability photoresistor ambient light sensing","Infrared speed tracking Doppler sensor modules target captures","High power constant current buck constant LED driver stage module","Transient voltage surge suppression filter grid front-end array"]},
-  {id:"p11", name:"Real-time Edge Impulse Predictive Machine Maintenance Node", emoji:"⚙️", category:"AI", price:"₹3,900", rawPrice:3900, desc:"Vibration and acoustic analytics processor running TinyML anomaly classification models directly at the sensor node for zero-latency industrial fault spotting.", specs:["Cortex-M4 high performance computing processor development board","MPU6050 6-axis accelerometer motion processing component","Edge Impulse trained DSP frequency spectrum analysis code layers","Sub-GHz long range telemetry communication transceiver module","Ultra low quiescent current power source regulation architecture"]},
-  {id:"p12", name:"Multi-Spectral Automated Agricultural Hydroponics System Array", emoji:"🌱", category:"Solar", price:"₹2,700", rawPrice:2700, desc:"Closed-loop cultivation controller tracking ambient pH scaling, total dissolved solids metrics, and managing dynamic multi-spectrum grow light schedules.", specs:["Dual processing master/slave microcontroller architecture grid","Analog pH probe signal conditioning amplifier circuit board","TDS tracking electrode driver filtering sensor network array","Solid-state high side switching lighting load controller circuits","Submersible low noise brushless pump fluid actuator loops"]},
-  {id:"p13", name:"Brushless Direct Current (BLDC) Motor Sinusoidal Vector Driver", emoji:"🏎️", category:"Electric", price:"₹4,200", rawPrice:4200, desc:"High performance electric propulsion controller implementing Field Oriented Control (FOC) processing parameters for space vector modulation.", specs:["ARM Cortex-M4 32-bit floating point hardware micro core","Three-phase half-bridge gate driver circuit with bootstrap networks","Low side current shunt precision op-amp instrumentation arrays","High precision magnetic absolute angle encoder peripheral bus","Regenerative braking energy capture storage regulation blocks"]},
-  {id:"p14", name:"Biometric Encrypted Hardware Cryptographic Key Vault Capsule", emoji:"🔑", category:"Smart", price:"₹3,100", rawPrice:3100, desc:"Offline cold storage secure device utilizing localized physical security architecture to manage cryptographic keys protected by biological traits match check profiles.", specs:["Secure hardware security module controller elements core chip","Capacitive absolute fingerprint imaging array scanning module","AES-256 localized electronic codebook hardware cipher blocks","OLED cryptographic status logs screen visual interface output","Physical tamper loop trigger self-destruct system logic sequence"]},
-  {id:"p15", name:"LoRaWAN Long Range Environmental Early Warning Telemetry Station", emoji:"📡", category:"IoT", price:"₹3,350", rawPrice:3350, desc:"Wide area mesh data collection station tracking hazardous environmental index monitoring profiles across massive ranges running off battery loops.", specs:["Ultra-low power sleep controller micro platform system hardware","Semtech SX1276 long range transceiver communication module radio","High precision particulate matter PM2.5 monitoring sensor element","Precision digital absolute pressure barometric sensor interface module","High capacity LiFePO4 battery array solar charger controller"]},
-  {id:"p16", name:"Six-Legged Hexapod Biomimetic Terrain Exploration Robot Platform", emoji:"🕷️", category:"Robot", price:"₹5,200", rawPrice:5200, desc:"Multi-legged mechanical traversal engine executing spatial matrix walk configurations across jagged surface structures utilizing a dynamic multi-servo grid.", specs:["High channel count dedicated servo driver microcontroller architecture","18 units high torque metal gear internal servo actuator engines","Time-of-Flight lidar distance tracking spatial ranging sensor element","Real-time structural load checking strain gauge interface system loops","Wireless RF remote telemetry data link bridge operator transceiver"]}
-];
+/* ---- UI NAVIGATION & TAB SWITCHING ---- */
+function switchLab(labKey) {
+  document.querySelectorAll('.lab-module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-let globalProjectCatalog = [...baseRepositoryData];
-let currentDomainCategoryFilter = "all";
-let clientGeolocationRecord = "";
-let cachedLastFocusTargetElement = null;
+  document.getElementById('module-' + labKey).classList.add('active');
+  const activeTab = document.getElementById('tab-' + labKey);
+  if(activeTab) activeTab.classList.add('active');
 
-/* ---- LOCAL STORAGE DATA SYNCHRONIZATION RUNTIME HOOKS ---- */
-function loadPersistedState() {
-  const customNodes = localStorage.getItem("rph_custom_nodes");
-  if (customNodes) {
-    try {
-      const parsed = JSON.parse(customNodes);
-      globalProjectCatalog = [...baseRepositoryData, ...parsed];
-    } catch(e) {
-      globalProjectCatalog = [...baseRepositoryData];
+  setTimeout(() => {
+    if(labKey === 'gen') runSignalGen();
+    if(labKey === 'conv') runConvolution();
+    if(labKey === 'fourier') runFourier();
+    if(labKey === 'sample') runSampling();
+    if(labKey === 'filter') runFilter();
+  }, 50);
+}
+
+/* Helper Canvas Context setup */
+function setupCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio || 600;
+  canvas.height = rect.height * window.devicePixelRatio || 350;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+/* Clear & Draw Grid */
+function drawAxes(ctx, w, h) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(0,229,255,0.1)';
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+  ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2);
+  ctx.moveTo(40, 0); ctx.lineTo(40, h);
+  ctx.stroke();
+}
+
+/* ---- PRACTICAL 1: SIGNAL GENERATOR ---- */
+function runSignalGen() {
+  const domain = document.getElementById('genDomain').value;
+  const wave = document.getElementById('genWave').value;
+  const amp = parseFloat(document.getElementById('genAmp').value);
+  const freq = parseFloat(document.getElementById('genFreq').value);
+  const phase = parseFloat(document.getElementById('genPhase').value);
+
+  document.getElementById('genAmpVal').textContent = amp.toFixed(1);
+  document.getElementById('genFreqVal').textContent = freq;
+  document.getElementById('genPhaseVal').textContent = phase.toFixed(1);
+
+  const { ctx, w, h } = setupCanvas('canvasGen');
+  drawAxes(ctx, w, h);
+
+  const centerY = h / 2;
+  const scaleY = 40;
+
+  ctx.strokeStyle = '#00e5ff';
+  ctx.fillStyle = '#00ff95';
+  ctx.lineWidth = 2;
+
+  if (domain === 'continuous') {
+    ctx.beginPath();
+    for (let x = 40; x < w; x++) {
+      let t = (x - 40) / 100;
+      let y = 0;
+
+      if (wave === 'sine') y = amp * Math.sin(2 * Math.PI * freq * t + phase);
+      else if (wave === 'square') y = amp * Math.sign(Math.sin(2 * Math.PI * freq * t + phase));
+      else if (wave === 'sawtooth') y = amp * (2 * (t * freq - Math.floor(0.5 + t * freq)));
+      else if (wave === 'step') y = t >= 0.5 ? amp : 0;
+      else if (wave === 'impulse') y = Math.abs(x - 100) < 2 ? amp : 0;
+      else if (wave === 'exponential') y = amp * Math.exp(-t * freq);
+
+      let canvasY = centerY - y * scaleY;
+      if (x === 40) ctx.moveTo(x, canvasY);
+      else ctx.lineTo(x, canvasY);
+    }
+    ctx.stroke();
+  } else {
+    // Discrete Stem Plot
+    const step = 16;
+    for (let x = 40; x < w; x += step) {
+      let n = (x - 40) / step;
+      let t = n / 10;
+      let y = 0;
+
+      if (wave === 'sine') y = amp * Math.sin(2 * Math.PI * freq * t + phase);
+      else if (wave === 'square') y = amp * Math.sign(Math.sin(2 * Math.PI * freq * t + phase));
+      else if (wave === 'sawtooth') y = amp * (2 * (t * freq - Math.floor(0.5 + t * freq)));
+      else if (wave === 'step') y = n >= 5 ? amp : 0;
+      else if (wave === 'impulse') y = n === 5 ? amp : 0;
+      else if (wave === 'exponential') y = amp * Math.exp(-t * freq);
+
+      let canvasY = centerY - y * scaleY;
+
+      ctx.beginPath();
+      ctx.moveTo(x, centerY);
+      ctx.lineTo(x, canvasY);
+      ctx.strokeStyle = '#00e5ff';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(x, canvasY, 4, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
-  processFilterQuery();
 }
 
-function persistCustomNode(nodeObj) {
-  const customNodes = localStorage.getItem("rph_custom_nodes");
-  let list = [];
-  if (customNodes) {
-    try { list = JSON.parse(customNodes); } catch(e) { list = []; }
-  }
-  list.push(nodeObj);
-  localStorage.setItem("rph_custom_nodes", JSON.stringify(list));
-  globalProjectCatalog.push(nodeObj);
-  processFilterQuery();
-}
+/* ---- PRACTICAL 2: CONVOLUTION ---- */
+function runConvolution() {
+  const typeX = document.getElementById('convX').value;
+  const typeH = document.getElementById('convH').value;
 
-function fetchUserWishlistArray() {
-  const favs = localStorage.getItem("rph_wishlist_nodes");
-  if (!favs) return [];
-  try { return JSON.parse(favs); } catch(e) { return []; }
-}
+  let x = typeX === 'rect' ? [1,1,1,1] : typeX === 'ramp' ? [1,2,3,4] : [4,3,2,1];
+  let h_sig = typeH === 'rect' ? [1,1,1] : typeH === 'delta' ? [1,0,0] : [-1,1,-1];
 
-function updateUserWishlistStorage(idList) {
-  localStorage.setItem("rph_wishlist_nodes", JSON.stringify(idList));
-}
-
-/* ---- SYSTEM CATALOG INTERFACE RENDERING LOGIC BLOCKS ---- */
-function displayCatalogView(activeList) {
-  const targetGrid = document.getElementById("projectContainer");
-  targetGrid.innerHTML = "";
-  
-  if (!activeList.length) {
-    targetGrid.innerHTML = `<div class="no-results" role="status"><span>🔍</span>No system architecture matches your current parameters.<br>Reset search or filter parameters to retry repository scans.</div>`;
-    document.getElementById("searchCount").textContent = "Found 0 matches";
-    document.getElementById("resetSearchContainer").style.display = "block";
-    return;
-  }
-  
-  const searchInputStr = document.getElementById("searchInput").value.trim();
-  if (searchInputStr || currentDomainCategoryFilter !== "all") {
-    document.getElementById("searchCount").textContent = `Displaying ${activeList.length} of ${globalProjectCatalog.length} engineering assets`;
-    document.getElementById("resetSearchContainer").style.display = "block";
-  } else {
-    document.getElementById("searchCount").textContent = `Displaying ${globalProjectCatalog.length} active node assets`;
-    document.getElementById("resetSearchContainer").style.display = "none";
-  }
-  
-  const currentWishlist = fetchUserWishlistArray();
-  const badgeMap = { AI: "badge-ai", IoT: "badge-iot", Robot: "badge-robot", Solar: "badge-solar", Electric: "badge-ev", Smart: "badge-other" };
-  
-  activeList.forEach(item => {
-    const isFav = currentWishlist.includes(item.id);
-    const itemCard = document.createElement("article");
-    itemCard.className = "card";
-    itemCard.setAttribute("aria-label", item.name);
-    
-    const badgeStyle = badgeMap[item.category] || "badge-other";
-    
-    itemCard.innerHTML = `
-      <div class="card-img" role="img" aria-label="Icon representative visualization">${item.emoji}</div>
-      <span class="card-badge ${badgeStyle}">${item.category} Matrix</span>
-      <div class="fav-btn-container">
-        <button class="btn-fav ${isFav ? 'is-fav' : ''}" onclick="toggleWishlistState('${item.id}', this)" aria-label="Save this system design to localized wishlist profile telemetry" aria-pressed="${isFav}">
-          <i class="fa-solid fa-heart"></i>
-        </button>
-      </div>
-      <div class="card-body">
-        <h3>${item.name}</h3>
-        <p>${item.desc.substring(0, 110)}...</p>
-        <div class="card-footer">
-          <span class="price">${item.price}</span>
-          <div class="card-actions">
-            <button class="btn-ghost" onclick="launchInspectorModal('${item.id}', this)">Inspect Specifications</button>
-            <button class="btn-buy" onclick="initiateSecureWhatsAppRouting('${item.name}', '${item.price}')">
-              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Acquire
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-    targetGrid.appendChild(itemCard);
-  });
-}
-
-/* ---- FILTERING, SEARCHING & ORDERING PROCESSORS MATRIX ---- */
-function setDomainCategory(categoryKey, targetButton) {
-  currentDomainCategoryFilter = categoryKey;
-  document.querySelectorAll(".filter-bar .filter-btn").forEach(btn => {
-    btn.classList.remove("active");
-    btn.setAttribute("aria-selected", "false");
-  });
-  targetButton.classList.add("active");
-  targetButton.setAttribute("aria-selected", "true");
-  processFilterQuery();
-}
-
-function processFilterQuery() {
-  const searchString = document.getElementById("searchInput").value.toLowerCase();
-  const activeSortMode = document.getElementById("sortSelect").value;
-  const wishlistArray = fetchUserWishlistArray();
-  
-  let processingList = globalProjectCatalog.filter(item => {
-    const searchMatch = item.name.toLowerCase().includes(searchString) || item.desc.toLowerCase().includes(searchString);
-    let categoryMatch = false;
-    
-    if (currentDomainCategoryFilter === "all") {
-      categoryMatch = true;
-    } else if (currentDomainCategoryFilter === "wishlist") {
-      categoryMatch = wishlistArray.includes(item.id);
-    } else {
-      categoryMatch = item.category === currentDomainCategoryFilter;
+  let y = new Array(x.length + h_sig.length - 1).fill(0);
+  for (let i = 0; i < x.length; i++) {
+    for (let j = 0; j < h_sig.length; j++) {
+      y[i + j] += x[i] * h_sig[j];
     }
-    
-    return searchMatch && categoryMatch;
-  });
-  
-  // Apply sort sequence logic loops transformations
-  if (activeSortMode === "priceAsc") {
-    processingList.sort((x, y) => x.rawPrice - y.rawPrice);
-  } else if (activeSortMode === "priceDesc") {
-    processingList.sort((x, y) => y.rawPrice - x.rawPrice);
-  } else if (activeSortMode === "nameAsc") {
-    processingList.sort((x, y) => x.name.localeCompare(y.name));
   }
-  
-  displayCatalogView(processingList);
-}
 
-/* ---- DYNAMIC WISHLIST USER STATE MANAGEMENT INTERACTION INTERFACES ---- */
-function toggleWishlistState(id, triggerElement) {
-  let list = fetchUserWishlistArray();
-  const index = list.indexOf(id);
-  
-  if (index > -1) {
-    list.splice(index, 1);
-    triggerElement.classList.remove("is-fav");
-    triggerElement.setAttribute("aria-pressed", "false");
-    triggerToastNotification("Asset entry removed from localized wishlist profile layout data tracking loops.");
-  } else {
-    list.push(id);
-    triggerElement.classList.add("is-fav");
-    triggerElement.setAttribute("aria-pressed", "true");
-    triggerToastNotification("Asset entry logged securely into localized user device wishlist framework.");
-  }
-  
-  updateUserWishlistStorage(list);
-  if (currentDomainCategoryFilter === "wishlist") {
-    processFilterQuery();
-  }
-}
+  const { ctx, w, h } = setupCanvas('canvasConv');
+  drawAxes(ctx, w, h);
 
-/* ---- REAL EXPANDED PRODUCT INSPECTOR MODAL SYSTEMS CONFIG ---- */
-function launchInspectorModal(id, coreTrigger) {
-  cachedLastFocusTargetElement = coreTrigger;
-  const item = globalProjectCatalog.find(p => p.id === id);
-  if (!item) return;
-  
-  const modal = document.getElementById("detailModal");
-  const contentNode = document.getElementById("inspectorContent");
-  
-  let specItemsHtml = "";
-  if (item.specs && item.specs.length) {
-    item.specs.forEach(sp => {
-      specItemsHtml += `<li><i class="fa-solid fa-microchip" aria-hidden="true"></i> <span>${sp}</span></li>`;
-    });
-  } else {
-    specItemsHtml = `<li><i class="fa-solid fa-microchip" aria-hidden="true"></i> Standard core system microcode package infrastructure configurations baseline reference blueprints.</li>`;
-  }
-  
-  contentNode.innerHTML = `
-    <div class="detail-meta">
-      <span>Domain Branch Vector: <strong>${item.category} Design Mode</strong></span>
-      <span class="price">${item.price}</span>
-    </div>
-    <div style="font-size:14px; line-height:1.6; color:var(--text);">
-      <h4>Architectural Overview Specifications Definition Summary:</h4>
-      <p style="margin-top:6px; color:var(--muted);">${item.desc}</p>
-    </div>
-    <div>
-      <h4 style="font-size:14px; margin-bottom:8px;">Verified Hardware Peripherals &amp; System Integration Matrix:</h4>
-      <ul class="detail-specs-list">${specItemsHtml}</ul>
-    </div>
-    <div style="margin-top:12px; display:flex; gap:12px; justify-content:flex-end;">
-      <button class="btn-ghost" onclick="closeInspectorModal()">Exit Modal Scan</button>
-      <button class="btn-buy" onclick="initiateSecureWhatsAppRouting('${item.name}', '${item.price}')">
-        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Acquire Package via Secure Gateway Channels
-      </button>
-    </div>
-  `;
-  
-  modal.style.display = "flex";
-  modal.querySelector(".modal-close").focus();
-  document.addEventListener("keydown", handleInspectorModalKeyboardTrap);
-}
+  ctx.fillStyle = '#a78bfa';
+  ctx.font = '12px Space Mono';
+  ctx.fillText("Output y[n] = x[n] * h[n]: [" + y.join(', ') + "]", 50, 30);
 
-function closeInspectorModal() {
-  document.getElementById("detailModal").style.display = "none";
-  document.removeEventListener("keydown", handleInspectorModalKeyboardTrap);
-  if (cachedLastFocusTargetElement) {
-    cachedLastFocusTargetElement.focus();
-  }
-}
+  const centerY = h / 2 + 20;
+  const startX = 60;
+  const gap = 35;
 
-function handleInspectorModalKeyboardTrap(e) {
-  if (e.key === "Escape") {
-    closeInspectorModal();
-  }
-}
+  y.forEach((val, idx) => {
+    let px = startX + idx * gap;
+    let py = centerY - val * 18;
 
-/* ---- ADMIN VALIDATION CONTROL SANDBOX MECHANICS MODULE ---- */
-function triggerAdminAccess() {
-  const tokenInput = prompt("Enter developer dynamic environment authentication hash signature password phrase (Demo access bypass pass: 'admin'):");
-  if (tokenInput === "admin") {
-    document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("adminPanel").scrollIntoView({ behavior: "smooth" });
-    triggerToastNotification("Authentication validation sequence complete. Extended operational configuration sandboxed views active.");
-  } else if (tokenInput !== null) {
-    alert("Authentication validation sequence failed. Invalid cryptographic developer profile signature trace token patterns.");
-  }
-}
+    ctx.beginPath();
+    ctx.moveTo(px, centerY);
+    ctx.lineTo(px, py);
+    ctx.strokeStyle = '#00ff95';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
-function commitAdminProjectData() {
-  const title = document.getElementById("admName").value.trim();
-  const category = document.getElementById("admCategory").value;
-  const displayPrice = document.getElementById("admPrice").value.trim();
-  const iconEmoji = document.getElementById("admEmoji").value.trim() || "🔧";
-  const briefDesc = document.getElementById("admDesc").value.trim();
-  
-  if (!title || !displayPrice || !briefDesc) {
-    alert("Validation Fault. Complete all required core parameter fields before inserting node matrices.");
-    return;
-  }
-  
-  const formattedRawPrice = parseInt(displayPrice.replace(/[^0-9]/g, "")) || 1999;
-  const targetIdStr = "custom_" + Date.now();
-  
-  const targetNode = {
-    id: targetIdStr,
-    name: title,
-    emoji: iconEmoji,
-    category: category,
-    price: displayPrice.startsWith("₹") ? displayPrice : "₹" + displayPrice,
-    rawPrice: formattedRawPrice,
-    desc: briefDesc,
-    specs: ["Custom input configuration node topology specifications reference data sets matrix parameters logged."]
-  };
-  
-  persistCustomNode(targetNode);
-  triggerToastNotification("✅ Architecture entry node committed successfully into repository.");
-  
-  // Clear administrative forms control fields
-  document.getElementById("admName").value = "";
-  document.getElementById("admPrice").value = "";
-  document.getElementById("admEmoji").value = "";
-  document.getElementById("admDesc").value = "";
-  document.getElementById("adminPanel").style.display = "none";
-}
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fill();
 
-/* ---- COMMUNICATION CHANNELS SECURE PACKAGES ROUTING PATHWAYS PIPELINE ---- */
-function initiateSecureWhatsAppRouting(name, price) {
-  const routingTemplate = `System Architecture Pipeline Request Data Packet Log:\n*Blueprint Identification Module:* ${name}\n*Asset Exchange Value Valuation Code:* ${price}\n*Client Telemetry Routing Location:* ${clientGeolocationRecord || "Not Broadcasted Over Public Wireless Grid Paths"}`;
-  const absoluteUrlEndpointStr = "https://wa.me/919322018190?text=" + encodeURIComponent(routingTemplate);
-  window.open(absoluteUrlEndpointStr, "_blank");
-}
-
-function executeMailtoPipeline(e) {
-  e.preventDefault();
-  const subjectStr = document.getElementById("msgSubject").value;
-  const bodyTextPayload = document.getElementById("msgBody").value;
-  
-  const constructionMailtoUrl = `mailto:pranav.hingane.developer@gmail.com?subject=${encodeURIComponent("[RPH Custom Request Architecture Task]: " + subjectStr)}&body=${encodeURIComponent(bodyTextPayload)}`;
-  window.location.href = constructionMailtoUrl;
-}
-
-function commitNewsletterRegistration() {
-  const elementVal = document.getElementById("newsletterEmail").value.trim();
-  if (!elementVal || !elementVal.includes("@")) {
-    alert("Validation Exception. Input valid messaging addressing structural protocol patterns to instantiate configuration pipes registration.");
-    return;
-  }
-  
-  let list = [];
-  const stored = localStorage.getItem("rph_newsletter_registry");
-  if (stored) { try { list = JSON.parse(stored); } catch(e) { list = []; } }
-  list.push({ email: elementVal, timestamp: Date.now() });
-  localStorage.setItem("rph_newsletter_registry", JSON.stringify(list));
-  
-  triggerToastNotification("Pipeline verification entry logged. Secure node registration monitoring profile initialized.");
-  document.getElementById("newsletterEmail").value = "";
-}
-
-/* ---- EVALUATION LOGIC INTERACTIVES MATRIX MECHANICS METHODS ---- */
-let currentSessionEvaluationAnswersMap = 0;
-
-function openQuiz() {
-  currentSessionEvaluationAnswersMap = 0;
-  document.getElementById("scoreResult").textContent = "";
-  document.querySelectorAll(".quiz-opt").forEach(btn => {
-    btn.disabled = false;
-    btn.className = "quiz-opt";
-  });
-  document.getElementById("quizModal").style.display = "flex";
-  document.getElementById("quizModal").querySelector(".modal-close").focus();
-}
-
-function closeQuizModal() {
-  document.getElementById("quizModal").style.display = "none";
-}
-
-function processQuizSelection(btnNode, isCorrectFlag) {
-  const containerGroupNode = btnNode.closest(".quiz-opts");
-  containerGroupNode.querySelectorAll("button").forEach(btn => btn.disabled = true);
-  
-  if (isCorrectFlag) {
-    currentSessionEvaluationAnswersMap++;
-    btnNode.classList.add("correct");
-  } else {
-    btnNode.classList.add("wrong");
-  }
-}
-
-function computeEvaluationScore() {
-  const labelsTextEvaluationsMapArray = ["😅 Infrastructure Re-calibration Recommended Profile Matrix", "😎 Acceptable Logic Parameters Analysis Validated", "🏆 Exceptional Computational Analysis Logic Capacity Vector Verified"];
-  const selectIndex = currentSessionEvaluationAnswersMap === 3 ? 2 : currentSessionEvaluationAnswersMap === 2 ? 1 : 0;
-  
-  document.getElementById("scoreResult").innerHTML = `Verification Profile Analysis Result Logs: ${currentSessionEvaluationAnswersMap}/3 &nbsp; ${labelsTextEvaluationsMapArray[selectIndex]}`;
-}
-
-/* ---- ADAPTIVE UI MENUS CONTEXT CONTROL VIEW OVERLAYS MODALS INTERFACES ---- */
-function toggleMenu() {
-  const targetElement = document.getElementById("navLinks");
-  const triggerBtn = document.querySelector(".menu-toggle");
-  const isOpen = targetElement.classList.toggle("open");
-  triggerBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-}
-
-function toggleChatAssistantOverlay() {
-  const pane = document.getElementById("chatWindow");
-  pane.style.display = pane.style.display === "block" ? "none" : "block";
-}
-
-function executeBotResponseMapping(queryToken) {
-  const containerNode = document.getElementById("botReply");
-  const mappingsDatabaseMatrix = {
-    pricing: "💰 Operational hardware blueprints asset base baseline transfer parameters valuation scale spans starting tiers from ₹1,850 up to deeper artificial machine learning architectures capped out tracking index parameters ranges down matching configurations at ₹5,999 bounds.",
-    delivery: "📦 Secure execution logic pipeline transfers documentation files codes schematic trace parameters configuration packages compiled vectors directly routing into client verification nodes channels onto target user WhatsApp profile registers safely 24/7 loops.",
-    domains: "🚀 Dedicated active operational specialization focuses tracking patterns involve: Real-time Embedded Microcontroller hardware networks, Edge Neural Network Inference structures, Smart Automation matrices, and Solar Photovoltaic Regulation configurations blocks architecture.",
-    architecture: "👑 Lead Principal Infrastructure Engineer and Repository System Administrator Executive Author Profile: Er. Pranav Hingane. Academic & Industrial hardware configuration structures controller core management layers deployment control."
-  };
-  containerNode.style.display = "block";
-  containerNode.textContent = mappingsDatabaseMatrix[queryToken] || "System automated parsing loop lookup response failure exception status profile logs missing updates.";
-}
-
-function getLocation() {
-  if (!navigator.geolocation) {
-    triggerToastNotification("Hardware Platform Geolocation subsystem query exception. Sensor access modules missing.");
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(position => {
-    clientGeolocationRecord = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`;
-    triggerToastNotification("📍 Spatial coordinate data parameters logged and locked securely to runtime operational environment cache parameters layers loops.");
-  }, () => {
-    triggerToastNotification("❌ Spatial data connection check failure exception trace log tracking permission denied from root system hardware layer layers parameters.");
+    ctx.fillStyle = '#f0f6fc';
+    ctx.fillText(val, px - 6, py - 10);
   });
 }
 
-const randomJokesLogsDatabase = [
-  "Why do structural firmware system engineers write everything in C? Because they refuse to lookup reference object pointer paths on messy runtime allocation loops! 😂",
-  "A capacitor and a high value variable resistor walk into an operational tank circuit amplifier block layout. The input bandwidth load constraints drop down instantly due to heavy internal performance friction feedback! ⚡",
-  "Why did the multi-meter sensor matrix fail validation parameters checks? Because it encountered too much resistance across external processing validation testing loops networks boundaries data lanes! 💔"
-];
-const inspirationalQuotesRepositoryLogs = [
-  "Dream big. Build bigger with proper hardware constraints tracking systems structures. 🚀",
-  "Circuit execution architecture design blueprints form the clean syntax logic of mathematical operational equations. ⚡",
-  "System stability functions scale effectively when structural code execution optimization loops maintain deterministic timing bounds configurations vectors. 💡"
-];
+/* ---- PRACTICAL 3: FOURIER Spectrum ---- */
+function runFourier() {
+  const f1 = parseFloat(document.getElementById('f1').value);
+  const f2 = parseFloat(document.getElementById('f2').value);
+  const noiseVal = parseFloat(document.getElementById('fourierNoise').value);
 
-function showJoke() { triggerToastNotification(randomJokesLogsDatabase[Math.floor(Math.random() * randomJokesLogsDatabase.length)]); }
-function showQuote() { triggerToastNotification(inspirationalQuotesRepositoryLogs[Math.floor(Math.random() * inspirationalQuotesRepositoryLogs.length)]); }
+  document.getElementById('f1Val').textContent = f1;
+  document.getElementById('f2Val').textContent = f2;
 
-function triggerToastNotification(messagePayloadText) {
-  const panel = document.getElementById("toast");
-  panel.textContent = messagePayloadText;
-  panel.classList.add("show");
-  setTimeout(() => panel.classList.remove("show"), 4000);
+  const { ctx, w, h } = setupCanvas('canvasFourier');
+  drawAxes(ctx, w, h);
+
+  ctx.fillStyle = '#8b949e';
+  ctx.font = '11px Space Mono';
+  ctx.fillText("Time Domain x(t) = sin(2πf1 t) + sin(2πf2 t)", 50, 20);
+
+  // Time Domain Plot
+  ctx.beginPath();
+  ctx.strokeStyle = '#00e5ff';
+  for (let px = 40; px < w; px++) {
+    let t = (px - 40) / 400;
+    let signal = Math.sin(2 * Math.PI * f1 * t) + Math.sin(2 * Math.PI * f2 * t);
+    if(noiseVal > 0) signal += (Math.random() - 0.5) * noiseVal;
+    let py = h / 4 - signal * 20;
+    if (px === 40) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Frequency Domain DFT Bars
+  ctx.fillText("Frequency Spectrum |X(f)|", 50, h / 2 + 20);
+  for (let freq = 1; freq <= 30; freq++) {
+    let mag = 0;
+    if (Math.abs(freq - f1) < 0.5) mag = 60;
+    if (Math.abs(freq - f2) < 0.5) mag = 60;
+    if (noiseVal > 0) mag += Math.random() * noiseVal * 10;
+
+    let bx = 50 + freq * 14;
+    let by = h - 20 - mag;
+
+    ctx.fillStyle = '#00ff95';
+    ctx.fillRect(bx, by, 8, mag);
+  }
 }
 
-function clearFilters() {
-  document.getElementById("searchInput").value = "";
-  document.getElementById("sortSelect").value = "default";
-  const allTabBtn = document.querySelectorAll(".filter-bar .filter-btn")[0];
-  setDomainCategory("all", allTabBtn);
+/* ---- PRACTICAL 4: SAMPLING ---- */
+function runSampling() {
+  const f_max = parseFloat(document.getElementById('sampleSigFreq').value);
+  const f_s = parseFloat(document.getElementById('sampleRate').value);
+
+  document.getElementById('sigFreqVal').textContent = f_max;
+  document.getElementById('sampRateVal').textContent = f_s;
+
+  const { ctx, w, h } = setupCanvas('canvasSample');
+  drawAxes(ctx, w, h);
+
+  // Continuous original signal
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  for (let px = 40; px < w; px++) {
+    let t = (px - 40) / 200;
+    let y = Math.sin(2 * Math.PI * f_max * t);
+    let py = h / 2 - y * 60;
+    if (px === 40) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Discrete Sampled Points
+  const Ts = 1 / f_s;
+  for (let t = 0; t < 2; t += Ts) {
+    let px = 40 + t * 200;
+    if (px > w) break;
+    let y = Math.sin(2 * Math.PI * f_max * t);
+    let py = h / 2 - y * 60;
+
+    ctx.beginPath();
+    ctx.moveTo(px, h / 2);
+    ctx.lineTo(px, py);
+    ctx.strokeStyle = '#f0883e';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fillStyle = f_s >= 2 * f_max ? '#00ff95' : '#f85149';
+    ctx.fill();
+  }
 }
 
-/* ---- SYSTEM RUNTIME BOOT INITIALIZATION STAGED HOOKS LIFECYCLE ROUTINES ---- */
+/* ---- PRACTICAL 5: FILTERING ---- */
+function runFilter() {
+  const N = parseInt(document.getElementById('filtWin').value);
+  const noiseAmt = parseFloat(document.getElementById('filtNoise').value);
+
+  document.getElementById('filtWinVal').textContent = N;
+  document.getElementById('filtNoiseVal').textContent = noiseAmt.toFixed(1);
+
+  const { ctx, w, h } = setupCanvas('canvasFilter');
+  drawAxes(ctx, w, h);
+
+  let rawSignal = [];
+  let filteredSignal = [];
+
+  for (let px = 40; px < w; px++) {
+    let t = (px - 40) / 100;
+    let clean = Math.sin(2 * Math.PI * 2 * t);
+    let noisy = clean + (Math.random() - 0.5) * noiseAmt;
+    rawSignal.push(noisy);
+  }
+
+  // Moving Average FIR Filter
+  for (let i = 0; i < rawSignal.length; i++) {
+    let sum = 0;
+    let count = 0;
+    for (let j = 0; j < N; j++) {
+      if (i - j >= 0) {
+        sum += rawSignal[i - j];
+        count++;
+      }
+    }
+    filteredSignal.push(sum / count);
+  }
+
+  // Plot Noisy
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(248,81,73,0.5)';
+  rawSignal.forEach((val, idx) => {
+    let px = 40 + idx;
+    let py = h / 2 - val * 40;
+    if (idx === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Plot Filtered
+  ctx.beginPath();
+  ctx.strokeStyle = '#00ff95';
+  ctx.lineWidth = 2;
+  filteredSignal.forEach((val, idx) => {
+    let px = 40 + idx;
+    let py = h / 2 - val * 40;
+    if (idx === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+}
+
+/* Init Lifecycle Hooks */
 document.addEventListener("DOMContentLoaded", () => {
-  loadPersistedState();
-  
-  // Bug fix: Corrected the administrative pane double .style mapping error from the dark template source code
-  document.getElementById("quizModal").addEventListener("click", function(e) { if(e.target === this) closeQuizModal(); });
-  document.getElementById("detailModal").addEventListener("click", function(e) { if(e.target === this) closeInspectorModal(); });
+  setTimeout(() => {
+    switchLab('gen');
+  }, 300);
 });
 </script>
 </body>
