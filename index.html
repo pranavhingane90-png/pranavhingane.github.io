@@ -1,329 +1,296 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MediQ — Skip the line, not the care</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#16302E;
-    --paper:#F6F8F7;
-    --teal:#2F6F63;
-    --teal-dark:#1F4E45;
-    --panel:#E7EEEC;
-    --amber:#E0A458;
-    --coral:#C4573B;
-    --line: rgba(22,48,46,0.12);
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter', sans-serif;
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  UserGroupIcon, 
+  ClockIcon, 
+  HospitalIcon, 
+  UserCircleIcon,
+  TicketIcon,
+  BellAlertIcon,
+  CheckBadgeIcon
+} from '@heroicons/react/24/outline';
 
-  /* NAV */
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:28px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .logo{
-    font-family:'Spectral', serif;
-    font-weight:700;
-    font-size:22px;
-    letter-spacing:0.2px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .logo .dot{
-    width:9px;height:9px;border-radius:50%;
-    background:var(--coral);
-    box-shadow:0 0 0 4px rgba(196,87,59,0.15);
-  }
-  nav a{
-    color:var(--ink); text-decoration:none; font-size:14px; font-weight:500;
-    opacity:0.7; margin-left:32px;
-  }
-  nav a:hover{opacity:1;}
+// =========================================================
+// MOCK DATA SIMULATION (REPLACE WITH REAL API/WEBSOCKETS)
+// =========================================================
+const MOCK_HOSPITAL_DATA = {
+  hospitalName: "Apollo Hospitals, Bangalore",
+  doctorName: "Dr. Alisha Singh (Cardiology)",
+  avgConsultationTime: 10, // minutes
+};
 
-  /* HERO */
-  .hero{
-    padding:88px 0 64px;
-    display:grid;
-    grid-template-columns:1.1fr 0.9fr;
-    gap:56px;
-    align-items:center;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--teal);
-    font-weight:600;
-    margin-bottom:18px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .eyebrow .pulse{
-    width:7px;height:7px;border-radius:50%;background:var(--coral);
-    animation:pulse 1.6s ease-in-out infinite;
-  }
-  @keyframes pulse{
-    0%,100%{ opacity:1; transform:scale(1);}
-    50%{ opacity:0.4; transform:scale(0.75);}
-  }
-  h1{
-    font-family:'Spectral', serif;
-    font-weight:600;
-    font-size:52px;
-    line-height:1.08;
-    letter-spacing:-0.5px;
-  }
-  h1 em{
-    font-style:normal;
-    color:var(--teal);
-    position:relative;
-  }
-  .sub{
-    margin-top:22px;
-    font-size:17px;
-    line-height:1.65;
-    color:rgba(22,48,46,0.72);
-    max-width:480px;
-  }
-  .hero-meta{
-    margin-top:32px;
-    display:flex; gap:28px;
-  }
-  .hero-meta div{font-family:'IBM Plex Mono', monospace; font-size:13px; color:rgba(22,48,46,0.6);}
-  .hero-meta strong{display:block; font-family:'Spectral', serif; font-size:26px; color:var(--ink); font-weight:600;}
+// Simulation state: Initial active token and total queue length
+const INITIAL_ACTIVE_TOKEN = 3;
+const INITIAL_QUEUE_LIST = Array.from({ length: 25 }, (_, i) => ({
+  id: `P-${101 + i}`,
+  tokenNo: i + 1,
+  status: i + 1 < INITIAL_ACTIVE_TOKEN ? 'completed' : (i + 1 === INITIAL_ACTIVE_TOKEN ? 'in-room' : 'waiting')
+}));
 
-  /* TOKEN BOARD - signature element */
-  .board{
-    background:var(--teal-dark);
-    border-radius:18px;
-    padding:32px;
-    color:var(--paper);
-    position:relative;
-    overflow:hidden;
-    box-shadow:0 24px 48px -20px rgba(22,48,46,0.35);
-  }
-  .board::before{
-    content:"";
-    position:absolute; inset:0;
-    background:linear-gradient(135deg, rgba(255,255,255,0.05), transparent 60%);
-  }
-  .board-head{
-    display:flex; justify-content:space-between; align-items:center;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    opacity:0.65;
-    margin-bottom:22px;
-  }
-  .board-live{display:flex; align-items:center; gap:6px;}
-  .board-live .lp{width:6px;height:6px;border-radius:50%;background:#7FE0B0; animation:pulse 1.6s ease-in-out infinite;}
-  .board-row{
-    display:flex; justify-content:space-between; align-items:baseline;
-    border-top:1px solid rgba(255,255,255,0.12);
-    padding-top:20px;
-  }
-  .now-serving{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.1em; opacity:0.6; text-transform:uppercase; margin-bottom:8px;}
-  .token-num{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:76px;
-    font-weight:600;
-    line-height:1;
-    color:#7FE0B0;
-    letter-spacing:-2px;
-  }
-  .your-turn{text-align:right;}
-  .your-turn .label{font-family:'IBM Plex Mono', monospace; font-size:12px; opacity:0.6; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;}
-  .your-turn .val{font-family:'IBM Plex Mono', monospace; font-size:32px; font-weight:600; color:var(--amber);}
-  .board-foot{
-    margin-top:22px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.12);
-    font-size:13px; opacity:0.65; font-family:'IBM Plex Mono', monospace;
+// The patient we are simulating: Token #15
+const MY_PATIENT_TOKEN = 15;
+
+const PatientQueueTracker = () => {
+  // ============================
+  // System/Queue State
+  // ============================
+  const [currentActiveToken, setCurrentActiveToken] = useState(INITIAL_ACTIVE_TOKEN);
+  const [patientQueue, setPatientQueue] = useState(INITIAL_QUEUE_LIST);
+  
+  // ============================
+  // Local Patient State
+  // ============================
+  const [notificationEnabled, setNotificationEnabled] = useState(false);
+  const [lastNotificationToken, setLastNotificationToken] = useState(0);
+
+  // ============================
+  // Derived Data (Calculations)
+  // ============================
+  // 1. Calculate patient position
+  const { myPatientData, position, patientsAhead } = useMemo(() => {
+    const pData = patientQueue.find(p => p.tokenNo === MY_PATIENT_TOKEN);
+    const pos = patientQueue.filter(p => p.tokenNo < MY_PATIENT_TOKEN && p.status !== 'completed').length + 1;
+    const ahead = pos - 1;
+    return { myPatientData: pData, position: pos, patientsAhead: ahead };
+  }, [patientQueue]);
+
+  // 2. Calculate estimated waiting time (EWT)
+  const estimatedWaitingTime = useMemo(() => {
+    if (position <= 1 || myPatientData.status === 'in-room') return 0;
+    // We don't count the current person fully, and the patient themselves isn't waiting 'ahead'
+    return patientsAhead * MOCK_HOSPITAL_DATA.avgConsultationTime;
+  }, [patientsAhead, myPatientData, position]);
+
+  // 3. Status determination
+  const myStatus = myPatientData.status;
+
+  // ============================
+  // Simulate Real-time Updates
+  // ============================
+  // In a real app, this effect would connect to a WebSocket/SSE
+  useEffect(() => {
+    // Stop simulation when patient's turn is done
+    if (currentActiveToken > MY_PATIENT_TOKEN + 1) return;
+
+    // Simulate doctor calling next patient every 5 seconds
+    const interval = setInterval(() => {
+      setCurrentActiveToken((prev) => {
+        const nextToken = prev + 1;
+        
+        // Check if there are patients remaining
+        if (nextToken <= patientQueue.length) {
+          // Update the queue list statuses
+          setPatientQueue(prevQueue => 
+            prevQueue.map(p => {
+              if (p.tokenNo < nextToken) return { ...p, status: 'completed' };
+              if (p.tokenNo === nextToken) return { ...p, status: 'in-room' };
+              return { ...p, status: 'waiting' };
+            })
+          );
+          return nextToken;
+        } else {
+          clearInterval(interval);
+          return prev;
+        }
+      });
+    }, 5000); // 5 second tick for demo speed
+
+    return () => clearInterval(interval);
+  }, [patientQueue.length, currentActiveToken]);
+
+  // ============================
+  // Notification Logic
+  // ============================
+  useEffect(() => {
+    // Request permission on enable
+    if (notificationEnabled && ("Notification" in window) && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+    // Trigger alert when 3 patients ahead (Current active is 12, my token is 15)
+    const TRIGGER_THRESHOLD = 3;
+    const shouldNotify = (MY_PATIENT_TOKEN - currentActiveToken) === TRIGGER_THRESHOLD;
+
+    if (notificationEnabled && shouldNotify && currentActiveToken !== lastNotificationToken && Notification.permission === "granted") {
+      new Notification("🏥 Hospital Queue Alert!", {
+        body: `It's almost your turn! You are next after ${TRIGGER_THRESHOLD} patients. Please arrive at ${MOCK_HOSPITAL_DATA.doctorName}'s OPD room now.`,
+        icon: '/hospital-icon.png' // Replace with your icon path
+      });
+      setLastNotificationToken(currentActiveToken); // Prevent duplicate notifications for same token
+    }
+  }, [currentActiveToken, notificationEnabled, lastNotificationToken]);
+
+  const toggleNotifications = () => {
+    setNotificationEnabled(!notificationEnabled);
+  };
+
+  // ============================
+  // Helper: Status Badge
+  // ============================
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'in-room': return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Currently Seeing Doctor</span>;
+      case 'waiting': return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">Waiting</span>;
+      default: return null;
+    }
   }
 
-  /* ENTRY PANELS */
-  .entry-title{
-    text-align:center;
-    font-family:'Spectral', serif;
-    font-size:15px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:rgba(22,48,46,0.5);
-    margin:56px 0 24px;
-  }
-  .entry-title span{border-bottom:1px solid var(--line); padding-bottom:10px;}
-  .panels{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-    padding-bottom:96px;
-  }
-  .panel{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:36px;
-    text-decoration:none;
-    color:var(--ink);
-    transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    min-height:230px;
-  }
-  .panel:hover{
-    transform:translateY(-4px);
-    box-shadow:0 20px 40px -24px rgba(22,48,46,0.25);
-    border-color:var(--teal);
-  }
-  .panel .tag{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--teal);
-    font-weight:600;
-    margin-bottom:16px;
-  }
-  .panel.hospital .tag{color:var(--coral);}
-  .panel h2{
-    font-family:'Spectral', serif;
-    font-size:26px;
-    font-weight:600;
-    margin-bottom:10px;
-  }
-  .panel p{
-    font-size:14.5px;
-    line-height:1.6;
-    color:rgba(22,48,46,0.65);
-    max-width:360px;
-  }
-  .panel .go{
-    margin-top:auto;
-    padding-top:20px;
-    font-weight:600;
-    font-size:14.5px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .panel.hospital .go{color:var(--coral);}
-  .panel.patient .go{color:var(--teal);}
-  .panel .go svg{transition:transform 0.2s ease;}
-  .panel:hover .go svg{transform:translateX(4px);}
-
-  footer{
-    border-top:1px solid var(--line);
-    padding:24px 0 40px;
-    font-size:13px;
-    color:rgba(22,48,46,0.5);
-    display:flex; justify-content:space-between;
-  }
-
-  @media (max-width: 860px){
-    .hero{grid-template-columns:1fr; padding-top:48px;}
-    h1{font-size:38px;}
-    .panels{grid-template-columns:1fr;}
-    .hero-meta{flex-wrap:wrap; gap:20px;}
-  }
-
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--teal);
-    outline-offset:3px;
-  }
-  @media (prefers-reduced-motion: reduce){
-    .pulse, .lp{animation:none;}
-  }
-</style>
-</head>
-<body>
-
-<div class="wrap">
-  <header>
-    <div class="logo"><span class="dot"></span>MediQ</div>
-    <nav>
-      <a href="#patient">For patients</a>
-      <a href="#hospital">For hospitals</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div>
-      <div class="eyebrow"><span class="pulse"></span>Live queues, right now</div>
-      <h1>Skip the line.<br>Not the <em>care</em>.</h1>
-      <p class="sub">Book your doctor's appointment online, watch the token count live, and walk in only when your number is close. No more standing in reception queues to find out you're number 40.</p>
-      <div class="hero-meta">
-        <div><strong>2 min</strong>to book</div>
-        <div><strong>Live</strong>token tracking</div>
-        <div><strong>0</strong>reception queue</div>
-      </div>
-    </div>
-
-    <div class="board" aria-hidden="true">
-      <div class="board-head">
-        <span>OPD Counter · Cardiology</span>
-        <span class="board-live"><span class="lp"></span>Live</span>
-      </div>
-      <div class="board-row">
-        <div>
-          <div class="now-serving">Now serving</div>
-          <div class="token-num" id="tokenNum">12</div>
+  // ============================
+  // JSX Render
+  // ============================
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-900 p-4 md:p-8 font-sans">
+      <header className="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6 border-gray-200">
+        <div className='flex items-center gap-3'>
+          <div className='p-3 rounded-2xl bg-sky-600 text-white'>
+            <HospitalIcon className="w-9 h-9" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-extrabold text-gray-950 tracking-tight">{MOCK_HOSPITAL_DATA.hospitalName}</h1>
+            <p className="text-lg text-gray-600">{MOCK_HOSPITAL_DATA.doctorName}</p>
+          </div>
         </div>
-        <div class="your-turn">
-          <div class="label">Your token</div>
-          <div class="val">15</div>
+        
+        <button 
+          onClick={toggleNotifications}
+          className={`flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition ${
+            notificationEnabled 
+              ? 'bg-amber-100 text-amber-800 hover:bg-amber-200' 
+              : 'bg-gray-900 text-white hover:bg-gray-700'
+          }`}
+        >
+          <BellAlertIcon className={`w-5 h-5 ${notificationEnabled ? 'animate-pulse' : ''}`} />
+          {notificationEnabled ? 'Notifications On' : 'Turn On Notifications'}
+        </button>
+      </header>
+
+      {myStatus === 'completed' ? (
+        <div className="max-w-2xl mx-auto flex flex-col items-center justify-center gap-6 p-12 bg-white rounded-3xl shadow-lg border border-gray-100 text-center">
+            <CheckBadgeIcon className='w-24 h-24 text-green-500 bg-green-50 rounded-full p-4' />
+            <h2 className='text-3xl font-bold text-gray-950'>Consultation Completed</h2>
+            <p className='text-gray-600 max-w-md'>You have finished your appointment with {MOCK_HOSPITAL_DATA.doctorName}. Thank you for using our queue system!</p>
+            <p className='text-sm text-gray-500'>Your Token: <strong className='font-bold text-gray-700'>#{MY_PATIENT_TOKEN}</strong></p>
         </div>
-      </div>
-      <div class="board-foot">~3 patients ahead · est. wait 18 min</div>
+      ) : (
+        <main className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* Main Status Section */}
+          <div className="xl:col-span-2 flex flex-col gap-8">
+            {/* Status Overview Card */}
+            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div className="flex items-center gap-3">
+                  <TicketIcon className="w-7 h-7 text-sky-600" />
+                  <h2 className="text-2xl font-bold">Your Queue Ticket</h2>
+                </div>
+                {getStatusBadge(myStatus)}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-sky-50/50 p-6 rounded-2xl border border-sky-100">
+                <div className="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
+                  <div className="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
+                    <UserCircleIcon className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-gray-500">Your Token Number</div>
+                    <div className="text-5xl font-black text-sky-700 tracking-tight">#{MY_PATIENT_TOKEN}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
+                  <div className="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
+                    <UserGroupIcon className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-gray-500">Current Token In-OPD</div>
+                    <div className="text-5xl font-black text-gray-900 tracking-tight">#{currentActiveToken}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Position Card */}
+              <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
+                <div className="p-4 bg-amber-50 text-amber-600 rounded-full border border-amber-100">
+                  <UserGroupIcon className="w-10 h-10" />
+                </div>
+                <div>
+                  <div className="text-3xl font-extrabold text-gray-950">
+                    {patientsAhead}
+                  </div>
+                  <div className="text-gray-600 mt-0.5">Patients Ahead of You</div>
+                </div>
+              </div>
+
+              {/* Time Card */}
+              <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
+                <div className="p-4 bg-green-50 text-green-600 rounded-full border border-green-100">
+                  <ClockIcon className="w-10 h-10" />
+                </div>
+                <div>
+                  <div className="text-3xl font-extrabold text-gray-950">
+                    ~ {estimatedWaitingTime} <span className="text-lg font-medium text-gray-600">mins</span>
+                  </div>
+                  <div className="text-gray-600 mt-0.5 font-medium">Estimated Wait Time (EWT)</div>
+                </div>
+              </div>
+            </div>
+            
+            {myStatus === 'waiting' && patientsAhead <= 3 && (
+                <div className="bg-amber-100/60 p-6 rounded-2xl border-2 border-dashed border-amber-300 text-amber-950 flex gap-4 items-center">
+                    <BellAlertIcon className='w-12 h-12 text-amber-500' />
+                    <div>
+                        <h4 className='font-bold text-lg'>Arrival Advisory</h4>
+                        <p className='text-sm'>Only <strong className='font-bold'>{patientsAhead}</strong> patients ahead. Please arrive near <strong className='font-bold'>{MOCK_HOSPITAL_DATA.doctorName}</strong>'s OPD room shortly.</p>
+                    </div>
+                </div>
+            )}
+          </div>
+
+          {/* Real-time Queue List */}
+          <aside className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 xl:max-h-[calc(100vh-100px)] flex flex-col">
+            <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
+              <UserGroupIcon className="w-6 h-6 text-sky-600" />
+              Live Queue List
+            </h3>
+            
+            <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+              {patientQueue.map((patient) => {
+                const isMe = patient.tokenNo === MY_PATIENT_TOKEN;
+                return (
+                  <div 
+                    key={patient.id} 
+                    className={`flex items-center justify-between p-4 rounded-xl transition ${
+                      isMe 
+                        ? 'bg-sky-600 text-white shadow-md' 
+                        : patient.status === 'completed'
+                          ? 'bg-gray-50 text-gray-400'
+                          : 'bg-white border border-gray-100'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div className={`font-bold text-lg p-2 rounded-lg ${isMe ? 'bg-white/20' : patient.status === 'completed' ? 'bg-gray-100' : 'bg-gray-100'}`}>
+                        T-{patient.tokenNo}
+                      </div>
+                      <div className={`font-mono text-sm ${isMe ? 'text-white' : patient.status === 'completed' ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {patient.id}
+                      </div>
+                    </div>
+                    {patient.status === 'in-room' && (
+                        <span className={`px-2 py-0.5 text-xs font-semibold rounded ${isMe ? 'bg-white/20 text-white' : 'bg-green-100 text-green-700'}`}>IN-OPD</span>
+                    )}
+                    {patient.status === 'completed' && (
+                        <CheckBadgeIcon className='w-5 h-5 text-gray-300' />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </aside>
+        </main>
+      )}
     </div>
-  </section>
+  );
+};
 
-  <div class="entry-title"><span>Continue as</span></div>
-
-  <div class="panels">
-    <a href="#" class="panel patient" id="patient">
-      <div class="tag">Patient</div>
-      <h2>Book an appointment</h2>
-      <p>Search a hospital, pick your doctor, and reserve your slot. Track your position in the queue live so you know exactly when to leave home.</p>
-      <div class="go">Login / Sign up
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </a>
-
-    <a href="#" class="panel hospital" id="hospital">
-      <div class="tag">Hospital</div>
-      <h2>Register your hospital</h2>
-      <p>List your hospital and doctors, manage OPD schedules, and let patients book ahead — fewer walk-ins crowding your reception.</p>
-      <div class="go">Register your hospital
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </a>
-  </div>
-
-  <footer>
-    <span>© 2026 MediQ</span>
-    <span>Built for calmer waiting rooms</span>
-  </footer>
-</div>
-
-<script>
-  // subtle live-feel: token count ticks up occasionally, purely cosmetic on the landing page
-  const tokenEl = document.getElementById('tokenNum');
-  let n = 12;
-  setInterval(() => {
-    n = n < 15 ? n + 1 : 12;
-    tokenEl.textContent = n;
-  }, 4000);
-</script>
-
-</body>
-</html>
+export default PatientQueueTracker;
