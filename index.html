@@ -1,296 +1,306 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  UserGroupIcon, 
-  ClockIcon, 
-  HospitalIcon, 
-  UserCircleIcon,
-  TicketIcon,
-  BellAlertIcon,
-  CheckBadgeIcon
-} from '@heroicons/react/24/outline';
-
-// =========================================================
-// MOCK DATA SIMULATION (REPLACE WITH REAL API/WEBSOCKETS)
-// =========================================================
-const MOCK_HOSPITAL_DATA = {
-  hospitalName: "Apollo Hospitals, Bangalore",
-  doctorName: "Dr. Alisha Singh (Cardiology)",
-  avgConsultationTime: 10, // minutes
-};
-
-// Simulation state: Initial active token and total queue length
-const INITIAL_ACTIVE_TOKEN = 3;
-const INITIAL_QUEUE_LIST = Array.from({ length: 25 }, (_, i) => ({
-  id: `P-${101 + i}`,
-  tokenNo: i + 1,
-  status: i + 1 < INITIAL_ACTIVE_TOKEN ? 'completed' : (i + 1 === INITIAL_ACTIVE_TOKEN ? 'in-room' : 'waiting')
-}));
-
-// The patient we are simulating: Token #15
-const MY_PATIENT_TOKEN = 15;
-
-const PatientQueueTracker = () => {
-  // ============================
-  // System/Queue State
-  // ============================
-  const [currentActiveToken, setCurrentActiveToken] = useState(INITIAL_ACTIVE_TOKEN);
-  const [patientQueue, setPatientQueue] = useState(INITIAL_QUEUE_LIST);
-  
-  // ============================
-  // Local Patient State
-  // ============================
-  const [notificationEnabled, setNotificationEnabled] = useState(false);
-  const [lastNotificationToken, setLastNotificationToken] = useState(0);
-
-  // ============================
-  // Derived Data (Calculations)
-  // ============================
-  // 1. Calculate patient position
-  const { myPatientData, position, patientsAhead } = useMemo(() => {
-    const pData = patientQueue.find(p => p.tokenNo === MY_PATIENT_TOKEN);
-    const pos = patientQueue.filter(p => p.tokenNo < MY_PATIENT_TOKEN && p.status !== 'completed').length + 1;
-    const ahead = pos - 1;
-    return { myPatientData: pData, position: pos, patientsAhead: ahead };
-  }, [patientQueue]);
-
-  // 2. Calculate estimated waiting time (EWT)
-  const estimatedWaitingTime = useMemo(() => {
-    if (position <= 1 || myPatientData.status === 'in-room') return 0;
-    // We don't count the current person fully, and the patient themselves isn't waiting 'ahead'
-    return patientsAhead * MOCK_HOSPITAL_DATA.avgConsultationTime;
-  }, [patientsAhead, myPatientData, position]);
-
-  // 3. Status determination
-  const myStatus = myPatientData.status;
-
-  // ============================
-  // Simulate Real-time Updates
-  // ============================
-  // In a real app, this effect would connect to a WebSocket/SSE
-  useEffect(() => {
-    // Stop simulation when patient's turn is done
-    if (currentActiveToken > MY_PATIENT_TOKEN + 1) return;
-
-    // Simulate doctor calling next patient every 5 seconds
-    const interval = setInterval(() => {
-      setCurrentActiveToken((prev) => {
-        const nextToken = prev + 1;
-        
-        // Check if there are patients remaining
-        if (nextToken <= patientQueue.length) {
-          // Update the queue list statuses
-          setPatientQueue(prevQueue => 
-            prevQueue.map(p => {
-              if (p.tokenNo < nextToken) return { ...p, status: 'completed' };
-              if (p.tokenNo === nextToken) return { ...p, status: 'in-room' };
-              return { ...p, status: 'waiting' };
-            })
-          );
-          return nextToken;
-        } else {
-          clearInterval(interval);
-          return prev;
-        }
-      });
-    }, 5000); // 5 second tick for demo speed
-
-    return () => clearInterval(interval);
-  }, [patientQueue.length, currentActiveToken]);
-
-  // ============================
-  // Notification Logic
-  // ============================
-  useEffect(() => {
-    // Request permission on enable
-    if (notificationEnabled && ("Notification" in window) && Notification.permission !== "granted") {
-      Notification.requestPermission();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Live Queue Tracker</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Custom scrollbar for queue list */
+    .queue-scrollbar::-webkit-scrollbar {
+      width: 6px;
     }
-
-    // Trigger alert when 3 patients ahead (Current active is 12, my token is 15)
-    const TRIGGER_THRESHOLD = 3;
-    const shouldNotify = (MY_PATIENT_TOKEN - currentActiveToken) === TRIGGER_THRESHOLD;
-
-    if (notificationEnabled && shouldNotify && currentActiveToken !== lastNotificationToken && Notification.permission === "granted") {
-      new Notification("🏥 Hospital Queue Alert!", {
-        body: `It's almost your turn! You are next after ${TRIGGER_THRESHOLD} patients. Please arrive at ${MOCK_HOSPITAL_DATA.doctorName}'s OPD room now.`,
-        icon: '/hospital-icon.png' // Replace with your icon path
-      });
-      setLastNotificationToken(currentActiveToken); // Prevent duplicate notifications for same token
+    .queue-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
     }
-  }, [currentActiveToken, notificationEnabled, lastNotificationToken]);
-
-  const toggleNotifications = () => {
-    setNotificationEnabled(!notificationEnabled);
-  };
-
-  // ============================
-  // Helper: Status Badge
-  // ============================
-  const getStatusBadge = (status) => {
-    switch(status) {
-      case 'in-room': return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Currently Seeing Doctor</span>;
-      case 'waiting': return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">Waiting</span>;
-      default: return null;
+    .queue-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 9999px;
     }
-  }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen p-4 md:p-8">
 
-  // ============================
-  // JSX Render
-  // ============================
-  return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 p-4 md:p-8 font-sans">
-      <header className="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6 border-gray-200">
-        <div className='flex items-center gap-3'>
-          <div className='p-3 rounded-2xl bg-sky-600 text-white'>
-            <HospitalIcon className="w-9 h-9" />
+  <!-- Header -->
+  <header class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6 border-gray-200">
+    <div class="flex items-center gap-3">
+      <div class="p-3 rounded-2xl bg-sky-600 text-white">
+        <i class="fa-solid fa-hospital text-2xl"></i>
+      </div>
+      <div>
+        <h1 id="hospitalName" class="text-2xl sm:text-3xl font-extrabold text-gray-950 tracking-tight">Apollo Hospitals, Bangalore</h1>
+        <p id="doctorName" class="text-base sm:text-lg text-gray-600">Dr. Alisha Singh (Cardiology)</p>
+      </div>
+    </div>
+    
+    <button id="notifyBtn" onclick="toggleNotifications()" class="flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition bg-gray-900 text-white hover:bg-gray-700">
+      <i id="notifyIcon" class="fa-regular fa-bell"></i>
+      <span id="notifyText">Turn On Notifications</span>
+    </button>
+  </header>
+
+  <!-- Main Active Tracker State -->
+  <main id="trackerContent" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Primary Queue Stats -->
+    <div class="xl:col-span-2 flex flex-col gap-8">
+      
+      <!-- Your Ticket Card -->
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-gray-100">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-ticket text-sky-600 text-2xl"></i>
+            <h2 class="text-2xl font-bold">Your Queue Ticket</h2>
+          </div>
+          <div id="statusBadgeContainer">
+            <!-- Dynamic Status Badge -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-sky-50/50 p-6 rounded-2xl border border-sky-100">
+          <div class="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
+            <div class="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
+              <i class="fa-solid fa-user-gear text-2xl"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-gray-500">Your Token Number</div>
+              <div id="myTokenDisplay" class="text-4xl sm:text-5xl font-black text-sky-700 tracking-tight">#15</div>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
+            <div class="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
+              <i class="fa-solid fa-users text-2xl"></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-gray-500">Current Token In-OPD</div>
+              <div id="activeTokenDisplay" class="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight">#3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Metrics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Patients Ahead -->
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
+          <div class="p-4 bg-amber-50 text-amber-600 rounded-full border border-amber-100">
+            <i class="fa-solid fa-user-clock text-3xl"></i>
           </div>
           <div>
-            <h1 className="text-3xl font-extrabold text-gray-950 tracking-tight">{MOCK_HOSPITAL_DATA.hospitalName}</h1>
-            <p className="text-lg text-gray-600">{MOCK_HOSPITAL_DATA.doctorName}</p>
+            <div id="patientsAheadDisplay" class="text-3xl font-extrabold text-gray-950">11</div>
+            <div class="text-gray-600 mt-0.5">Patients Ahead of You</div>
           </div>
         </div>
-        
-        <button 
-          onClick={toggleNotifications}
-          className={`flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition ${
-            notificationEnabled 
-              ? 'bg-amber-100 text-amber-800 hover:bg-amber-200' 
-              : 'bg-gray-900 text-white hover:bg-gray-700'
-          }`}
-        >
-          <BellAlertIcon className={`w-5 h-5 ${notificationEnabled ? 'animate-pulse' : ''}`} />
-          {notificationEnabled ? 'Notifications On' : 'Turn On Notifications'}
-        </button>
-      </header>
 
-      {myStatus === 'completed' ? (
-        <div className="max-w-2xl mx-auto flex flex-col items-center justify-center gap-6 p-12 bg-white rounded-3xl shadow-lg border border-gray-100 text-center">
-            <CheckBadgeIcon className='w-24 h-24 text-green-500 bg-green-50 rounded-full p-4' />
-            <h2 className='text-3xl font-bold text-gray-950'>Consultation Completed</h2>
-            <p className='text-gray-600 max-w-md'>You have finished your appointment with {MOCK_HOSPITAL_DATA.doctorName}. Thank you for using our queue system!</p>
-            <p className='text-sm text-gray-500'>Your Token: <strong className='font-bold text-gray-700'>#{MY_PATIENT_TOKEN}</strong></p>
-        </div>
-      ) : (
-        <main className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Main Status Section */}
-          <div className="xl:col-span-2 flex flex-col gap-8">
-            {/* Status Overview Card */}
-            <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <div className="flex items-center gap-3">
-                  <TicketIcon className="w-7 h-7 text-sky-600" />
-                  <h2 className="text-2xl font-bold">Your Queue Ticket</h2>
-                </div>
-                {getStatusBadge(myStatus)}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-sky-50/50 p-6 rounded-2xl border border-sky-100">
-                <div className="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
-                  <div className="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
-                    <UserCircleIcon className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">Your Token Number</div>
-                    <div className="text-5xl font-black text-sky-700 tracking-tight">#{MY_PATIENT_TOKEN}</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
-                  <div className="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
-                    <UserGroupIcon className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">Current Token In-OPD</div>
-                    <div className="text-5xl font-black text-gray-900 tracking-tight">#{currentActiveToken}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Live Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Position Card */}
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
-                <div className="p-4 bg-amber-50 text-amber-600 rounded-full border border-amber-100">
-                  <UserGroupIcon className="w-10 h-10" />
-                </div>
-                <div>
-                  <div className="text-3xl font-extrabold text-gray-950">
-                    {patientsAhead}
-                  </div>
-                  <div className="text-gray-600 mt-0.5">Patients Ahead of You</div>
-                </div>
-              </div>
-
-              {/* Time Card */}
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
-                <div className="p-4 bg-green-50 text-green-600 rounded-full border border-green-100">
-                  <ClockIcon className="w-10 h-10" />
-                </div>
-                <div>
-                  <div className="text-3xl font-extrabold text-gray-950">
-                    ~ {estimatedWaitingTime} <span className="text-lg font-medium text-gray-600">mins</span>
-                  </div>
-                  <div className="text-gray-600 mt-0.5 font-medium">Estimated Wait Time (EWT)</div>
-                </div>
-              </div>
-            </div>
-            
-            {myStatus === 'waiting' && patientsAhead <= 3 && (
-                <div className="bg-amber-100/60 p-6 rounded-2xl border-2 border-dashed border-amber-300 text-amber-950 flex gap-4 items-center">
-                    <BellAlertIcon className='w-12 h-12 text-amber-500' />
-                    <div>
-                        <h4 className='font-bold text-lg'>Arrival Advisory</h4>
-                        <p className='text-sm'>Only <strong className='font-bold'>{patientsAhead}</strong> patients ahead. Please arrive near <strong className='font-bold'>{MOCK_HOSPITAL_DATA.doctorName}</strong>'s OPD room shortly.</p>
-                    </div>
-                </div>
-            )}
+        <!-- Estimated Wait Time -->
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
+          <div class="p-4 bg-green-50 text-green-600 rounded-full border border-green-100">
+            <i class="fa-regular fa-clock text-3xl"></i>
           </div>
+          <div>
+            <div id="ewtDisplay" class="text-3xl font-extrabold text-gray-950">~ 110 <span class="text-lg font-medium text-gray-600">mins</span></div>
+            <div class="text-gray-600 mt-0.5 font-medium">Estimated Wait Time (EWT)</div>
+          </div>
+        </div>
+      </div>
 
-          {/* Real-time Queue List */}
-          <aside className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 xl:max-h-[calc(100vh-100px)] flex flex-col">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
-              <UserGroupIcon className="w-6 h-6 text-sky-600" />
-              Live Queue List
-            </h3>
-            
-            <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
-              {patientQueue.map((patient) => {
-                const isMe = patient.tokenNo === MY_PATIENT_TOKEN;
-                return (
-                  <div 
-                    key={patient.id} 
-                    className={`flex items-center justify-between p-4 rounded-xl transition ${
-                      isMe 
-                        ? 'bg-sky-600 text-white shadow-md' 
-                        : patient.status === 'completed'
-                          ? 'bg-gray-50 text-gray-400'
-                          : 'bg-white border border-gray-100'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <div className={`font-bold text-lg p-2 rounded-lg ${isMe ? 'bg-white/20' : patient.status === 'completed' ? 'bg-gray-100' : 'bg-gray-100'}`}>
-                        T-{patient.tokenNo}
-                      </div>
-                      <div className={`font-mono text-sm ${isMe ? 'text-white' : patient.status === 'completed' ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {patient.id}
-                      </div>
-                    </div>
-                    {patient.status === 'in-room' && (
-                        <span className={`px-2 py-0.5 text-xs font-semibold rounded ${isMe ? 'bg-white/20 text-white' : 'bg-green-100 text-green-700'}`}>IN-OPD</span>
-                    )}
-                    {patient.status === 'completed' && (
-                        <CheckBadgeIcon className='w-5 h-5 text-gray-300' />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </aside>
-        </main>
-      )}
+      <!-- Arrival Advisory Banner -->
+      <div id="arrivalAdvisory" class="hidden bg-amber-100/60 p-6 rounded-2xl border-2 border-dashed border-amber-300 text-amber-950 flex gap-4 items-center">
+        <i class="fa-solid fa-bell text-3xl text-amber-500 animate-bounce"></i>
+        <div>
+          <h4 class="font-bold text-lg">Arrival Advisory</h4>
+          <p class="text-sm">Only <strong id="advisoryAheadCount" class="font-bold">3</strong> patients ahead. Please arrive near the doctor's OPD room shortly.</p>
+        </div>
+      </div>
+
     </div>
-  );
-};
 
-export default PatientQueueTracker;
+    <!-- Right Column: Live Queue List -->
+    <aside class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex flex-col h-[550px]">
+      <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+        <i class="fa-solid fa-list-ol text-sky-600"></i>
+        Live Queue List
+      </h3>
+      
+      <div id="queueListContainer" class="flex-1 overflow-y-auto pr-2 queue-scrollbar space-y-3">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Completed State Container (Hidden by Default) -->
+  <div id="completedContent" class="hidden max-w-2xl mx-auto flex flex-col items-center justify-center gap-6 p-12 bg-white rounded-3xl shadow-lg border border-gray-100 text-center my-12">
+    <div class="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center">
+      <i class="fa-solid fa-circle-check text-6xl"></i>
+    </div>
+    <h2 class="text-3xl font-bold text-gray-950">Consultation Completed</h2>
+    <p class="text-gray-600 max-w-md">You have finished your appointment. Thank you for using our digital queue system!</p>
+    <p class="text-sm text-gray-500">Your Token: <strong id="completedTokenDisplay" class="font-bold text-gray-700">#15</strong></p>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // =========================================================
+    // CONFIGURATION & STATE
+    // =========================================================
+    const AVG_CONSULTATION_TIME = 10; // Minutes per patient
+    const MY_TOKEN = 15; // Simulate current user token #15
+    let currentActiveToken = 3; // Starting active token
+    let notificationEnabled = false;
+    let hasNotified = false;
+
+    // Generate total queue tokens 1 through 25
+    let patientQueue = Array.from({ length: 25 }, (_, i) => ({
+      id: `P-${101 + i}`,
+      tokenNo: i + 1,
+      status: (i + 1) < currentActiveToken ? 'completed' : ((i + 1) === currentActiveToken ? 'in-room' : 'waiting')
+    }));
+
+    // =========================================================
+    // RENDER FUNCTIONS
+    // =========================================================
+    function updateDashboard() {
+      const myPatient = patientQueue.find(p => p.tokenNo === MY_TOKEN);
+      
+      // 1. Check if patient consultation is finished
+      if (myPatient.status === 'completed') {
+        document.getElementById('trackerContent').classList.add('hidden');
+        document.getElementById('completedContent').classList.remove('hidden');
+        document.getElementById('completedTokenDisplay').innerText = `#${MY_TOKEN}`;
+        return;
+      }
+
+      // 2. Calculate Stats
+      const patientsAhead = patientQueue.filter(p => p.tokenNo >= currentActiveToken && p.tokenNo < MY_TOKEN).length;
+      const ewt = myPatient.status === 'in-room' ? 0 : patientsAhead * AVG_CONSULTATION_TIME;
+
+      // 3. Update DOM Text Displays
+      document.getElementById('myTokenDisplay').innerText = `#${MY_TOKEN}`;
+      document.getElementById('activeTokenDisplay').innerText = `#${currentActiveToken}`;
+      document.getElementById('patientsAheadDisplay').innerText = patientsAhead;
+      document.getElementById('ewtDisplay').innerHTML = `~ ${ewt} <span class="text-lg font-medium text-gray-600">mins</span>`;
+
+      // 4. Update Status Badge
+      const badgeContainer = document.getElementById('statusBadgeContainer');
+      if (myPatient.status === 'in-room') {
+        badgeContainer.innerHTML = `<span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Currently Seeing Doctor</span>`;
+      } else {
+        badgeContainer.innerHTML = `<span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">Waiting</span>`;
+      }
+
+      // 5. Arrival Advisory Alert (Shows when <= 3 patients ahead)
+      const advisoryBanner = document.getElementById('arrivalAdvisory');
+      if (patientsAhead <= 3 && myPatient.status === 'waiting') {
+        advisoryBanner.classList.remove('hidden');
+        document.getElementById('advisoryAheadCount').innerText = patientsAhead;
+        
+        // Push notification if enabled
+        if (notificationEnabled && !hasNotified && ("Notification" in window) && Notification.permission === "granted") {
+          new Notification("🏥 Hospital Queue Alert!", {
+            body: `It's almost your turn! You have ${patientsAhead} patients ahead. Please head to the doctor's OPD room now.`
+          });
+          hasNotified = true;
+        }
+      } else {
+        advisoryBanner.classList.add('hidden');
+      }
+
+      // 6. Render Live Queue List
+      renderQueueList();
+    }
+
+    function renderQueueList() {
+      const container = document.getElementById('queueListContainer');
+      container.innerHTML = '';
+
+      patientQueue.forEach(patient => {
+        const isMe = patient.tokenNo === MY_TOKEN;
+        const item = document.createElement('div');
+
+        let itemClasses = "flex items-center justify-between p-4 rounded-xl transition ";
+        if (isMe) {
+          itemClasses += "bg-sky-600 text-white shadow-md";
+        } else if (patient.status === 'completed') {
+          itemClasses += "bg-gray-50 text-gray-400";
+        } else {
+          itemClasses += "bg-white border border-gray-100 text-gray-800";
+        }
+        item.className = itemClasses;
+
+        let rightBadge = '';
+        if (patient.status === 'in-room') {
+          rightBadge = `<span class="px-2 py-0.5 text-xs font-semibold rounded ${isMe ? 'bg-white/20 text-white' : 'bg-green-100 text-green-700'}">IN-OPD</span>`;
+        } else if (patient.status === 'completed') {
+          rightBadge = `<i class="fa-solid fa-circle-check text-gray-300"></i>`;
+        }
+
+        item.innerHTML = `
+          <div class="flex items-center gap-3.5">
+            <div class="font-bold text-sm px-2.5 py-1 rounded-lg ${isMe ? 'bg-white/20' : 'bg-gray-100 text-gray-700'}">
+              T-${patient.tokenNo}
+            </div>
+            <div class="font-mono text-xs ${isMe ? 'text-white' : patient.status === 'completed' ? 'text-gray-400' : 'text-gray-500'}">
+              ${patient.id} ${isMe ? '(You)' : ''}
+            </div>
+          </div>
+          ${rightBadge}
+        `;
+
+        container.appendChild(item);
+      });
+    }
+
+    // =========================================================
+    // NOTIFICATION TOGGLE
+    // =========================================================
+    function toggleNotifications() {
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notifications.");
+        return;
+      }
+
+      notificationEnabled = !notificationEnabled;
+      const btn = document.getElementById('notifyBtn');
+      const icon = document.getElementById('notifyIcon');
+      const text = document.getElementById('notifyText');
+
+      if (notificationEnabled) {
+        Notification.requestPermission();
+        btn.className = "flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition bg-amber-100 text-amber-800 hover:bg-amber-200";
+        icon.className = "fa-solid fa-bell animate-pulse";
+        text.innerText = "Notifications On";
+      } else {
+        btn.className = "flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition bg-gray-900 text-white hover:bg-gray-700";
+        icon.className = "fa-regular fa-bell";
+        text.innerText = "Turn On Notifications";
+      }
+    }
+
+    // =========================================================
+    // SIMULATION ENGINE (Advances doctor queue every 5 seconds)
+    // =========================================================
+    setInterval(() => {
+      if (currentActiveToken <= patientQueue.length) {
+        currentActiveToken++;
+        
+        // Update statuses
+        patientQueue = patientQueue.map(p => {
+          if (p.tokenNo < currentActiveToken) return { ...p, status: 'completed' };
+          if (p.tokenNo === currentActiveToken) return { ...p, status: 'in-room' };
+          return { ...p, status: 'waiting' };
+        });
+
+        updateDashboard();
+      }
+    }, 5000); // 5-second interval for demonstration speed
+
+    // Initial Render
+    updateDashboard();
+  </script>
+</body>
+</html>
