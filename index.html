@@ -139,8 +139,8 @@
 <div class="toast" id="toast">Saved</div>
 
 <script>
-/* ---------------- storage helpers (localStorage → works on GitHub Pages / any static host) ---------------- */
-const LS = { DIR:'mediq_directory', Q:'mediq_queues', ACC:'mediq_accounts', SESSION:'mediq_session' };
+/* ---------------- storage helpers ---------------- */
+const LS = { DIR:'mediq_directory', Q:'mediq_queues', ACC:'mediq_accounts', SESSION:'mediq_session', NOTIFY:'mediq_notify' };
 const AVG_CONSULT_MIN = 10;
 
 function readLS(key, fallback){
@@ -154,6 +154,7 @@ function writeLS(key, value){
 let toastTimer;
 function toast(){
   const el = document.getElementById('toast');
+  if(!el) return;
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=> el.classList.remove('show'), 900);
@@ -201,14 +202,14 @@ let state = {
   authMode: 'login',
   formError: '',
   search: '',
-  notifyOn: {},
+  notifyOn: readLS(LS.NOTIFY, {}),
   notifyFired: {},
 };
+
 if (!readLS(LS.DIR, null)) writeLS(LS.DIR, state.directory);
 if (!readLS(LS.Q, null)) writeLS(LS.Q, state.queues);
 if (!readLS(LS.ACC, null)) writeLS(LS.ACC, state.accounts);
 
-// restore session (so a refresh keeps you logged in)
 (function restoreSession(){
   const s = readLS(LS.SESSION, null);
   if (!s) return;
@@ -227,12 +228,11 @@ function saveQueues(){ writeLS(LS.Q, state.queues); }
 function saveAccounts(){ writeLS(LS.ACC, state.accounts); }
 function saveMyBookings(){ localStorage.setItem('mediq_bookings_' + state.patient.email, JSON.stringify(state.myBookings)); }
 
-/* cross-tab live updates: if another tab (e.g. the hospital dashboard) changes the queue, this tab refreshes */
 window.addEventListener('storage', (e) => {
   if (e.key === LS.Q) { state.queues = readLS(LS.Q, state.queues); render(); }
   if (e.key === LS.DIR) { state.directory = readLS(LS.DIR, state.directory); render(); }
 });
-// fallback poll, in case the storage event doesn't fire in some browsers
+
 setInterval(() => {
   state.queues = readLS(LS.Q, state.queues);
   if (state.view === 'myAppointments') checkNotifications();
@@ -326,9 +326,15 @@ function selectHospital(id){
   state.selectedHospital = state.directory.hospitals.find(h => h.id === id);
   state.view = 'doctorList'; render();
 }
+
 function selectDoctor(id){
   state.selectedDoctor = state.directory.doctors.find(d => d.id === id);
   state.view = 'booking'; render();
+}
+
+function selectDoctorForManagement(id){
+  state.selectedDoctor = state.directory.doctors.find(d => d.id === id);
+  state.view = 'manageQueue'; render();
 }
 
 function confirmBooking(){
@@ -364,11 +370,34 @@ function addDoctor(){
 function toggleNotify(key){
   if (!state.notifyOn[key] && 'Notification' in window && Notification.permission === 'default') Notification.requestPermission();
   state.notifyOn[key] = !state.notifyOn[key];
+  writeLS(LS.NOTIFY, state.notifyOn);
   render();
 }
 
 function patientLogout(){ state.patient = null; state.myBookings = []; clearSession(); goHome(); }
 function hospitalLogout(){ state.hospitalAdmin = null; clearSession(); goHome(); }
+
+function handleSearch(query) {
+  state.search = query;
+  const listContainer = document.getElementById('hospital-list-grid');
+  if (!listContainer) return;
+
+  const term = query.toLowerCase();
+  const list = state.directory.hospitals.filter(h => h.name.toLowerCase().includes(term) || h.city.toLowerCase().includes(term));
+  
+  if (list.length === 0) {
+    listContainer.innerHTML = `<p class="empty">No hospitals match "${esc(query)}".</p>`;
+  } else {
+    listContainer.innerHTML = list.map(h => `
+      <div class="card card-hover h-card" onclick="selectHospital('${h.id}')">
+        <div class="icon-box icon-teal">🏥</div>
+        <div>
+          <h3>${esc(h.name)}</h3>
+          <div class="sub">📍 ${esc(h.address)}</div>
+        </div>
+      </div>`).join('');
+  }
+}
 
 /* ---------------- render ---------------- */
 function topbar(right){
@@ -480,10 +509,9 @@ function viewHospitalSearch(){
   <div class="search-box">
     <span class="search-icon">🔍</span>
     <input class="field" style="margin-bottom:0" value="${esc(state.search)}" placeholder="Search by hospital name or city…"
-      oninput="state.search=this.value; render(); document.getElementById('search-input').focus(); document.getElementById('search-input').setSelectionRange(this.value.length,this.value.length);"
-      id="search-input">
+      oninput="handleSearch(this.value)" id="search-input">
   </div>
-  <div class="grid2">
+  <div class="grid2" id="hospital-list-grid">
     ${list.map(h => `
       <div class="card card-hover h-card" onclick="selectHospital('${h.id}')">
         <div class="icon-box icon-teal">🏥</div>
@@ -616,7 +644,7 @@ function viewHospitalDashboard(){
           <div><h3>${esc(d.name)}</h3><div class="sub">${esc(d.specialty)}</div></div>
           <div><div class="num">Waiting</div><div class="val">${q.queue.length}</div></div>
         </div>
-        <button class="btn btn-subtle btn-block" style="margin-top:14px" onclick="state.selectedDoctor=${JSON.stringify(d).replace(/"/g,'&quot;')}; state.view='manageQueue'; render();">Manage queue →</button>
+        <button class="btn btn-subtle btn-block" style="margin-top:14px" onclick="selectDoctorForManagement('${d.id}')">Manage queue →</button>
       </div>`;
     }).join('')}
     ${docs.length===0 ? `<p class="empty">No doctors added yet — add your first one to start taking bookings.</p>` : ''}
