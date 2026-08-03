@@ -233,7 +233,7 @@ function updateFormData(field, val) { state.formData[field] = val; }
 function positionInfo(doctorId, token){
   const q = state.queues[doctorId] || { queue:[] };
   const idx = q.queue.findIndex(x => x.token === token);
-  if (idx === -1) return { status:'done', liveQueue: q.queue.map(x => x.token) };
+  if (idx === -1) return { status:'done', ahead:0, liveQueue: q.queue.map(x => x.token) };
   if (idx === 0) return { status:'now', ahead:0, nowServing:q.queue[0].token, ewt:0, liveQueue: q.queue.map(x => x.token) };
   return { status:'waiting', ahead:idx, nowServing:q.queue[0].token, ewt: idx*AVG_CONSULT_MIN, liveQueue: q.queue.map(x => x.token) };
 }
@@ -249,6 +249,7 @@ function submitPatientAuth(e){
   const name = state.formData.pName.trim(), email = state.formData.pEmail.trim().toLowerCase(), password = state.formData.pPass;
   if (state.authMode === 'signup') {
     if (!name || !email || !password) { state.formError='Please fill all fields.'; render(); return; }
+    if (state.accounts.patients.some(p => p.email === email)) { state.formError='An account with this email already exists. Please log in.'; render(); return; }
     state.accounts.patients.push({ name, email, password }); saveAccounts();
     state.patient = { name, email }; state.myBookings = []; saveMyBookings();
   } else {
@@ -266,6 +267,7 @@ function submitHospitalAuth(e){
   const name = state.formData.hName.trim(), address = state.formData.hAddr.trim(), city = state.formData.hCity.trim(), email = state.formData.hEmail.trim().toLowerCase(), password = state.formData.hPass;
   if (state.authMode === 'signup') {
     if (!name || !address || !city || !email || !password) { state.formError='Please fill all fields.'; render(); return; }
+    if (state.accounts.hospitalAdmins.some(a => a.email === email)) { state.formError='An account with this email already exists. Please log in.'; render(); return; }
     const id = 'h_' + Date.now();
     state.directory.hospitals.push({ id, name, address, city }); saveDirectory();
     state.accounts.hospitalAdmins.push({ email, password, hospitalId: id }); saveAccounts();
@@ -285,6 +287,7 @@ function submitMedicalAuth(e){
   const name = state.formData.mName.trim(), address = state.formData.mAddr.trim(), city = state.formData.mCity.trim(), email = state.formData.mEmail.trim().toLowerCase(), password = state.formData.mPass;
   if (state.authMode === 'signup') {
     if (!name || !address || !city || !email || !password) { state.formError='Please fill all fields.'; render(); return; }
+    if (state.accounts.medicalAdmins.some(a => a.email === email)) { state.formError='An account with this email already exists. Please log in.'; render(); return; }
     const id = 'm_' + Date.now();
     state.directory.medicals.push({ id, name, address, city }); saveDirectory();
     state.accounts.medicalAdmins.push({ email, password, medicalId: id }); saveAccounts();
@@ -527,7 +530,7 @@ function viewMyAppointments(){
   <h3 class="serif" style="margin-top:32px">Prescriptions &amp; Health Records</h3>
   ${myRx.length === 0 ? '<p class="empty">No medical records or prescriptions found.</p>' : myRx.map(r => `
     <div class="card" style="padding:20px; margin-bottom:14px;">
-      <div style="display:flex; justify-space-between; align-items:flex-start;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
         <div>
           <h3 style="margin:0 0 4px;">Prescribed by ${esc(r.doctorName)}</h3>
           <div class="sub">Date: ${esc(r.date)} | Status: <b>${esc(r.status)}</b></div>
@@ -558,7 +561,7 @@ function ticketHtml(b){
     </div>
     <div class="stat-grid">
       <div><div class="stat-label">Your Token</div><div class="stat-val stat-big" style="color:var(--amber-dark)">#${b.token}</div></div>
-      <div><div class="stat-label">Patients Ahead</div><div class="stat-val">${info.ahead}</div></div>
+      <div><div class="stat-label">Patients Ahead</div><div class="stat-val">${info.status==='done' ? 'Completed' : info.ahead}</div></div>
     </div>
   </div>`;
 }
