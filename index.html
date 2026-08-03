@@ -10,6 +10,7 @@
   :root{
     --ink:#16302E; --paper:#F6F8F7; --teal:#2F6F63; --teal-dark:#1F4E45;
     --panel:#E7EEEC; --amber:#E0A458; --amber-dark:#B9791F; --coral:#C4573B; --coral-dark:#9E4530;
+    --purple:#6B4E71; --purple-dark:#4A344F;
     --line: rgba(22,48,46,0.12); --muted: rgba(22,48,46,0.55);
   }
   *{box-sizing:border-box;}
@@ -23,7 +24,7 @@
   header.topbar{display:flex; align-items:center; justify-content:space-between; padding:26px 0;}
   .logo{display:flex; align-items:center; gap:9px; font-family:'Spectral',serif; font-weight:700; font-size:20px; background:none; border:none; cursor:pointer; color:var(--ink); padding:0;}
   .logo .dot{width:9px;height:9px;border-radius:50%; background:var(--coral); box-shadow:0 0 0 4px rgba(196,87,59,0.15);}
-  .topbar-right{display:flex; align-items:center; gap:10px;}
+  .topbar-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
   .hi{font-size:14px; color:var(--muted);}
 
   /* buttons */
@@ -31,42 +32,47 @@
   .btn:disabled{opacity:.5; cursor:not-allowed;}
   .btn-primary{background:var(--teal); color:#fff;} .btn-primary:hover{background:var(--teal-dark);}
   .btn-hospital{background:var(--coral); color:#fff;} .btn-hospital:hover{background:var(--coral-dark);}
+  .btn-medical{background:var(--purple); color:#fff;} .btn-medical:hover{background:var(--purple-dark);}
   .btn-ghost{background:transparent; border:1px solid var(--line); color:var(--ink);} .btn-ghost:hover{background:#fff;}
   .btn-subtle{background:var(--panel); color:var(--ink);} .btn-subtle:hover{background:#dbe6e3;}
   .btn-block{width:100%; justify-content:center;}
+  .btn-sm{padding:6px 12px; font-size:12px;}
 
   /* card */
   .card{background:#fff; border:1px solid var(--line); border-radius:16px;}
   .card-hover:hover{border-color:var(--teal); transform:translateY(-2px); box-shadow:0 16px 32px -20px rgba(22,48,46,.25);}
   .card-hover{transition:transform .15s, box-shadow .15s, border-color .15s; cursor:pointer;}
 
-  /* inputs */
-  input.field{width:100%; border:1px solid #c9d3d1; border-radius:9px; padding:11px 13px; font-size:14px; font-family:inherit; margin-bottom:10px;}
-  input.field:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:transparent;}
+  /* inputs & forms */
+  input.field, select.field, textarea.field{width:100%; border:1px solid #c9d3d1; border-radius:9px; padding:11px 13px; font-size:14px; font-family:inherit; margin-bottom:10px;}
+  textarea.field{resize:vertical; min-height:70px;}
+  input.field:focus, select.field:focus, textarea.field:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:transparent;}
 
   /* landing */
   .hero-h{font-size:34px; font-weight:700; text-align:center; margin:36px 0 8px;}
   .hero-p{text-align:center; color:var(--muted); max-width:480px; margin:0 auto 40px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:850px){.grid3{grid-template-columns:1fr;}}
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:700px){.grid2{grid-template-columns:1fr;}}
-  .panel{padding:28px;}
+  .panel{padding:24px;}
   .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; margin-bottom:12px;}
-  .tag-p{color:var(--teal);} .tag-h{color:var(--coral);}
-  .panel h2{font-size:22px; margin:0 0 8px;}
-  .panel p{color:var(--muted); font-size:14px; margin:0 0 20px; max-width:340px;}
-  .go{display:flex; align-items:center; gap:7px; font-weight:700; font-size:14px;}
-  .go-p{color:var(--teal);} .go-h{color:var(--coral);}
+  .tag-p{color:var(--teal);} .tag-h{color:var(--coral);} .tag-m{color:var(--purple);}
+  .panel h2{font-size:20px; margin:0 0 8px;}
+  .panel p{color:var(--muted); font-size:13.5px; margin:0 0 20px;}
+  .go{display:flex; align-items:center; gap:7px; font-weight:700; font-size:13.5px;}
+  .go-p{color:var(--teal);} .go-h{color:var(--coral);} .go-m{color:var(--purple);}
 
   /* forms */
-  .form-wrap{max-width:380px; margin:24px auto 0;}
+  .form-wrap{max-width:400px; margin:24px auto 0;}
   .form-wrap .card{padding:28px;}
   .form-wrap h2{font-size:20px; margin:0 0 4px;}
   .form-wrap .lead{color:var(--muted); font-size:14px; margin-bottom:18px;}
   .err{color:var(--coral); font-size:13.5px; margin:2px 0 8px;}
   .switch-link{background:none; border:none; cursor:pointer; font-size:13.5px; width:100%; text-align:center; margin-top:14px; text-decoration:underline; padding:0;}
-  .switch-p{color:var(--teal);} .switch-h{color:var(--coral);}
+  .switch-p{color:var(--teal);} .switch-h{color:var(--coral);} .switch-m{color:var(--purple);}
 
-  /* search */
+  /* search & titles */
   .search-box{position:relative; margin:18px 0;}
   .search-box input{padding-left:38px;}
   .search-icon{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.45; font-size:15px;}
@@ -74,25 +80,19 @@
   .backlink{background:none; border:none; color:var(--muted); font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:6px; margin-bottom:16px; padding:0;}
   .empty{color:#9aa6a3; font-size:14px;}
 
-  /* hospital/doctor list cards */
-  .h-card, .d-card{padding:18px 20px; display:flex; gap:12px; align-items:flex-start;}
-  .icon-box{width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
-  .icon-teal{background:#e3efec; color:var(--teal);} .icon-coral{background:#f7e7e2; color:var(--coral);}
-  .h-card h3, .d-card h3{margin:0 0 3px; font-size:15.5px;}
-  .h-card .sub, .d-card .sub{color:var(--muted); font-size:13.5px;}
-  .waiting-tag{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--teal); margin-top:6px;}
+  /* cards */
+  .h-card, .d-card, .rx-card{padding:18px 20px; display:flex; gap:12px; align-items:flex-start;}
+  .icon-box{width:36px; height:36px; border-radius:99px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
+  .icon-teal{background:#e3efec; color:var(--teal);} .icon-coral{background:#f7e7e2; color:var(--coral);} .icon-purple{background:#f0e7f2; color:var(--purple);}
+  .h-card h3, .d-card h3, .rx-card h3{margin:0 0 3px; font-size:15.5px;}
+  .h-card .sub, .d-card .sub, .rx-card .sub{color:var(--muted); font-size:13.5px;}
 
-  /* booking screen */
-  .book-card{max-width:460px; margin:16px auto 0; padding:28px;}
-  .book-card .tag{margin-bottom:4px;}
-  .book-card h2{margin:0 0 2px;}
-  .book-card .sub{color:var(--muted); font-size:14px; margin-bottom:20px;}
-  .now-vs-you{background:var(--panel); border-radius:12px; padding:18px 20px; display:flex; justify-content:space-between; margin-bottom:18px;}
-  .nv-label{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; color:var(--muted); margin-bottom:4px;}
-  .nv-num{font-family:'IBM Plex Mono',monospace; font-size:30px; font-weight:700;}
-  .nv-right{text-align:right;}
+  /* modal */
+  .modal-overlay{position:fixed; inset:0; background:rgba(22,48,46,0.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:100;}
+  .modal{background:#fff; border-radius:16px; padding:28px; width:100%; max-width:480px; box-shadow:0 20px 40px rgba(0,0,0,0.2);}
+  .modal h3{margin:0 0 12px; font-size:20px;}
 
-  /* ticket */
+  /* ticket & prescription */
   .ticket{overflow:hidden; margin-bottom:18px;}
   .ticket-head{padding:18px 20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; align-items:center;}
   .stat-grid{padding:18px 20px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
@@ -100,37 +100,24 @@
   .stat-label{font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; letter-spacing:.03em;}
   .stat-val{font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:22px;}
   .stat-big{font-size:28px;}
-  .advisory{margin:0 20px 20px; border-radius:12px; padding:14px 16px; display:flex; gap:10px;}
+  .advisory{margin:0 20px 16px; border-radius:12px; padding:14px 16px; display:flex; gap:10px;}
   .advisory-warn{background:#fbf1e2; border:1px solid #efd9ae;}
   .advisory-now{background:#fbe9e5; border:1px solid #e9beb1;}
   .advisory .title{font-weight:700; font-size:14px; margin-bottom:2px;}
   .advisory .body{font-size:13.5px; color:var(--muted);}
-  .livequeue{padding:0 20px 20px;}
-  .lq-label{font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
-  .lq-tokens{display:flex; flex-wrap:wrap; gap:7px;}
-  .lq-chip{font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:5px 10px; border-radius:99px; border:1px solid var(--line); background:#fafcfb; color:#7a8683;}
-  .lq-chip.me{background:var(--amber); border-color:var(--amber); color:#fff; font-weight:700;}
-  .lq-chip.serving{background:var(--teal); border-color:var(--teal); color:#fff; font-weight:700;}
-  .done-card{padding:30px; text-align:center;}
-  .done-icon{width:44px;height:44px;border-radius:50%; background:#e3efec; color:var(--teal); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:20px;}
+  .rx-box{margin:0 20px 20px; padding:16px; background:#f4f7f6; border-radius:12px; border:1px solid var(--line);}
+  .rx-title{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; color:var(--teal); font-weight:700; margin-bottom:8px;}
+  .rx-item{font-size:13.5px; margin-bottom:4px;}
 
   /* dashboard */
   .dash-head{display:flex; justify-content:space-between; align-items:center; margin:20px 0 16px; flex-wrap:wrap; gap:10px;}
   .dash-head p{color:var(--muted); font-size:14px; margin:2px 0 0;}
-  .doc-card{padding:18px 20px;}
-  .doc-top{display:flex; justify-content:space-between; align-items:flex-start;}
-  .doc-top .num{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); text-transform:uppercase;}
-  .doc-top .val{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:700; text-align:right;}
-
-  /* manage queue */
   .mq-now{background:var(--panel); border-radius:12px; padding:18px 20px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
   .mq-now .val{font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:700;}
   .wl-item{padding:12px 16px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
-  .wl-item.first{border:1px solid var(--amber);}
   .wl-token{font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:16px; width:34px; display:inline-block;}
-  .wl-badge{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; color:var(--amber-dark); font-weight:700;}
 
-  .toast{position:fixed; bottom:18px; right:18px; background:#fff; border:1px solid var(--line); border-radius:99px; padding:7px 14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8a938f; box-shadow:0 6px 20px -8px rgba(0,0,0,.2); opacity:0; transition:opacity .3s; pointer-events:none;}
+  .toast{position:fixed; bottom:18px; right:18px; background:#fff; border:1px solid var(--line); border-radius:99px; padding:7px 14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8a938f; box-shadow:0 6px 20px -8px rgba(0,0,0,.2); opacity:0; transition:opacity .3s; pointer-events:none; z-index:200;}
   .toast.show{opacity:1;}
 </style>
 </head>
@@ -140,7 +127,7 @@
 
 <script>
 /* ---------------- storage helpers ---------------- */
-const LS = { DIR:'mediq_directory', Q:'mediq_queues', ACC:'mediq_accounts', SESSION:'mediq_session', NOTIFY:'mediq_notify' };
+const LS = { DIR:'mediq_directory', Q:'mediq_queues', ACC:'mediq_accounts', SESSION:'mediq_session', RX:'mediq_prescriptions' };
 const AVG_CONSULT_MIN = 10;
 
 function readLS(key, fallback){
@@ -161,29 +148,29 @@ function toast(){
 }
 
 function seedDirectory(){
-  const h1='h_seed_1', h2='h_seed_2';
+  const h1='h_seed_1', h2='h_seed_2', m1='m_seed_1';
   return {
     hospitals:[
       {id:h1, name:'Sunrise General Hospital', city:'Pune', address:'FC Road, Pune'},
       {id:h2, name:'Green Valley Multispecialty', city:'Pune', address:'Baner Road, Pune'},
     ],
+    medicals:[
+      {id:m1, name:'Apollo Pharmacy', city:'Pune', address:'FC Road, Corner Shop'},
+      {id:'m_seed_2', name:'Wellness Forever Medical', city:'Pune', address:'Baner Main Road'},
+    ],
     doctors:[
       {id:'d_seed_1', hospitalId:h1, name:'Dr. Anita Rao', specialty:'Cardiology'},
       {id:'d_seed_2', hospitalId:h1, name:'Dr. Sameer Kulkarni', specialty:'General Medicine'},
       {id:'d_seed_3', hospitalId:h2, name:'Dr. Neha Deshpande', specialty:'Pediatrics'},
-      {id:'d_seed_4', hospitalId:h2, name:'Dr. Vikram Joshi', specialty:'Orthopedics'},
     ]
   };
 }
+
 function seedQueues(){
   return {
-    d_seed_1: { lastToken:9, queue:[
-      {token:8, patientEmail:'demo1@example.com', patientName:'Demo Patient A'},
-      {token:9, patientEmail:'demo2@example.com', patientName:'Demo Patient B'},
-    ]},
-    d_seed_2: { lastToken:3, queue:[ {token:3, patientEmail:'demo3@example.com', patientName:'Demo Patient C'} ]},
+    d_seed_1: { lastToken:2, queue:[{token:2, patientEmail:'patient@demo.com', patientName:'Alex Smith'}] },
+    d_seed_2: { lastToken:0, queue:[] },
     d_seed_3: { lastToken:0, queue:[] },
-    d_seed_4: { lastToken:5, queue:[] },
   };
 }
 
@@ -191,20 +178,20 @@ function seedQueues(){
 let state = {
   directory: readLS(LS.DIR, null) || seedDirectory(),
   queues: readLS(LS.Q, null) || seedQueues(),
-  accounts: readLS(LS.ACC, null) || { patients:[], hospitalAdmins:[] },
+  accounts: readLS(LS.ACC, null) || { patients:[], hospitalAdmins:[], medicalAdmins:[] },
+  prescriptions: readLS(LS.RX, []),
   patient: null,
   hospitalAdmin: null,
+  medicalAdmin: null,
   myBookings: [],
   view: 'landing',
   selectedHospital: null,
   selectedDoctor: null,
-  lastBooking: null,
+  activeConsultation: null, // modal state for doctor completing consultation
   authMode: 'login',
   formError: '',
-  formData: { pName: '', pEmail: '', pPass: '', hName: '', hAddr: '', hCity: '', hEmail: '', hPass: '' },
+  formData: { pName:'', pEmail:'', pPass:'', hName:'', hAddr:'', hCity:'', hEmail:'', hPass:'', mName:'', mAddr:'', mCity:'', mEmail:'', mPass:'' },
   search: '',
-  notifyOn: readLS(LS.NOTIFY, {}),
-  notifyFired: {},
 };
 
 if (!readLS(LS.DIR, null)) writeLS(LS.DIR, state.directory);
@@ -221,160 +208,165 @@ if (!readLS(LS.ACC, null)) writeLS(LS.ACC, state.accounts);
   } else if (s.type === 'hospital') {
     state.hospitalAdmin = { email:s.email, hospitalId:s.hospitalId, hospitalName:s.hospitalName };
     state.view = 'hospitalDashboard';
+  } else if (s.type === 'medical') {
+    state.medicalAdmin = { email:s.email, medicalId:s.medicalId, medicalName:s.medicalName };
+    state.view = 'medicalDashboard';
   }
 })();
 
 function saveDirectory(){ writeLS(LS.DIR, state.directory); }
 function saveQueues(){ writeLS(LS.Q, state.queues); }
 function saveAccounts(){ writeLS(LS.ACC, state.accounts); }
+function savePrescriptions(){ writeLS(LS.RX, state.prescriptions); }
 function saveMyBookings(){ localStorage.setItem('mediq_bookings_' + state.patient.email, JSON.stringify(state.myBookings)); }
 
 window.addEventListener('storage', (e) => {
   if (e.key === LS.Q) { state.queues = readLS(LS.Q, state.queues); render(); }
   if (e.key === LS.DIR) { state.directory = readLS(LS.DIR, state.directory); render(); }
+  if (e.key === LS.RX) { state.prescriptions = readLS(LS.RX, state.prescriptions); render(); }
 });
-
-setInterval(() => {
-  state.queues = readLS(LS.Q, state.queues);
-  if (state.view === 'myAppointments') checkNotifications();
-  render();
-}, 6000);
 
 /* ---------------- helpers ---------------- */
 function esc(s){ return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function updateFormData(field, val) {
-  state.formData[field] = val;
-}
+function updateFormData(field, val) { state.formData[field] = val; }
 
 function positionInfo(doctorId, token){
   const q = state.queues[doctorId] || { queue:[] };
   const idx = q.queue.findIndex(x => x.token === token);
-  const liveQueue = q.queue.map(x => x.token);
-  if (idx === -1) return { status:'done', liveQueue };
-  if (idx === 0) return { status:'now', ahead:0, nowServing:q.queue[0].token, ewt:0, liveQueue };
-  return { status:'waiting', ahead:idx, nowServing:q.queue[0].token, ewt: idx*AVG_CONSULT_MIN, liveQueue };
+  if (idx === -1) return { status:'done', liveQueue: q.queue.map(x => x.token) };
+  if (idx === 0) return { status:'now', ahead:0, nowServing:q.queue[0].token, ewt:0, liveQueue: q.queue.map(x => x.token) };
+  return { status:'waiting', ahead:idx, nowServing:q.queue[0].token, ewt: idx*AVG_CONSULT_MIN, liveQueue: q.queue.map(x => x.token) };
 }
 
-function checkNotifications(){
-  state.myBookings.forEach(b => {
-    const key = b.doctorId + '-' + b.token;
-    const info = positionInfo(b.doctorId, b.token);
-    if (state.notifyOn[key] && info.status === 'now' && !state.notifyFired[key]) {
-      state.notifyFired[key] = true;
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification("It's your turn!", { body: `Token #${b.token} — ${b.doctorName}` });
-      }
-    }
-  });
-}
-
-function goHome(){
-  state.view='landing'; state.formError=''; state.selectedHospital=null; state.selectedDoctor=null; render();
-}
+function goHome(){ state.view='landing'; state.formError=''; render(); }
 function clearSession(){ localStorage.removeItem(LS.SESSION); }
 
 /* ---------------- actions ---------------- */
-function toggleAuthMode() {
-  state.authMode = state.authMode === 'login' ? 'signup' : 'login';
-  state.formError = '';
-  render();
-}
+function toggleAuthMode() { state.authMode = state.authMode === 'login' ? 'signup' : 'login'; state.formError = ''; render(); }
 
 function submitPatientAuth(e){
   if(e) e.preventDefault();
-  const mode = state.authMode;
-  const name = state.formData.pName.trim();
-  const email = state.formData.pEmail.trim().toLowerCase();
-  const password = state.formData.pPass;
-  state.formError = '';
-  
-  if (mode === 'signup') {
-    if (state.accounts.patients.some(p => p.email === email)) { state.formError='An account with this email already exists.'; render(); return; }
-    if (!name || !email || !password) { state.formError='Please fill in every field.'; render(); return; }
+  const name = state.formData.pName.trim(), email = state.formData.pEmail.trim().toLowerCase(), password = state.formData.pPass;
+  if (state.authMode === 'signup') {
+    if (!name || !email || !password) { state.formError='Please fill all fields.'; render(); return; }
     state.accounts.patients.push({ name, email, password }); saveAccounts();
     state.patient = { name, email }; state.myBookings = []; saveMyBookings();
-    writeLS(LS.SESSION, { type:'patient', name, email });
-    state.view = 'hospitalSearch';
   } else {
     const found = state.accounts.patients.find(p => p.email === email && p.password === password);
-    if (!found) { state.formError='Email or password is incorrect.'; render(); return; }
+    if (!found) { state.formError='Invalid credentials.'; render(); return; }
     state.patient = { name: found.name, email: found.email };
     state.myBookings = readLS('mediq_bookings_' + email, []);
-    writeLS(LS.SESSION, { type:'patient', name: found.name, email });
-    state.view = 'hospitalSearch';
   }
-  render();
+  writeLS(LS.SESSION, { type:'patient', name: state.patient.name, email: state.patient.email });
+  state.view = 'hospitalSearch'; render();
 }
 
 function submitHospitalAuth(e){
   if(e) e.preventDefault();
-  const mode = state.authMode;
-  const hospitalName = state.formData.hName.trim();
-  const address = state.formData.hAddr.trim();
-  const city = state.formData.hCity.trim();
-  const email = state.formData.hEmail.trim().toLowerCase();
-  const password = state.formData.hPass;
-  state.formError = '';
-  
-  if (mode === 'signup') {
-    if (state.accounts.hospitalAdmins.some(a => a.email === email)) { state.formError='An account with this email already exists.'; render(); return; }
-    if (!hospitalName || !address || !city || !email || !password) { state.formError='Please fill in every field.'; render(); return; }
-    const hospitalId = 'h_' + Date.now();
-    state.directory.hospitals.push({ id:hospitalId, name:hospitalName, address, city }); saveDirectory();
-    state.accounts.hospitalAdmins.push({ email, password, hospitalId }); saveAccounts();
-    state.hospitalAdmin = { email, hospitalId, hospitalName };
-    writeLS(LS.SESSION, { type:'hospital', email, hospitalId, hospitalName });
-    state.view = 'hospitalDashboard';
+  const name = state.formData.hName.trim(), address = state.formData.hAddr.trim(), city = state.formData.hCity.trim(), email = state.formData.hEmail.trim().toLowerCase(), password = state.formData.hPass;
+  if (state.authMode === 'signup') {
+    if (!name || !address || !city || !email || !password) { state.formError='Please fill all fields.'; render(); return; }
+    const id = 'h_' + Date.now();
+    state.directory.hospitals.push({ id, name, address, city }); saveDirectory();
+    state.accounts.hospitalAdmins.push({ email, password, hospitalId: id }); saveAccounts();
+    state.hospitalAdmin = { email, hospitalId: id, hospitalName: name };
   } else {
     const found = state.accounts.hospitalAdmins.find(a => a.email === email && a.password === password);
-    if (!found) { state.formError='Email or password is incorrect.'; render(); return; }
+    if (!found) { state.formError='Invalid credentials.'; render(); return; }
     const h = state.directory.hospitals.find(h => h.id === found.hospitalId);
-    state.hospitalAdmin = { email: found.email, hospitalId: found.hospitalId, hospitalName: h ? h.name : 'Your hospital' };
-    writeLS(LS.SESSION, { type:'hospital', email: found.email, hospitalId: found.hospitalId, hospitalName: state.hospitalAdmin.hospitalName });
-    state.view = 'hospitalDashboard';
+    state.hospitalAdmin = { email: found.email, hospitalId: found.hospitalId, hospitalName: h ? h.name : 'Hospital' };
   }
-  render();
+  writeLS(LS.SESSION, { type:'hospital', ...state.hospitalAdmin });
+  state.view = 'hospitalDashboard'; render();
 }
 
-function selectHospital(id){
-  state.selectedHospital = state.directory.hospitals.find(h => h.id === id);
-  state.view = 'doctorList'; render();
+function submitMedicalAuth(e){
+  if(e) e.preventDefault();
+  const name = state.formData.mName.trim(), address = state.formData.mAddr.trim(), city = state.formData.mCity.trim(), email = state.formData.mEmail.trim().toLowerCase(), password = state.formData.mPass;
+  if (state.authMode === 'signup') {
+    if (!name || !address || !city || !email || !password) { state.formError='Please fill all fields.'; render(); return; }
+    const id = 'm_' + Date.now();
+    state.directory.medicals.push({ id, name, address, city }); saveDirectory();
+    state.accounts.medicalAdmins.push({ email, password, medicalId: id }); saveAccounts();
+    state.medicalAdmin = { email, medicalId: id, medicalName: name };
+  } else {
+    const found = state.accounts.medicalAdmins.find(a => a.email === email && a.password === password);
+    if (!found) { state.formError='Invalid credentials.'; render(); return; }
+    const m = state.directory.medicals.find(m => m.id === found.medicalId);
+    state.medicalAdmin = { email: found.email, medicalId: found.medicalId, medicalName: m ? m.name : 'Medical Store' };
+  }
+  writeLS(LS.SESSION, { type:'medical', ...state.medicalAdmin });
+  state.view = 'medicalDashboard'; render();
 }
 
-function selectDoctor(id){
-  state.selectedDoctor = state.directory.doctors.find(d => d.id === id);
-  state.view = 'booking'; render();
-}
-
-function selectDoctorForManagement(id){
-  state.selectedDoctor = state.directory.doctors.find(d => d.id === id);
-  state.view = 'manageQueue'; render();
-}
+function selectHospital(id){ state.selectedHospital = state.directory.hospitals.find(h => h.id === id); state.view = 'doctorList'; render(); }
+function selectDoctor(id){ state.selectedDoctor = state.directory.doctors.find(d => d.id === id); state.view = 'booking'; render(); }
 
 function confirmBooking(){
-  const doctor = state.selectedDoctor;
-  const q = state.queues[doctor.id] || { lastToken:0, queue:[] };
+  const d = state.selectedDoctor, q = state.queues[d.id] || { lastToken:0, queue:[] };
   const token = q.lastToken + 1;
   q.lastToken = token;
   q.queue.push({ token, patientEmail: state.patient.email, patientName: state.patient.name });
-  state.queues[doctor.id] = q; saveQueues();
-  const hospital = state.directory.hospitals.find(h => h.id === doctor.hospitalId);
-  const booking = { doctorId: doctor.id, doctorName: doctor.name, hospitalId: doctor.hospitalId, hospitalName: hospital ? hospital.name : '', token };
-  state.myBookings.push(booking); saveMyBookings();
-  state.lastBooking = booking;
+  state.queues[d.id] = q; saveQueues();
+  const h = state.directory.hospitals.find(h => h.id === d.hospitalId);
+  state.myBookings.push({ doctorId: d.id, doctorName: d.name, hospitalId: d.hospitalId, hospitalName: h ? h.name : '', token });
+  saveMyBookings();
   state.view = 'myAppointments'; render();
 }
 
-function markServed(doctorId){
+/* Consultation & Prescription Handling */
+function openConsultationModal(doctorId){
   const q = state.queues[doctorId];
-  if (!q || q.queue.length === 0) return;
-  q.queue = q.queue.slice(1); saveQueues(); render();
+  if (!q || !q.queue.length) return;
+  const current = q.queue[0];
+  const d = state.directory.doctors.find(doc => doc.id === doctorId);
+  state.activeConsultation = { doctorId, token: current.token, patientName: current.patientName, patientEmail: current.patientEmail, doctorName: d.name };
+  render();
+}
+
+function submitConsultation(){
+  const diagnosis = document.getElementById('c-diag').value.trim();
+  const medicines = document.getElementById('c-meds').value.trim();
+  const precautions = document.getElementById('c-prec').value.trim();
+  const medicalId = document.getElementById('c-medical').value;
+
+  const rx = {
+    id: 'rx_' + Date.now(),
+    patientEmail: state.activeConsultation.patientEmail,
+    patientName: state.activeConsultation.patientName,
+    doctorName: state.activeConsultation.doctorName,
+    diagnosis, medicines, precautions,
+    medicalId: medicalId || null,
+    status: medicalId ? 'Sent to Pharmacy' : 'Created',
+    date: new Date().toLocaleDateString()
+  };
+
+  state.prescriptions.push(rx); savePrescriptions();
+
+  // Advance Queue
+  const q = state.queues[state.activeConsultation.doctorId];
+  q.queue = q.queue.slice(1); saveQueues();
+
+  state.activeConsultation = null;
+  render();
+}
+
+function sendRxToMedical(rxId, medicalId){
+  const rx = state.prescriptions.find(r => r.id === rxId);
+  if (rx) {
+    rx.medicalId = medicalId;
+    rx.status = 'Sent to Pharmacy';
+    savePrescriptions(); render();
+  }
+}
+
+function markRxFulfilled(rxId){
+  const rx = state.prescriptions.find(r => r.id === rxId);
+  if (rx) { rx.status = 'Fulfilled / Dispensed'; savePrescriptions(); render(); }
 }
 
 function addDoctor(){
-  const name = document.getElementById('d-name').value.trim();
-  const specialty = document.getElementById('d-spec').value.trim();
+  const name = document.getElementById('d-name').value.trim(), specialty = document.getElementById('d-spec').value.trim();
   if (!name || !specialty) return;
   const id = 'd_' + Date.now();
   state.directory.doctors.push({ id, hospitalId: state.hospitalAdmin.hospitalId, name, specialty }); saveDirectory();
@@ -382,333 +374,263 @@ function addDoctor(){
   state.view = 'hospitalDashboard'; render();
 }
 
-function toggleNotify(key){
-  if (!state.notifyOn[key] && 'Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-  state.notifyOn[key] = !state.notifyOn[key];
-  writeLS(LS.NOTIFY, state.notifyOn);
-  render();
-}
+function logout(){ state.patient = null; state.hospitalAdmin = null; state.medicalAdmin = null; clearSession(); goHome(); }
 
-function patientLogout(){ state.patient = null; state.myBookings = []; clearSession(); goHome(); }
-function hospitalLogout(){ state.hospitalAdmin = null; clearSession(); goHome(); }
-
-function handleSearch(query) {
-  state.search = query;
-  const listContainer = document.getElementById('hospital-list-grid');
-  if (!listContainer) return;
-
-  const term = query.toLowerCase();
-  const list = state.directory.hospitals.filter(h => h.name.toLowerCase().includes(term) || h.city.toLowerCase().includes(term));
-  
-  if (list.length === 0) {
-    listContainer.innerHTML = `<p class="empty">No hospitals match "${esc(query)}".</p>`;
-  } else {
-    listContainer.innerHTML = list.map(h => `
-      <div class="card card-hover h-card" onclick="selectHospital('${h.id}')">
-        <div class="icon-box icon-teal">🏥</div>
-        <div>
-          <h3>${esc(h.name)}</h3>
-          <div class="sub">📍 ${esc(h.address)}</div>
-        </div>
-      </div>`).join('');
-  }
-}
-
-/* ---------------- render ---------------- */
+/* ---------------- views ---------------- */
 function topbar(right){
-  return `<header class="topbar">
-    <button class="logo" onclick="goHome()"><span class="dot"></span>MediQ</button>
-    <div class="topbar-right">${right || ''}</div>
-  </header>`;
-}
-function patientMenu(){
-  return `<span class="hi">Hi, ${esc(state.patient.name.split(' ')[0])}</span>
-    <button class="btn btn-subtle" onclick="state.view='myAppointments'; render();">My appointments</button>
-    <button class="btn btn-ghost" onclick="patientLogout()">Log out</button>`;
-}
-function hospitalMenu(){
-  return `<span class="hi">${esc(state.hospitalAdmin.hospitalName)}</span>
-    <button class="btn btn-ghost" onclick="hospitalLogout()">Log out</button>`;
+  return `<header class="topbar"><button class="logo" onclick="goHome()"><span class="dot"></span>MediQ</button><div class="topbar-right">${right || ''}</div></header>`;
 }
 
 function render(){
   const app = document.getElementById('app');
   let right = '';
-  if (state.patient) right = patientMenu();
-  else if (state.hospitalAdmin) right = hospitalMenu();
+  if (state.patient) right = `<span class="hi">Hi, ${esc(state.patient.name.split(' ')[0])}</span><button class="btn btn-subtle btn-sm" onclick="state.view='myAppointments'; render();">My Appointments & Records</button><button class="btn btn-ghost btn-sm" onclick="logout()">Log out</button>`;
+  else if (state.hospitalAdmin) right = `<span class="hi">${esc(state.hospitalAdmin.hospitalName)}</span><button class="btn btn-ghost btn-sm" onclick="logout()">Log out</button>`;
+  else if (state.medicalAdmin) right = `<span class="hi">🏥 ${esc(state.medicalAdmin.medicalName)}</span><button class="btn btn-ghost btn-sm" onclick="logout()">Log out</button>`;
 
   let body = '';
   switch(state.view){
     case 'landing': body = viewLanding(); break;
     case 'patientAuth': body = viewPatientAuth(); break;
     case 'hospitalAuth': body = viewHospitalAuth(); break;
+    case 'medicalAuth': body = viewMedicalAuth(); break;
     case 'hospitalSearch': body = viewHospitalSearch(); break;
     case 'doctorList': body = viewDoctorList(); break;
     case 'booking': body = viewBooking(); break;
     case 'myAppointments': body = viewMyAppointments(); break;
     case 'hospitalDashboard': body = viewHospitalDashboard(); break;
+    case 'medicalDashboard': body = viewMedicalDashboard(); break;
     case 'addDoctor': body = viewAddDoctor(); break;
     case 'manageQueue': body = viewManageQueue(); break;
     default: body = viewLanding();
   }
-  app.innerHTML = topbar(right) + body;
-  if (state.view === 'myAppointments') checkNotifications();
+  
+  app.innerHTML = topbar(right) + body + (state.activeConsultation ? renderConsultationModal() : '');
 }
 
 function viewLanding(){
   return `
-  <div class="hero-h serif">Skip the line. Not the care.</div>
-  <div class="hero-p">Book online, track your token live, and arrive only when your turn is close.</div>
-  <div class="grid2">
+  <div class="hero-h serif">Skip the line. Manage your health.</div>
+  <div class="hero-p">Book doctor appointments, monitor live OPD queues, and get digital prescriptions directly sent to local pharmacies.</div>
+  <div class="grid3">
     <div class="card card-hover panel" onclick="state.authMode='login'; state.formError=''; state.view='patientAuth'; render();">
       <div class="tag tag-p">Patient</div>
-      <h2 class="serif">Find a doctor &amp; book</h2>
-      <p>Search hospitals, pick a doctor, and get a live token number.</p>
+      <h2 class="serif">Patient Portal</h2>
+      <p>Book live tokens, track wait time, &amp; view digital prescriptions.</p>
       <div class="go go-p">Login / Sign up →</div>
     </div>
     <div class="card card-hover panel" onclick="state.authMode='login'; state.formError=''; state.view='hospitalAuth'; render();">
       <div class="tag tag-h">Hospital</div>
-      <h2 class="serif">Register your hospital</h2>
-      <p>Add doctors, manage schedules, and run the queue from a dashboard.</p>
-      <div class="go go-h">Register / Login →</div>
+      <h2 class="serif">Hospital Portal</h2>
+      <p>Manage queues, call patients, and issue digital prescriptions.</p>
+      <div class="go go-h">Login / Register →</div>
+    </div>
+    <div class="card card-hover panel" onclick="state.authMode='login'; state.formError=''; state.view='medicalAuth'; render();">
+      <div class="tag tag-m">Medical Store</div>
+      <h2 class="serif">Pharmacy Portal</h2>
+      <p>Receive digital prescriptions directly from doctors and patients.</p>
+      <div class="go go-m">Login / Register →</div>
     </div>
   </div>`;
 }
 
 function viewPatientAuth(){
   const m = state.authMode;
-  return `
-  <div class="form-wrap">
-    <div class="card">
-      <h2 class="serif">${m==='login' ? 'Patient login' : 'Create your account'}</h2>
-      <div class="lead">${m==='login' ? 'Welcome back — find your next appointment.' : 'Book appointments and track your queue.'}</div>
-      <form onsubmit="submitPatientAuth(event)">
-        ${m==='signup' ? `<input class="field" placeholder="Full name" value="${esc(state.formData.pName)}" oninput="updateFormData('pName', this.value)">` : ''}
-        <input class="field" type="email" placeholder="Email" value="${esc(state.formData.pEmail)}" oninput="updateFormData('pEmail', this.value)">
-        <input class="field" type="password" placeholder="Password" value="${esc(state.formData.pPass)}" oninput="updateFormData('pPass', this.value)">
-        ${state.formError ? `<div class="err">${esc(state.formError)}</div>` : ''}
-        <button type="submit" class="btn btn-primary btn-block">${m==='login' ? 'Log in' : 'Sign up'}</button>
-      </form>
-      <button type="button" class="switch-link switch-p" onclick="toggleAuthMode()">
-        ${m==='login' ? 'New here? Create an account' : 'Already have an account? Log in'}
-      </button>
-    </div>
-  </div>`;
+  return `<div class="form-wrap"><div class="card">
+    <h2 class="serif">${m==='login'?'Patient Login':'Create Patient Account'}</h2>
+    <div class="lead">Track queues &amp; receive medical prescriptions.</div>
+    <form onsubmit="submitPatientAuth(event)">
+      ${m==='signup'?`<input class="field" placeholder="Full Name" value="${esc(state.formData.pName)}" oninput="updateFormData('pName', this.value)">`:''}
+      <input class="field" type="email" placeholder="Email" value="${esc(state.formData.pEmail)}" oninput="updateFormData('pEmail', this.value)">
+      <input class="field" type="password" placeholder="Password" value="${esc(state.formData.pPass)}" oninput="updateFormData('pPass', this.value)">
+      ${state.formError?`<div class="err">${esc(state.formError)}</div>`:''}
+      <button type="submit" class="btn btn-primary btn-block">${m==='login'?'Log in':'Sign up'}</button>
+    </form>
+    <button class="switch-link switch-p" onclick="toggleAuthMode()">${m==='login'?'New patient? Sign up':'Already registered? Log in'}</button>
+  </div></div>`;
 }
 
 function viewHospitalAuth(){
   const m = state.authMode;
-  return `
-  <div class="form-wrap">
-    <div class="card">
-      <h2 class="serif">${m==='login' ? 'Hospital login' : 'Register your hospital'}</h2>
-      <div class="lead">${m==='login' ? 'Manage your doctors and live queues.' : 'List your hospital and start managing appointments.'}</div>
-      <form onsubmit="submitHospitalAuth(event)">
-        ${m==='signup' ? `
-          <input class="field" placeholder="Hospital name" value="${esc(state.formData.hName)}" oninput="updateFormData('hName', this.value)">
-          <input class="field" placeholder="Address" value="${esc(state.formData.hAddr)}" oninput="updateFormData('hAddr', this.value)">
-          <input class="field" placeholder="City" value="${esc(state.formData.hCity)}" oninput="updateFormData('hCity', this.value)">` : ''}
-        <input class="field" type="email" placeholder="Admin email" value="${esc(state.formData.hEmail)}" oninput="updateFormData('hEmail', this.value)">
-        <input class="field" type="password" placeholder="Password" value="${esc(state.formData.hPass)}" oninput="updateFormData('hPass', this.value)">
-        ${state.formError ? `<div class="err">${esc(state.formError)}</div>` : ''}
-        <button type="submit" class="btn btn-hospital btn-block">${m==='login' ? 'Log in' : 'Register hospital'}</button>
-      </form>
-      <button type="button" class="switch-link switch-h" onclick="toggleAuthMode()">
-        ${m==='login' ? 'New hospital? Register here' : 'Already registered? Log in'}
-      </button>
-    </div>
-  </div>`;
+  return `<div class="form-wrap"><div class="card">
+    <h2 class="serif">${m==='login'?'Hospital Login':'Register Hospital'}</h2>
+    <div class="lead">Manage live patient OPD queues.</div>
+    <form onsubmit="submitHospitalAuth(event)">
+      ${m==='signup'?`
+        <input class="field" placeholder="Hospital Name" value="${esc(state.formData.hName)}" oninput="updateFormData('hName', this.value)">
+        <input class="field" placeholder="Address" value="${esc(state.formData.hAddr)}" oninput="updateFormData('hAddr', this.value)">
+        <input class="field" placeholder="City" value="${esc(state.formData.hCity)}" oninput="updateFormData('hCity', this.value)">`:''}
+      <input class="field" type="email" placeholder="Admin Email" value="${esc(state.formData.hEmail)}" oninput="updateFormData('hEmail', this.value)">
+      <input class="field" type="password" placeholder="Password" value="${esc(state.formData.hPass)}" oninput="updateFormData('hPass', this.value)">
+      ${state.formError?`<div class="err">${esc(state.formError)}</div>`:''}
+      <button type="submit" class="btn btn-hospital btn-block">${m==='login'?'Log in':'Register'}</button>
+    </form>
+    <button class="switch-link switch-h" onclick="toggleAuthMode()">${m==='login'?'New hospital? Register':'Already registered? Log in'}</button>
+  </div></div>`;
+}
+
+function viewMedicalAuth(){
+  const m = state.authMode;
+  return `<div class="form-wrap"><div class="card">
+    <h2 class="serif">${m==='login'?'Medical Store Login':'Register Pharmacy'}</h2>
+    <div class="lead">Receive digital prescriptions directly.</div>
+    <form onsubmit="submitMedicalAuth(event)">
+      ${m==='signup'?`
+        <input class="field" placeholder="Medical Store Name" value="${esc(state.formData.mName)}" oninput="updateFormData('mName', this.value)">
+        <input class="field" placeholder="Address" value="${esc(state.formData.mAddr)}" oninput="updateFormData('mAddr', this.value)">
+        <input class="field" placeholder="City" value="${esc(state.formData.mCity)}" oninput="updateFormData('mCity', this.value)">`:''}
+      <input class="field" type="email" placeholder="Store Email" value="${esc(state.formData.mEmail)}" oninput="updateFormData('mEmail', this.value)">
+      <input class="field" type="password" placeholder="Password" value="${esc(state.formData.mPass)}" oninput="updateFormData('mPass', this.value)">
+      ${state.formError?`<div class="err">${esc(state.formError)}</div>`:''}
+      <button type="submit" class="btn btn-medical btn-block">${m==='login'?'Log in':'Register Pharmacy'}</button>
+    </form>
+    <button class="switch-link switch-m" onclick="toggleAuthMode()">${m==='login'?'New pharmacy? Register':'Already registered? Log in'}</button>
+  </div></div>`;
 }
 
 function viewHospitalSearch(){
-  const term = state.search.toLowerCase();
-  const list = state.directory.hospitals.filter(h => h.name.toLowerCase().includes(term) || h.city.toLowerCase().includes(term));
-  return `
-  <h2 class="title serif">Find a hospital</h2>
-  <div class="search-box">
-    <span class="search-icon">🔍</span>
-    <input class="field" style="margin-bottom:0" value="${esc(state.search)}" placeholder="Search by hospital name or city…"
-      oninput="handleSearch(this.value)" id="search-input">
-  </div>
-  <div class="grid2" id="hospital-list-grid">
-    ${list.map(h => `
-      <div class="card card-hover h-card" onclick="selectHospital('${h.id}')">
-        <div class="icon-box icon-teal">🏥</div>
-        <div>
-          <h3>${esc(h.name)}</h3>
-          <div class="sub">📍 ${esc(h.address)}</div>
-        </div>
-      </div>`).join('')}
-    ${list.length===0 ? `<p class="empty">No hospitals match "${esc(state.search)}".</p>` : ''}
+  const list = state.directory.hospitals.filter(h => h.name.toLowerCase().includes(state.search.toLowerCase()) || h.city.toLowerCase().includes(state.search.toLowerCase()));
+  return `<h2 class="title serif">Find a hospital</h2>
+  <div class="search-box"><span class="search-icon">🔍</span><input class="field" value="${esc(state.search)}" placeholder="Search hospital name or city…" oninput="state.search=this.value; render();"></div>
+  <div class="grid2">
+    ${list.map(h => `<div class="card card-hover h-card" onclick="selectHospital('${h.id}')"><div class="icon-box icon-teal">🏥</div><div><h3>${esc(h.name)}</h3><div class="sub">📍 ${esc(h.address)}</div></div></div>`).join('')}
   </div>`;
 }
 
 function viewDoctorList(){
-  const h = state.selectedHospital;
-  const docs = state.directory.doctors.filter(d => d.hospitalId === h.id);
-  return `
-  <button class="backlink" onclick="state.view='hospitalSearch'; render();">← Back to hospitals</button>
-  <h2 class="title serif" style="margin-top:0">${esc(h.name)}</h2>
-  <div class="empty" style="margin-bottom:16px">${esc(h.address)}</div>
+  const docs = state.directory.doctors.filter(d => d.hospitalId === state.selectedHospital.id);
+  return `<button class="backlink" onclick="state.view='hospitalSearch'; render();">← Back to hospitals</button>
+  <h2 class="title serif">${esc(state.selectedHospital.name)}</h2>
   <div class="grid2">
-    ${docs.map(d => {
-      const q = state.queues[d.id] || { queue:[] };
-      return `<div class="card card-hover d-card" onclick="selectDoctor('${d.id}')">
-        <div class="icon-box icon-coral">🩺</div>
-        <div>
-          <h3>${esc(d.name)}</h3>
-          <div class="sub">${esc(d.specialty)}</div>
-          <div class="waiting-tag">👥 ${q.queue.length} waiting right now</div>
-        </div>
-      </div>`;
-    }).join('')}
-    ${docs.length===0 ? `<p class="empty">No doctors listed yet for this hospital.</p>` : ''}
+    ${docs.map(d => `<div class="card card-hover d-card" onclick="selectDoctor('${d.id}')"><div class="icon-box icon-coral">🩺</div><div><h3>${esc(d.name)}</h3><div class="sub">${esc(d.specialty)}</div></div></div>`).join('')}
   </div>`;
 }
 
 function viewBooking(){
-  const d = state.selectedDoctor, h = state.selectedHospital;
-  const q = state.queues[d.id] || { lastToken:0, queue:[] };
-  const myToken = q.lastToken + 1;
-  const nowServing = q.queue.length ? q.queue[0].token : null;
-  return `
-  <button class="backlink" onclick="state.view='doctorList'; render();">← Back to doctors</button>
-  <div class="card book-card">
-    <div class="tag tag-p">${esc(h.name)}</div>
+  const d = state.selectedDoctor, q = state.queues[d.id] || { lastToken:0, queue:[] };
+  return `<button class="backlink" onclick="state.view='doctorList'; render();">← Back</button>
+  <div class="card" style="max-width:460px; margin:0 auto; padding:28px;">
     <h2 class="serif">${esc(d.name)}</h2>
     <div class="sub">${esc(d.specialty)}</div>
-    <div class="now-vs-you">
-      <div><div class="nv-label mono">Now serving</div><div class="nv-num mono">${nowServing ?? '—'}</div></div>
-      <div class="nv-right"><div class="nv-label mono">Your token would be</div><div class="nv-num mono" style="color:var(--amber-dark)">${myToken}</div></div>
-    </div>
-    <p class="sub">${q.queue.length} ${q.queue.length===1?'person is':'people are'} currently ahead in line.</p>
-    <button class="btn btn-primary btn-block" onclick="confirmBooking()">✓ Confirm appointment</button>
+    <div class="mq-now" style="margin:20px 0;"><div><div class="stat-label">Next Token</div><div class="val mono" style="color:var(--amber-dark)">#${q.lastToken+1}</div></div></div>
+    <button class="btn btn-primary btn-block" onclick="confirmBooking()">✓ Confirm Appointment</button>
   </div>`;
 }
 
 function viewMyAppointments(){
-  const bookings = [...state.myBookings].reverse();
-  return `
-  <div class="dash-head">
-    <h2 class="serif" style="margin:0">My appointments</h2>
-    <button class="btn btn-subtle" onclick="state.view='hospitalSearch'; render();">+ Book another</button>
-  </div>
-  ${bookings.length===0 ? `<p class="empty">You haven't booked any appointments yet.</p>` : bookings.map(b => ticketHtml(b)).join('')}
+  const myRx = state.prescriptions.filter(r => r.patientEmail === state.patient.email);
+  return `<div class="dash-head"><h2 class="serif">My Appointments &amp; Medical Records</h2><button class="btn btn-subtle" onclick="state.view='hospitalSearch'; render();">+ Book Appointment</button></div>
+  
+  <h3 class="serif">Active Appointments</h3>
+  ${state.myBookings.map(b => ticketHtml(b)).join('')}
+
+  <h3 class="serif" style="margin-top:32px">Prescriptions &amp; Health Records</h3>
+  ${myRx.length === 0 ? '<p class="empty">No medical records or prescriptions found.</p>' : myRx.map(r => `
+    <div class="card" style="padding:20px; margin-bottom:14px;">
+      <div style="display:flex; justify-space-between; align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 4px;">Prescribed by ${esc(r.doctorName)}</h3>
+          <div class="sub">Date: ${esc(r.date)} | Status: <b>${esc(r.status)}</b></div>
+        </div>
+      </div>
+      <div class="rx-box" style="margin:14px 0 10px;">
+        <div class="rx-item"><b>Diagnosis:</b> ${esc(r.diagnosis || 'None')}</div>
+        <div class="rx-item"><b>Medications (Tablets/Syrups):</b> ${esc(r.medicines || 'None')}</div>
+        <div class="rx-item"><b>Precautions:</b> ${esc(r.precautions || 'None')}</div>
+      </div>
+      ${!r.medicalId ? `
+        <div style="display:flex; gap:10px; align-items:center;">
+          <select class="field" style="margin:0; max-width:260px;" id="send-med-${r.id}">
+            <option value="">Select Local Pharmacy...</option>
+            ${state.directory.medicals.map(m => `<option value="${m.id}">${esc(m.name)} (${esc(m.city)})</option>`).join('')}
+          </select>
+          <button class="btn btn-medical btn-sm" onclick="sendRxToMedical('${r.id}', document.getElementById('send-med-${r.id}').value)">Send to Pharmacy</button>
+        </div>` : `<div class="sub" style="color:var(--teal)">Sent to <b>${esc((state.directory.medicals.find(m => m.id===r.medicalId)||{}).name || 'Pharmacy')}</b></div>`}
+    </div>`).join('')}
   `;
 }
 
 function ticketHtml(b){
   const info = positionInfo(b.doctorId, b.token);
-  const key = b.doctorId + '-' + b.token;
-  const on = !!state.notifyOn[key];
-
-  if (info.status === 'done') {
-    return `<div class="card done-card">
-      <div class="done-icon">✓</div>
-      <h3 class="serif" style="margin:0 0 6px">Consultation Completed</h3>
-      <p class="sub" style="margin:0 0 10px">You have finished your appointment with ${esc(b.doctorName)} at ${esc(b.hospitalName)}. Thank you for using our digital queue system!</p>
-      <div class="mono" style="font-size:13px; color:var(--muted)">Your token: <b style="color:var(--ink)">#${b.token}</b></div>
-    </div>`;
-  }
-
-  const isNow = info.status === 'now';
-  const advisoryText = isNow
-    ? "It's your turn — please head to the OPD room now."
-    : info.ahead <= 3
-      ? `Only ${info.ahead} patient${info.ahead===1?'':'s'} ahead. Please arrive near the doctor's OPD room shortly.`
-      : `${info.ahead} patients ahead. You have some time — we'll estimate about ${info.ewt} minutes before your turn.`;
-
-  return `
-  <div class="card ticket">
+  return `<div class="card ticket">
     <div class="ticket-head">
-      <div>
-        <div class="tag tag-p" style="margin-bottom:2px">${esc(b.hospitalName)}</div>
-        <h3 class="serif" style="margin:0; font-size:17px">${esc(b.doctorName)}</h3>
-      </div>
-      <button class="btn ${on ? 'btn-primary' : 'btn-ghost'}" onclick="toggleNotify('${key}')">${on ? '🔔 Notifications on' : '🔕 Turn on notifications'}</button>
+      <div><div class="tag tag-p">${esc(b.hospitalName)}</div><h3 class="serif">${esc(b.doctorName)}</h3></div>
     </div>
     <div class="stat-grid">
-      <div><div class="stat-label">Your Token Number</div><div class="stat-val stat-big" style="color:var(--amber-dark)">#${b.token}</div></div>
-      <div><div class="stat-label">Current Token In-OPD</div><div class="stat-val">${info.nowServing!=null ? '#'+info.nowServing : '—'}</div></div>
-      <div><div class="stat-label">Patients Ahead of You</div><div class="stat-val" style="${isNow?'color:var(--coral)':''}">${info.ahead}</div></div>
-      <div><div class="stat-label">Estimated Wait Time (EWT)</div><div class="stat-val">${isNow ? "It's now!" : '~ ' + info.ewt + ' mins'}</div></div>
-    </div>
-    <div class="advisory ${isNow ? 'advisory-now' : 'advisory-warn'}">
-      <span>⚠️</span>
-      <div><div class="title">Arrival Advisory</div><div class="body">${advisoryText}</div></div>
-    </div>
-    <div class="livequeue">
-      <div class="lq-label">Live Queue List</div>
-      <div class="lq-tokens">
-        ${info.liveQueue.map(t => `<span class="lq-chip ${t===b.token?'me':t===info.nowServing?'serving':''}">#${t}</span>`).join('')}
-        ${info.liveQueue.length===0 ? '<span class="empty">Queue is empty.</span>' : ''}
-      </div>
+      <div><div class="stat-label">Your Token</div><div class="stat-val stat-big" style="color:var(--amber-dark)">#${b.token}</div></div>
+      <div><div class="stat-label">Patients Ahead</div><div class="stat-val">${info.ahead}</div></div>
     </div>
   </div>`;
 }
 
 function viewHospitalDashboard(){
-  const a = state.hospitalAdmin;
-  const docs = state.directory.doctors.filter(d => d.hospitalId === a.hospitalId);
-  return `
-  <div class="dash-head">
-    <div><h2 class="serif" style="margin:0">${esc(a.hospitalName)}</h2><p>Manage your doctors and live queues.</p></div>
-    <button class="btn btn-hospital" onclick="state.view='addDoctor'; render();">+ Add doctor</button>
-  </div>
-  <div class="grid2">
-    ${docs.map(d => {
-      const q = state.queues[d.id] || { queue:[] };
-      return `<div class="card doc-card">
-        <div class="doc-top">
-          <div><h3>${esc(d.name)}</h3><div class="sub">${esc(d.specialty)}</div></div>
-          <div><div class="num">Waiting</div><div class="val">${q.queue.length}</div></div>
-        </div>
-        <button class="btn btn-subtle btn-block" style="margin-top:14px" onclick="selectDoctorForManagement('${d.id}')">Manage queue →</button>
-      </div>`;
-    }).join('')}
-    ${docs.length===0 ? `<p class="empty">No doctors added yet — add your first one to start taking bookings.</p>` : ''}
+  const docs = state.directory.doctors.filter(d => d.hospitalId === state.hospitalAdmin.hospitalId);
+  return `<div class="dash-head"><div><h2 class="serif">${esc(state.hospitalAdmin.hospitalName)}</h2></div><button class="btn btn-hospital" onclick="state.view='addDoctor'; render();">+ Add Doctor</button></div>
+  <div class="grid2">${docs.map(d => `<div class="card panel"><h3>${esc(d.name)}</h3><div class="sub">${esc(d.specialty)}</div><button class="btn btn-subtle btn-block" style="margin-top:14px" onclick="selectDoctorForManagement('${d.id}')">Manage Queue &amp; Consult →</button></div>`).join('')}</div>`;
+}
+
+function selectDoctorForManagement(id){ state.selectedDoctor = state.directory.doctors.find(d => d.id === id); state.view = 'manageQueue'; render(); }
+
+function viewManageQueue(){
+  const d = state.selectedDoctor, q = state.queues[d.id] || { lastToken:0, queue:[] }, now = q.queue[0];
+  return `<button class="backlink" onclick="state.view='hospitalDashboard'; render();">← Dashboard</button>
+  <div class="card" style="padding:24px; max-width:480px;">
+    <h2 class="serif">${esc(d.name)}</h2>
+    <div class="mq-now">
+      <div><div class="stat-label">Current Patient</div><div class="val mono">${now ? now.token : '—'}</div><div>${now ? esc(now.patientName) : 'No one in line'}</div></div>
+      <button class="btn btn-hospital" ${now ? '' : 'disabled'} onclick="openConsultationModal('${d.id}')">✓ Finish &amp; Prescribe</button>
+    </div>
   </div>`;
+}
+
+function viewMedicalDashboard(){
+  const myRx = state.prescriptions.filter(r => r.medicalId === state.medicalAdmin.medicalId);
+  return `<div class="dash-head"><div><h2 class="serif">🏥 ${esc(state.medicalAdmin.medicalName)}</h2><p>Incoming Prescriptions from Doctors &amp; Patients</p></div></div>
+  ${myRx.length === 0 ? '<p class="empty">No active prescriptions received yet.</p>' : myRx.map(r => `
+    <div class="card" style="padding:20px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between;">
+        <div>
+          <h3>Patient: ${esc(r.patientName)}</h3>
+          <div class="sub">Prescribed by: ${esc(r.doctorName)} | Date: ${esc(r.date)}</div>
+        </div>
+        <span class="tag ${r.status.includes('Fulfilled')?'tag-p':'tag-h'}">${esc(r.status)}</span>
+      </div>
+      <div class="rx-box" style="margin:12px 0;">
+        <div class="rx-item"><b>Tablets / Syrups:</b> ${esc(r.medicines)}</div>
+        <div class="rx-item"><b>Precautions:</b> ${esc(r.precautions)}</div>
+      </div>
+      ${!r.status.includes('Fulfilled') ? `<button class="btn btn-primary btn-sm" onclick="markRxFulfilled('${r.id}')">✓ Mark as Dispensed &amp; Ready</button>` : ''}
+    </div>`).join('')}`;
+}
+
+function renderConsultationModal(){
+  const c = state.activeConsultation;
+  return `<div class="modal-overlay"><div class="modal">
+    <h3 class="serif">Patient Checkup &amp; Prescription</h3>
+    <div class="sub" style="margin-bottom:12px;">Patient: <b>${esc(c.patientName)}</b> (Token #${c.token})</div>
+    <input class="field" id="c-diag" placeholder="Disease / Diagnosis (e.g. Viral Fever)">
+    <textarea class="field" id="c-meds" placeholder="Tablets, Syrups, Dosage (e.g. Paracetamol 500mg - 1 TAF, Cough Syrup 5ml)"></textarea>
+    <textarea class="field" id="c-prec" placeholder="Precautions & Rest Advice"></textarea>
+    <label class="stat-label">Directly Forward to Medical Store (Optional)</label>
+    <select class="field" id="c-medical">
+      <option value="">Do not send (Patient will choose)</option>
+      ${state.directory.medicals.map(m => `<option value="${m.id}">${esc(m.name)} (${esc(m.city)})</option>`).join('')}
+    </select>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button class="btn btn-hospital btn-block" onclick="submitConsultation()">Complete &amp; Save Record</button>
+      <button class="btn btn-ghost" onclick="state.activeConsultation=null; render();">Cancel</button>
+    </div>
+  </div></div>`;
 }
 
 function viewAddDoctor(){
-  return `
-  <button class="backlink" onclick="state.view='hospitalDashboard'; render();">← Back to dashboard</button>
-  <div class="form-wrap" style="margin-top:0">
-    <div class="card">
-      <h2 class="serif">Add a doctor</h2>
-      <input class="field" id="d-name" placeholder="Doctor's name">
-      <input class="field" id="d-spec" placeholder="Specialty (e.g. Cardiology)">
-      <button class="btn btn-hospital btn-block" onclick="addDoctor()">+ Add doctor</button>
-    </div>
-  </div>`;
-}
-
-function viewManageQueue(){
-  const d = state.selectedDoctor;
-  const q = state.queues[d.id] || { lastToken:0, queue:[] };
-  const now = q.queue[0];
-  return `
-  <button class="backlink" onclick="state.view='hospitalDashboard'; render();">← Back to dashboard</button>
-  <div class="card" style="padding:26px; margin-bottom:20px; max-width:460px;">
-    <h2 class="serif" style="margin:0 0 2px">${esc(d.name)}</h2>
-    <div class="sub" style="margin-bottom:16px">${esc(d.specialty)}</div>
-    <div class="mq-now">
-      <div>
-        <div class="stat-label">Now serving</div>
-        <div class="val mono">${now ? now.token : '—'}</div>
-        ${now ? `<div class="sub" style="margin-top:2px">${esc(now.patientName)}</div>` : ''}
-      </div>
-      <button class="btn btn-hospital" ${now ? '' : 'disabled'} onclick="markServed('${d.id}')">✓ Done, call next</button>
-    </div>
-  </div>
-  <div class="stat-label" style="margin-bottom:8px">Waiting list (${q.queue.length})</div>
-  ${q.queue.map((p,i) => `
-    <div class="card wl-item ${i===0?'first':''}" style="max-width:460px">
-      <div style="display:flex; align-items:center; gap:12px;"><span class="wl-token mono">${p.token}</span><span>${esc(p.patientName)}</span></div>
-      ${i===0 ? '<span class="wl-badge">Now serving</span>' : ''}
-    </div>`).join('')}
-  ${q.queue.length===0 ? `<p class="empty">No one is currently waiting.</p>` : ''}
-  `;
+  return `<button class="backlink" onclick="state.view='hospitalDashboard'; render();">← Dashboard</button>
+  <div class="form-wrap" style="margin-top:0"><div class="card">
+    <h2 class="serif">Add Doctor</h2>
+    <input class="field" id="d-name" placeholder="Doctor Name">
+    <input class="field" id="d-spec" placeholder="Specialty">
+    <button class="btn btn-hospital btn-block" onclick="addDoctor()">+ Add</button>
+  </div></div>`;
 }
 
 render();
