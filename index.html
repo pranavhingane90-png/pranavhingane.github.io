@@ -27,7 +27,7 @@
   .hi{font-size:14px; color:var(--muted);}
 
   /* buttons */
-  .btn{display:inline-flex; align-items:center; gap:7px; border:none; border-radius:9px; font-weight:600; font-size:14px; padding:10px 16px; cursor:pointer; transition:filter .15s, background .15s; font-family:'Inter',sans-serif;}
+  .btn{display:inline-flex; align-items:center; gap:7px; border:none; border-radius:99px; font-weight:600; font-size:14px; padding:10px 16px; cursor:pointer; transition:filter .15s, background .15s; font-family:'Inter',sans-serif;}
   .btn:disabled{opacity:.5; cursor:not-allowed;}
   .btn-primary{background:var(--teal); color:#fff;} .btn-primary:hover{background:var(--teal-dark);}
   .btn-hospital{background:var(--coral); color:#fff;} .btn-hospital:hover{background:var(--coral-dark);}
@@ -201,6 +201,7 @@ let state = {
   lastBooking: null,
   authMode: 'login',
   formError: '',
+  formData: { pName: '', pEmail: '', pPass: '', hName: '', hAddr: '', hCity: '', hEmail: '', hPass: '' },
   search: '',
   notifyOn: readLS(LS.NOTIFY, {}),
   notifyFired: {},
@@ -240,7 +241,11 @@ setInterval(() => {
 }, 6000);
 
 /* ---------------- helpers ---------------- */
-function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function esc(s){ return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function updateFormData(field, val) {
+  state.formData[field] = val;
+}
 
 function positionInfo(doctorId, token){
   const q = state.queues[doctorId] || { queue:[] };
@@ -270,12 +275,20 @@ function goHome(){
 function clearSession(){ localStorage.removeItem(LS.SESSION); }
 
 /* ---------------- actions ---------------- */
-function submitPatientAuth(){
-  const mode = state.authMode;
-  const name = document.getElementById('p-name') ? document.getElementById('p-name').value.trim() : '';
-  const email = document.getElementById('p-email').value.trim().toLowerCase();
-  const password = document.getElementById('p-pass').value;
+function toggleAuthMode() {
+  state.authMode = state.authMode === 'login' ? 'signup' : 'login';
   state.formError = '';
+  render();
+}
+
+function submitPatientAuth(e){
+  if(e) e.preventDefault();
+  const mode = state.authMode;
+  const name = state.formData.pName.trim();
+  const email = state.formData.pEmail.trim().toLowerCase();
+  const password = state.formData.pPass;
+  state.formError = '';
+  
   if (mode === 'signup') {
     if (state.accounts.patients.some(p => p.email === email)) { state.formError='An account with this email already exists.'; render(); return; }
     if (!name || !email || !password) { state.formError='Please fill in every field.'; render(); return; }
@@ -294,14 +307,16 @@ function submitPatientAuth(){
   render();
 }
 
-function submitHospitalAuth(){
+function submitHospitalAuth(e){
+  if(e) e.preventDefault();
   const mode = state.authMode;
-  const hospitalName = document.getElementById('h-name') ? document.getElementById('h-name').value.trim() : '';
-  const address = document.getElementById('h-addr') ? document.getElementById('h-addr').value.trim() : '';
-  const city = document.getElementById('h-city') ? document.getElementById('h-city').value.trim() : '';
-  const email = document.getElementById('h-email').value.trim().toLowerCase();
-  const password = document.getElementById('h-pass').value;
+  const hospitalName = state.formData.hName.trim();
+  const address = state.formData.hAddr.trim();
+  const city = state.formData.hCity.trim();
+  const email = state.formData.hEmail.trim().toLowerCase();
+  const password = state.formData.hPass;
   state.formError = '';
+  
   if (mode === 'signup') {
     if (state.accounts.hospitalAdmins.some(a => a.email === email)) { state.formError='An account with this email already exists.'; render(); return; }
     if (!hospitalName || !address || !city || !email || !password) { state.formError='Please fill in every field.'; render(); return; }
@@ -467,12 +482,14 @@ function viewPatientAuth(){
     <div class="card">
       <h2 class="serif">${m==='login' ? 'Patient login' : 'Create your account'}</h2>
       <div class="lead">${m==='login' ? 'Welcome back — find your next appointment.' : 'Book appointments and track your queue.'}</div>
-      ${m==='signup' ? `<input class="field" id="p-name" placeholder="Full name">` : ''}
-      <input class="field" id="p-email" type="email" placeholder="Email">
-      <input class="field" id="p-pass" type="password" placeholder="Password">
-      ${state.formError ? `<div class="err">${esc(state.formError)}</div>` : ''}
-      <button class="btn btn-primary btn-block" onclick="submitPatientAuth()">${m==='login' ? 'Log in' : 'Sign up'}</button>
-      <button class="switch-link switch-p" onclick="state.authMode = state.authMode==='login' ? 'signup' : 'login'; state.formError=''; render();">
+      <form onsubmit="submitPatientAuth(event)">
+        ${m==='signup' ? `<input class="field" placeholder="Full name" value="${esc(state.formData.pName)}" oninput="updateFormData('pName', this.value)">` : ''}
+        <input class="field" type="email" placeholder="Email" value="${esc(state.formData.pEmail)}" oninput="updateFormData('pEmail', this.value)">
+        <input class="field" type="password" placeholder="Password" value="${esc(state.formData.pPass)}" oninput="updateFormData('pPass', this.value)">
+        ${state.formError ? `<div class="err">${esc(state.formError)}</div>` : ''}
+        <button type="submit" class="btn btn-primary btn-block">${m==='login' ? 'Log in' : 'Sign up'}</button>
+      </form>
+      <button type="button" class="switch-link switch-p" onclick="toggleAuthMode()">
         ${m==='login' ? 'New here? Create an account' : 'Already have an account? Log in'}
       </button>
     </div>
@@ -486,15 +503,17 @@ function viewHospitalAuth(){
     <div class="card">
       <h2 class="serif">${m==='login' ? 'Hospital login' : 'Register your hospital'}</h2>
       <div class="lead">${m==='login' ? 'Manage your doctors and live queues.' : 'List your hospital and start managing appointments.'}</div>
-      ${m==='signup' ? `
-        <input class="field" id="h-name" placeholder="Hospital name">
-        <input class="field" id="h-addr" placeholder="Address">
-        <input class="field" id="h-city" placeholder="City">` : ''}
-      <input class="field" id="h-email" type="email" placeholder="Admin email">
-      <input class="field" id="h-pass" type="password" placeholder="Password">
-      ${state.formError ? `<div class="err">${esc(state.formError)}</div>` : ''}
-      <button class="btn btn-hospital btn-block" onclick="submitHospitalAuth()">${m==='login' ? 'Log in' : 'Register hospital'}</button>
-      <button class="switch-link switch-h" onclick="state.authMode = state.authMode==='login' ? 'signup' : 'login'; state.formError=''; render();">
+      <form onsubmit="submitHospitalAuth(event)">
+        ${m==='signup' ? `
+          <input class="field" placeholder="Hospital name" value="${esc(state.formData.hName)}" oninput="updateFormData('hName', this.value)">
+          <input class="field" placeholder="Address" value="${esc(state.formData.hAddr)}" oninput="updateFormData('hAddr', this.value)">
+          <input class="field" placeholder="City" value="${esc(state.formData.hCity)}" oninput="updateFormData('hCity', this.value)">` : ''}
+        <input class="field" type="email" placeholder="Admin email" value="${esc(state.formData.hEmail)}" oninput="updateFormData('hEmail', this.value)">
+        <input class="field" type="password" placeholder="Password" value="${esc(state.formData.hPass)}" oninput="updateFormData('hPass', this.value)">
+        ${state.formError ? `<div class="err">${esc(state.formError)}</div>` : ''}
+        <button type="submit" class="btn btn-hospital btn-block">${m==='login' ? 'Log in' : 'Register hospital'}</button>
+      </form>
+      <button type="button" class="switch-link switch-h" onclick="toggleAuthMode()">
         ${m==='login' ? 'New hospital? Register here' : 'Already registered? Log in'}
       </button>
     </div>
