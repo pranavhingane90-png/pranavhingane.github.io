@@ -1,306 +1,862 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patient Live Queue Tracker</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome for Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    /* Custom scrollbar for queue list */
-    .queue-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
-    .queue-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .queue-scrollbar::-webkit-scrollbar-thumb {
-      background: #e2e8f0;
-      border-radius: 9999px;
-    }
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans min-h-screen p-4 md:p-8">
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  Hospital, Stethoscope, LogIn, UserPlus, ArrowLeft, ArrowRight,
+  Search, Plus, Check, Clock, LogOut, RefreshCw, MapPin, Users, X, Bell, BellOff
+} from 'lucide-react';
 
-  <!-- Header -->
-  <header class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6 border-gray-200">
-    <div class="flex items-center gap-3">
-      <div class="p-3 rounded-2xl bg-sky-600 text-white">
-        <i class="fa-solid fa-hospital text-2xl"></i>
-      </div>
-      <div>
-        <h1 id="hospitalName" class="text-2xl sm:text-3xl font-extrabold text-gray-950 tracking-tight">Apollo Hospitals, Bangalore</h1>
-        <p id="doctorName" class="text-base sm:text-lg text-gray-600">Dr. Alisha Singh (Cardiology)</p>
-      </div>
-    </div>
-    
-    <button id="notifyBtn" onclick="toggleNotifications()" class="flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition bg-gray-900 text-white hover:bg-gray-700">
-      <i id="notifyIcon" class="fa-regular fa-bell"></i>
-      <span id="notifyText">Turn On Notifications</span>
+const AVG_CONSULT_MIN = 10; // used only to estimate wait time for display
+
+// ---------- demo seed data (only used the very first time, before real data exists) ----------
+function seedDirectory() {
+  const h1 = 'h_seed_1', h2 = 'h_seed_2';
+  return {
+    hospitals: [
+      { id: h1, name: 'Sunrise General Hospital', city: 'Pune', address: 'FC Road, Pune' },
+      { id: h2, name: 'Green Valley Multispecialty', city: 'Pune', address: 'Baner Road, Pune' },
+    ],
+    doctors: [
+      { id: 'd_seed_1', hospitalId: h1, name: 'Dr. Anita Rao', specialty: 'Cardiology' },
+      { id: 'd_seed_2', hospitalId: h1, name: 'Dr. Sameer Kulkarni', specialty: 'General Medicine' },
+      { id: 'd_seed_3', hospitalId: h2, name: 'Dr. Neha Deshpande', specialty: 'Pediatrics' },
+      { id: 'd_seed_4', hospitalId: h2, name: 'Dr. Vikram Joshi', specialty: 'Orthopedics' },
+    ],
+  };
+}
+function seedQueues() {
+  return {
+    d_seed_1: { lastToken: 9, queue: [
+      { token: 8, patientEmail: 'demo1@example.com', patientName: 'Demo Patient A', bookedAt: Date.now() },
+      { token: 9, patientEmail: 'demo2@example.com', patientName: 'Demo Patient B', bookedAt: Date.now() },
+    ]},
+    d_seed_2: { lastToken: 3, queue: [
+      { token: 3, patientEmail: 'demo3@example.com', patientName: 'Demo Patient C', bookedAt: Date.now() },
+    ]},
+    d_seed_3: { lastToken: 0, queue: [] },
+    d_seed_4: { lastToken: 5, queue: [] },
+  };
+}
+
+// ---------- small reusable UI bits ----------
+const Button = ({ children, variant = 'primary', className = '', ...props }) => {
+  const base = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold text-sm px-4 py-2.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+  const variants = {
+    primary: 'bg-teal-700 hover:bg-teal-800 text-white',
+    hospital: 'bg-rose-700 hover:bg-rose-800 text-white',
+    ghost: 'bg-transparent hover:bg-slate-100 text-slate-700 border border-slate-200',
+    subtle: 'bg-slate-100 hover:bg-slate-200 text-slate-800',
+  };
+  return <button className={`${base} ${variants[variant]} ${className}`} {...props}>{children}</button>;
+};
+
+const Input = (props) => (
+  <input
+    {...props}
+    className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+  />
+);
+
+const Card = ({ children, className = '' }) => (
+  <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm ${className}`}>{children}</div>
+);
+
+const TopBar = ({ onHome, right }) => (
+  <header className="flex items-center justify-between py-6">
+    <button onClick={onHome} className="flex items-center gap-2 font-serif font-bold text-xl text-slate-900">
+      <span className="w-2.5 h-2.5 rounded-full bg-rose-600" />
+      MediQ
     </button>
+    <div className="flex items-center gap-3">{right}</div>
   </header>
+);
 
-  <!-- Main Active Tracker State -->
-  <main id="trackerContent" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-    
-    <!-- Left Column: Primary Queue Stats -->
-    <div class="xl:col-span-2 flex flex-col gap-8">
-      
-      <!-- Your Ticket Card -->
-      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-gray-100">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div class="flex items-center gap-3">
-            <i class="fa-solid fa-ticket text-sky-600 text-2xl"></i>
-            <h2 class="text-2xl font-bold">Your Queue Ticket</h2>
-          </div>
-          <div id="statusBadgeContainer">
-            <!-- Dynamic Status Badge -->
-          </div>
-        </div>
+// ---------- app ----------
+export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState('landing');
+  const [directory, setDirectory] = useState({ hospitals: [], doctors: [] });
+  const [queues, setQueues] = useState({});
+  const [accounts, setAccounts] = useState({ patients: [], hospitalAdmins: [] });
+  const [patient, setPatient] = useState(null);
+  const [hospitalAdmin, setHospitalAdmin] = useState(null);
+  const [myBookings, setMyBookings] = useState([]);
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [lastBooking, setLastBooking] = useState(null);
+  const [authMode, setAuthMode] = useState('login');
+  const [formError, setFormError] = useState('');
+  const [search, setSearch] = useState('');
+  const [saving, setSaving] = useState(false);
+  const pollRef = useRef(null);
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-sky-50/50 p-6 rounded-2xl border border-sky-100">
-          <div class="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
-            <div class="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
-              <i class="fa-solid fa-user-gear text-2xl"></i>
-            </div>
-            <div>
-              <div class="text-sm font-medium text-gray-500">Your Token Number</div>
-              <div id="myTokenDisplay" class="text-4xl sm:text-5xl font-black text-sky-700 tracking-tight">#15</div>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-5 p-4 rounded-xl bg-white border border-sky-100">
-            <div class="p-3.5 bg-sky-100/70 text-sky-700 rounded-full">
-              <i class="fa-solid fa-users text-2xl"></i>
-            </div>
-            <div>
-              <div class="text-sm font-medium text-gray-500">Current Token In-OPD</div>
-              <div id="activeTokenDisplay" class="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight">#3</div>
-            </div>
-          </div>
-        </div>
+  // ---------- initial load ----------
+  useEffect(() => {
+    (async () => {
+      let dir, qs, accts;
+      try {
+        const r = await window.storage.get('directory', true);
+        dir = JSON.parse(r.value);
+      } catch {
+        dir = seedDirectory();
+        await window.storage.set('directory', JSON.stringify(dir), true);
+      }
+      try {
+        const r = await window.storage.get('queues', true);
+        qs = JSON.parse(r.value);
+      } catch {
+        qs = seedQueues();
+        await window.storage.set('queues', JSON.stringify(qs), true);
+      }
+      try {
+        const r = await window.storage.get('accounts', true);
+        accts = JSON.parse(r.value);
+      } catch {
+        accts = { patients: [], hospitalAdmins: [] };
+        await window.storage.set('accounts', JSON.stringify(accts), true);
+      }
+      setDirectory(dir);
+      setQueues(qs);
+      setAccounts(accts);
+      setLoading(false);
+    })();
+  }, []);
+
+  // ---------- light polling so queue numbers feel live ----------
+  useEffect(() => {
+    pollRef.current = setInterval(async () => {
+      try {
+        const r = await window.storage.get('queues', true);
+        setQueues(JSON.parse(r.value));
+      } catch { /* ignore */ }
+    }, 6000);
+    return () => clearInterval(pollRef.current);
+  }, []);
+
+  const saveDirectory = useCallback(async (next) => {
+    setDirectory(next);
+    setSaving(true);
+    try { await window.storage.set('directory', JSON.stringify(next), true); } finally { setSaving(false); }
+  }, []);
+  const saveQueues = useCallback(async (next) => {
+    setQueues(next);
+    setSaving(true);
+    try { await window.storage.set('queues', JSON.stringify(next), true); } finally { setSaving(false); }
+  }, []);
+  const saveAccounts = useCallback(async (next) => {
+    setAccounts(next);
+    setSaving(true);
+    try { await window.storage.set('accounts', JSON.stringify(next), true); } finally { setSaving(false); }
+  }, []);
+  const savePersonalBookings = useCallback(async (email, next) => {
+    setMyBookings(next);
+    try { await window.storage.set(`bookings_${email}`, JSON.stringify(next), false); } catch { /* ignore */ }
+  }, []);
+
+  const goHome = () => {
+    setView('landing');
+    setFormError('');
+    setSelectedHospital(null);
+    setSelectedDoctor(null);
+  };
+
+  // ---------- patient auth ----------
+  const handlePatientAuth = async ({ name, email, password }) => {
+    setFormError('');
+    email = email.trim().toLowerCase();
+    if (authMode === 'signup') {
+      if (accounts.patients.some(p => p.email === email)) {
+        setFormError('An account with this email already exists.'); return;
+      }
+      if (!name || !email || !password) { setFormError('Please fill in every field.'); return; }
+      const next = { ...accounts, patients: [...accounts.patients, { name, email, password }] };
+      await saveAccounts(next);
+      setPatient({ name, email });
+      await savePersonalBookings(email, []);
+      setView('hospitalSearch');
+    } else {
+      const found = accounts.patients.find(p => p.email === email && p.password === password);
+      if (!found) { setFormError('Email or password is incorrect.'); return; }
+      setPatient({ name: found.name, email: found.email });
+      try {
+        const r = await window.storage.get(`bookings_${email}`, false);
+        setMyBookings(JSON.parse(r.value));
+      } catch { setMyBookings([]); }
+      setView('hospitalSearch');
+    }
+  };
+
+  // ---------- hospital auth ----------
+  const handleHospitalAuth = async ({ hospitalName, address, city, email, password }) => {
+    setFormError('');
+    email = email.trim().toLowerCase();
+    if (authMode === 'signup') {
+      if (accounts.hospitalAdmins.some(a => a.email === email)) {
+        setFormError('An account with this email already exists.'); return;
+      }
+      if (!hospitalName || !address || !city || !email || !password) { setFormError('Please fill in every field.'); return; }
+      const hospitalId = 'h_' + Date.now();
+      const nextDir = { ...directory, hospitals: [...directory.hospitals, { id: hospitalId, name: hospitalName, address, city }] };
+      const nextAccts = { ...accounts, hospitalAdmins: [...accounts.hospitalAdmins, { email, password, hospitalId }] };
+      await saveDirectory(nextDir);
+      await saveAccounts(nextAccts);
+      setHospitalAdmin({ email, hospitalId, hospitalName });
+      setView('hospitalDashboard');
+    } else {
+      const found = accounts.hospitalAdmins.find(a => a.email === email && a.password === password);
+      if (!found) { setFormError('Email or password is incorrect.'); return; }
+      const h = directory.hospitals.find(h => h.id === found.hospitalId);
+      setHospitalAdmin({ email: found.email, hospitalId: found.hospitalId, hospitalName: h ? h.name : 'Your hospital' });
+      setView('hospitalDashboard');
+    }
+  };
+
+  // ---------- doctor management ----------
+  const addDoctor = async ({ name, specialty }) => {
+    const id = 'd_' + Date.now();
+    const nextDir = { ...directory, doctors: [...directory.doctors, { id, hospitalId: hospitalAdmin.hospitalId, name, specialty }] };
+    const nextQ = { ...queues, [id]: { lastToken: 0, queue: [] } };
+    await saveDirectory(nextDir);
+    await saveQueues(nextQ);
+  };
+
+  // ---------- booking ----------
+  const bookAppointment = async (doctor) => {
+    const q = queues[doctor.id] || { lastToken: 0, queue: [] };
+    const token = q.lastToken + 1;
+    const nextQ = {
+      ...queues,
+      [doctor.id]: {
+        lastToken: token,
+        queue: [...q.queue, { token, patientEmail: patient.email, patientName: patient.name, bookedAt: Date.now() }],
+      },
+    };
+    await saveQueues(nextQ);
+    const hospital = directory.hospitals.find(h => h.id === doctor.hospitalId);
+    const bookingRecord = { doctorId: doctor.id, doctorName: doctor.name, hospitalId: doctor.hospitalId, hospitalName: hospital?.name, token, bookedAt: Date.now() };
+    await savePersonalBookings(patient.email, [...myBookings, bookingRecord]);
+    setLastBooking(bookingRecord);
+    setView('bookingConfirm');
+  };
+
+  // ---------- hospital queue control ----------
+  const markServed = async (doctorId) => {
+    const q = queues[doctorId];
+    if (!q || q.queue.length === 0) return;
+    const nextQ = { ...queues, [doctorId]: { ...q, queue: q.queue.slice(1) } };
+    await saveQueues(nextQ);
+  };
+
+  const positionInfo = (doctorId, token) => {
+    const q = queues[doctorId] || { queue: [] };
+    const idx = q.queue.findIndex(x => x.token === token);
+    const liveQueue = q.queue.map(x => x.token);
+    if (idx === -1) return { status: 'done', liveQueue };
+    if (idx === 0) return { status: 'now', ahead: 0, nowServing: q.queue[0].token, ewt: 0, liveQueue };
+    return {
+      status: 'waiting',
+      ahead: idx,
+      nowServing: q.queue[0].token,
+      ewt: idx * AVG_CONSULT_MIN,
+      liveQueue,
+    };
+  };
+
+  // ================= views =================
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Fonts />
+        <div className="text-slate-500 text-sm font-mono">Loading MediQ…</div>
       </div>
+    );
+  }
 
-      <!-- Live Metrics Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Patients Ahead -->
-        <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
-          <div class="p-4 bg-amber-50 text-amber-600 rounded-full border border-amber-100">
-            <i class="fa-solid fa-user-clock text-3xl"></i>
-          </div>
-          <div>
-            <div id="patientsAheadDisplay" class="text-3xl font-extrabold text-gray-950">11</div>
-            <div class="text-gray-600 mt-0.5">Patients Ahead of You</div>
-          </div>
-        </div>
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <Fonts />
+      <div className="max-w-5xl mx-auto px-6">
 
-        <!-- Estimated Wait Time -->
-        <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-6">
-          <div class="p-4 bg-green-50 text-green-600 rounded-full border border-green-100">
-            <i class="fa-regular fa-clock text-3xl"></i>
-          </div>
-          <div>
-            <div id="ewtDisplay" class="text-3xl font-extrabold text-gray-950">~ 110 <span class="text-lg font-medium text-gray-600">mins</span></div>
-            <div class="text-gray-600 mt-0.5 font-medium">Estimated Wait Time (EWT)</div>
-          </div>
-        </div>
+        {view === 'landing' && (
+          <>
+            <TopBar onHome={goHome} />
+            <Landing
+              onPatient={() => { setAuthMode('login'); setFormError(''); setView('patientAuth'); }}
+              onHospital={() => { setAuthMode('login'); setFormError(''); setView('hospitalAuth'); }}
+            />
+          </>
+        )}
+
+        {view === 'patientAuth' && (
+          <>
+            <TopBar onHome={goHome} right={<Button variant="ghost" onClick={goHome}><ArrowLeft size={15} />Back</Button>} />
+            <PatientAuthForm mode={authMode} setMode={setAuthMode} error={formError} onSubmit={handlePatientAuth} />
+          </>
+        )}
+
+        {view === 'hospitalAuth' && (
+          <>
+            <TopBar onHome={goHome} right={<Button variant="ghost" onClick={goHome}><ArrowLeft size={15} />Back</Button>} />
+            <HospitalAuthForm mode={authMode} setMode={setAuthMode} error={formError} onSubmit={handleHospitalAuth} />
+          </>
+        )}
+
+        {view === 'hospitalSearch' && patient && (
+          <>
+            <TopBar onHome={goHome} right={<PatientMenu patient={patient} onMyAppointments={() => setView('myAppointments')} onLogout={() => { setPatient(null); goHome(); }} />} />
+            <HospitalSearch
+              hospitals={directory.hospitals}
+              search={search}
+              setSearch={setSearch}
+              onSelect={(h) => { setSelectedHospital(h); setView('doctorList'); }}
+            />
+          </>
+        )}
+
+        {view === 'doctorList' && selectedHospital && (
+          <>
+            <TopBar onHome={goHome} right={<PatientMenu patient={patient} onMyAppointments={() => setView('myAppointments')} onLogout={() => { setPatient(null); goHome(); }} />} />
+            <DoctorList
+              hospital={selectedHospital}
+              doctors={directory.doctors.filter(d => d.hospitalId === selectedHospital.id)}
+              queues={queues}
+              onBack={() => setView('hospitalSearch')}
+              onSelect={(d) => { setSelectedDoctor(d); setView('booking'); }}
+            />
+          </>
+        )}
+
+        {view === 'booking' && selectedDoctor && (
+          <>
+            <TopBar onHome={goHome} right={<PatientMenu patient={patient} onMyAppointments={() => setView('myAppointments')} onLogout={() => { setPatient(null); goHome(); }} />} />
+            <BookingScreen
+              hospital={selectedHospital}
+              doctor={selectedDoctor}
+              queue={queues[selectedDoctor.id] || { lastToken: 0, queue: [] }}
+              onBack={() => setView('doctorList')}
+              onConfirm={() => bookAppointment(selectedDoctor)}
+            />
+          </>
+        )}
+
+        {view === 'bookingConfirm' && lastBooking && (
+          <>
+            <TopBar onHome={goHome} right={<PatientMenu patient={patient} onMyAppointments={() => setView('myAppointments')} onLogout={() => { setPatient(null); goHome(); }} />} />
+            <BookingConfirmScreen booking={lastBooking} onDone={() => setView('myAppointments')} />
+          </>
+        )}
+
+        {view === 'myAppointments' && patient && (
+          <>
+            <TopBar onHome={goHome} right={<PatientMenu patient={patient} onMyAppointments={() => setView('myAppointments')} onLogout={() => { setPatient(null); goHome(); }} />} />
+            <MyAppointments
+              bookings={myBookings}
+              positionInfo={positionInfo}
+              onBookMore={() => setView('hospitalSearch')}
+            />
+          </>
+        )}
+
+        {view === 'hospitalDashboard' && hospitalAdmin && (
+          <>
+            <TopBar onHome={goHome} right={<HospitalMenu admin={hospitalAdmin} onLogout={() => { setHospitalAdmin(null); goHome(); }} />} />
+            <HospitalDashboard
+              admin={hospitalAdmin}
+              doctors={directory.doctors.filter(d => d.hospitalId === hospitalAdmin.hospitalId)}
+              queues={queues}
+              onAddDoctor={() => setView('addDoctor')}
+              onManageQueue={(d) => { setSelectedDoctor(d); setView('manageQueue'); }}
+            />
+          </>
+        )}
+
+        {view === 'addDoctor' && hospitalAdmin && (
+          <>
+            <TopBar onHome={goHome} right={<HospitalMenu admin={hospitalAdmin} onLogout={() => { setHospitalAdmin(null); goHome(); }} />} />
+            <AddDoctorForm onBack={() => setView('hospitalDashboard')} onSubmit={async (vals) => { await addDoctor(vals); setView('hospitalDashboard'); }} />
+          </>
+        )}
+
+        {view === 'manageQueue' && hospitalAdmin && selectedDoctor && (
+          <>
+            <TopBar onHome={goHome} right={<HospitalMenu admin={hospitalAdmin} onLogout={() => { setHospitalAdmin(null); goHome(); }} />} />
+            <ManageQueue
+              doctor={selectedDoctor}
+              queue={queues[selectedDoctor.id] || { lastToken: 0, queue: [] }}
+              onBack={() => setView('hospitalDashboard')}
+              onMarkServed={() => markServed(selectedDoctor.id)}
+            />
+          </>
+        )}
+
       </div>
+      {saving && <div className="fixed bottom-4 right-4 text-xs font-mono text-slate-400 bg-white border border-slate-200 rounded-full px-3 py-1.5 shadow-sm">Saving…</div>}
+    </div>
+  );
+}
 
-      <!-- Arrival Advisory Banner -->
-      <div id="arrivalAdvisory" class="hidden bg-amber-100/60 p-6 rounded-2xl border-2 border-dashed border-amber-300 text-amber-950 flex gap-4 items-center">
-        <i class="fa-solid fa-bell text-3xl text-amber-500 animate-bounce"></i>
+// ---------- font import (kept consistent with the landing page brand) ----------
+function Fonts() {
+  return (
+    <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+      .font-serif { font-family: 'Spectral', serif; }
+      .font-mono { font-family: 'IBM Plex Mono', monospace; }
+    `}</style>
+  );
+}
+
+// ---------- Landing ----------
+function Landing({ onPatient, onHospital }) {
+  return (
+    <div className="pb-16">
+      <div className="text-center pt-10 pb-10">
+        <h1 className="font-serif font-bold text-4xl text-slate-900">Skip the line. Not the care.</h1>
+        <p className="text-slate-500 mt-3 max-w-lg mx-auto">Book online, track your token live, and arrive only when your turn is close.</p>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-5">
+        <button onClick={onPatient} className="text-left group">
+          <Card className="p-7 h-full hover:border-teal-600 hover:-translate-y-0.5 transition-all">
+            <div className="font-mono text-xs uppercase tracking-wider text-teal-700 font-semibold mb-3">Patient</div>
+            <h2 className="font-serif text-2xl font-semibold mb-2">Find a doctor & book</h2>
+            <p className="text-slate-500 text-sm mb-6">Search hospitals, pick a doctor, and get a live token number.</p>
+            <div className="flex items-center gap-2 text-teal-700 font-semibold text-sm mt-auto">
+              <LogIn size={16} /> Login / Sign up <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Card>
+        </button>
+        <button onClick={onHospital} className="text-left group">
+          <Card className="p-7 h-full hover:border-rose-600 hover:-translate-y-0.5 transition-all">
+            <div className="font-mono text-xs uppercase tracking-wider text-rose-700 font-semibold mb-3">Hospital</div>
+            <h2 className="font-serif text-2xl font-semibold mb-2">Register your hospital</h2>
+            <p className="text-slate-500 text-sm mb-6">Add doctors, manage schedules, and run the queue from a dashboard.</p>
+            <div className="flex items-center gap-2 text-rose-700 font-semibold text-sm mt-auto">
+              <Hospital size={16} /> Register / Login <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Card>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Patient menu ----------
+function PatientMenu({ patient, onMyAppointments, onLogout }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-slate-500 hidden sm:inline">Hi, {patient.name.split(' ')[0]}</span>
+      <Button variant="subtle" onClick={onMyAppointments}><Clock size={15} />My appointments</Button>
+      <Button variant="ghost" onClick={onLogout}><LogOut size={15} /></Button>
+    </div>
+  );
+}
+function HospitalMenu({ admin, onLogout }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-slate-500 hidden sm:inline">{admin.hospitalName}</span>
+      <Button variant="ghost" onClick={onLogout}><LogOut size={15} /></Button>
+    </div>
+  );
+}
+
+// ---------- Patient auth ----------
+function PatientAuthForm({ mode, setMode, error, onSubmit }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  return (
+    <div className="max-w-sm mx-auto pt-8 pb-16">
+      <Card className="p-7">
+        <h2 className="font-serif text-xl font-semibold mb-1">{mode === 'login' ? 'Patient login' : 'Create your account'}</h2>
+        <p className="text-slate-500 text-sm mb-5">{mode === 'login' ? 'Welcome back — find your next appointment.' : 'Book appointments and track your queue.'}</p>
+        <div className="space-y-3">
+          {mode === 'signup' && <Input placeholder="Full name" value={name} onChange={e => setName(e.target.value)} />}
+          <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+          <Input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+          {error && <div className="text-rose-600 text-sm">{error}</div>}
+          <Button className="w-full" onClick={() => onSubmit({ name, email, password })}>
+            {mode === 'login' ? <LogIn size={16} /> : <UserPlus size={16} />}
+            {mode === 'login' ? 'Log in' : 'Sign up'}
+          </Button>
+        </div>
+        <button className="text-sm text-teal-700 mt-4 w-full text-center hover:underline" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>
+          {mode === 'login' ? "New here? Create an account" : 'Already have an account? Log in'}
+        </button>
+      </Card>
+    </div>
+  );
+}
+
+// ---------- Hospital auth ----------
+function HospitalAuthForm({ mode, setMode, error, onSubmit }) {
+  const [hospitalName, setHospitalName] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  return (
+    <div className="max-w-sm mx-auto pt-8 pb-16">
+      <Card className="p-7">
+        <h2 className="font-serif text-xl font-semibold mb-1">{mode === 'login' ? 'Hospital login' : 'Register your hospital'}</h2>
+        <p className="text-slate-500 text-sm mb-5">{mode === 'login' ? 'Manage your doctors and live queues.' : 'List your hospital and start managing appointments.'}</p>
+        <div className="space-y-3">
+          {mode === 'signup' && <>
+            <Input placeholder="Hospital name" value={hospitalName} onChange={e => setHospitalName(e.target.value)} />
+            <Input placeholder="Address" value={address} onChange={e => setAddress(e.target.value)} />
+            <Input placeholder="City" value={city} onChange={e => setCity(e.target.value)} />
+          </>}
+          <Input type="email" placeholder="Admin email" value={email} onChange={e => setEmail(e.target.value)} />
+          <Input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+          {error && <div className="text-rose-600 text-sm">{error}</div>}
+          <Button variant="hospital" className="w-full" onClick={() => onSubmit({ hospitalName, address, city, email, password })}>
+            {mode === 'login' ? <LogIn size={16} /> : <UserPlus size={16} />}
+            {mode === 'login' ? 'Log in' : 'Register hospital'}
+          </Button>
+        </div>
+        <button className="text-sm text-rose-700 mt-4 w-full text-center hover:underline" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}>
+          {mode === 'login' ? "New hospital? Register here" : 'Already registered? Log in'}
+        </button>
+      </Card>
+    </div>
+  );
+}
+
+// ---------- Hospital search ----------
+function HospitalSearch({ hospitals, search, setSearch, onSelect }) {
+  const filtered = hospitals.filter(h =>
+    h.name.toLowerCase().includes(search.toLowerCase()) || h.city.toLowerCase().includes(search.toLowerCase())
+  );
+  return (
+    <div className="pb-16">
+      <h2 className="font-serif text-2xl font-semibold mt-4 mb-4">Find a hospital</h2>
+      <div className="relative mb-5">
+        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by hospital name or city…"
+          className="w-full rounded-lg border border-slate-300 pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
+        />
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4">
+        {filtered.map(h => (
+          <button key={h.id} onClick={() => onSelect(h)} className="text-left">
+            <Card className="p-5 h-full hover:border-teal-600 hover:-translate-y-0.5 transition-all">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0"><Hospital size={18} /></div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">{h.name}</h3>
+                  <div className="text-slate-500 text-sm flex items-center gap-1 mt-1"><MapPin size={13} />{h.address}</div>
+                </div>
+              </div>
+            </Card>
+          </button>
+        ))}
+        {filtered.length === 0 && <p className="text-slate-400 text-sm">No hospitals match "{search}".</p>}
+      </div>
+    </div>
+  );
+}
+
+// ---------- Doctor list ----------
+function DoctorList({ hospital, doctors, queues, onBack, onSelect }) {
+  return (
+    <div className="pb-16">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-slate-500 text-sm mb-4 hover:text-slate-700"><ArrowLeft size={14} />Back to hospitals</button>
+      <h2 className="font-serif text-2xl font-semibold mb-1">{hospital.name}</h2>
+      <p className="text-slate-500 text-sm mb-5">{hospital.address}</p>
+      <div className="grid sm:grid-cols-2 gap-4">
+        {doctors.map(d => {
+          const q = queues[d.id] || { queue: [] };
+          return (
+            <button key={d.id} onClick={() => onSelect(d)} className="text-left">
+              <Card className="p-5 h-full hover:border-teal-600 hover:-translate-y-0.5 transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center shrink-0"><Stethoscope size={18} /></div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-slate-900">{d.name}</h3>
+                    <div className="text-slate-500 text-sm">{d.specialty}</div>
+                    <div className="font-mono text-xs text-teal-700 mt-2 flex items-center gap-1"><Users size={12} />{q.queue.length} waiting right now</div>
+                  </div>
+                </div>
+              </Card>
+            </button>
+          );
+        })}
+        {doctors.length === 0 && <p className="text-slate-400 text-sm">No doctors listed yet for this hospital.</p>}
+      </div>
+    </div>
+  );
+}
+
+// ---------- Booking screen ----------
+function BookingScreen({ hospital, doctor, queue, onBack, onConfirm }) {
+  const myToken = queue.lastToken + 1;
+  const nowServing = queue.queue.length ? queue.queue[0].token : null;
+  return (
+    <div className="pb-16 max-w-lg mx-auto">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-slate-500 text-sm mb-4 hover:text-slate-700"><ArrowLeft size={14} />Back to doctors</button>
+      <Card className="p-7">
+        <div className="font-mono text-xs uppercase tracking-wider text-teal-700 font-semibold mb-2">{hospital.name}</div>
+        <h2 className="font-serif text-2xl font-semibold mb-1">{doctor.name}</h2>
+        <p className="text-slate-500 text-sm mb-6">{doctor.specialty}</p>
+        <div className="bg-slate-50 rounded-xl p-5 flex items-center justify-between mb-6">
+          <div>
+            <div className="font-mono text-xs uppercase text-slate-400 mb-1">Now serving</div>
+            <div className="font-mono text-3xl font-semibold text-slate-800">{nowServing ?? '—'}</div>
+          </div>
+          <div className="text-right">
+            <div className="font-mono text-xs uppercase text-slate-400 mb-1">Your token would be</div>
+            <div className="font-mono text-3xl font-semibold text-amber-600">{myToken}</div>
+          </div>
+        </div>
+        <p className="text-slate-500 text-sm mb-6">{queue.queue.length} {queue.queue.length === 1 ? 'person is' : 'people are'} currently ahead in line.</p>
+        <Button className="w-full" onClick={onConfirm}><Check size={16} />Confirm appointment</Button>
+      </Card>
+    </div>
+  );
+}
+
+// ---------- Booking confirmation ----------
+function BookingConfirmScreen({ booking, onDone }) {
+  return (
+    <div className="pb-16 max-w-md mx-auto pt-6 text-center">
+      <Card className="p-8">
+        <div className="w-12 h-12 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center mx-auto mb-4"><Check size={22} /></div>
+        <h2 className="font-serif text-2xl font-semibold mb-1">You're booked!</h2>
+        <p className="text-slate-500 text-sm mb-6">{booking.doctorName} · {booking.hospitalName}</p>
+        <div className="font-mono text-5xl font-bold text-amber-600 mb-2">{booking.token}</div>
+        <div className="text-slate-400 text-xs font-mono uppercase mb-6">Your token number</div>
+        <Button className="w-full" onClick={onDone}>Track my queue<ArrowRight size={16} /></Button>
+      </Card>
+    </div>
+  );
+}
+
+// ---------- My appointments ----------
+function MyAppointments({ bookings, positionInfo, onBookMore }) {
+  const [notifyOn, setNotifyOn] = useState({}); // { "doctorId-token": true }
+  const firedRef = useRef({}); // tracks which tickets already got a browser notification
+
+  const toggleNotify = (key, doctorName) => {
+    const turningOn = !notifyOn[key];
+    if (turningOn && 'Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+    setNotifyOn(prev => ({ ...prev, [key]: turningOn }));
+  };
+
+  // fire a browser notification the moment a ticket becomes "now serving" (while this tab stays open)
+  useEffect(() => {
+    bookings.forEach(b => {
+      const key = `${b.doctorId}-${b.token}`;
+      const info = positionInfo(b.doctorId, b.token);
+      if (notifyOn[key] && info.status === 'now' && !firedRef.current[key]) {
+        firedRef.current[key] = true;
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('It\'s your turn!', { body: `Token #${b.token} — ${b.doctorName}` });
+        }
+      }
+    });
+  }, [bookings, positionInfo, notifyOn]);
+
+  return (
+    <div className="pb-16">
+      <div className="flex items-center justify-between mt-4 mb-5">
+        <h2 className="font-serif text-2xl font-semibold">My appointments</h2>
+        <Button variant="subtle" onClick={onBookMore}><Plus size={15} />Book another</Button>
+      </div>
+      <div className="space-y-5">
+        {bookings.length === 0 && <p className="text-slate-400 text-sm">You haven't booked any appointments yet.</p>}
+        {[...bookings].reverse().map((b, i) => {
+          const info = positionInfo(b.doctorId, b.token);
+          const key = `${b.doctorId}-${b.token}`;
+          return (
+            <QueueTicket
+              key={key}
+              booking={b}
+              info={info}
+              notifyOn={!!notifyOn[key]}
+              onToggleNotify={() => toggleNotify(key, b.doctorName)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ---------- a single live queue ticket, styled after the OPD token-board display ----------
+function QueueTicket({ booking, info, notifyOn, onToggleNotify }) {
+  if (info.status === 'done') {
+    return (
+      <Card className="p-7 text-center">
+        <div className="w-11 h-11 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center mx-auto mb-3"><Check size={20} /></div>
+        <h3 className="font-serif text-lg font-semibold mb-1">Consultation Completed</h3>
+        <p className="text-slate-500 text-sm mb-3">You have finished your appointment with {booking.doctorName} at {booking.hospitalName}. Thank you for using our digital queue system!</p>
+        <div className="font-mono text-sm text-slate-400">Your token: <span className="font-semibold text-slate-700">#{booking.token}</span></div>
+      </Card>
+    );
+  }
+
+  const isNow = info.status === 'now';
+
+  return (
+    <Card className="overflow-hidden">
+      <div className="p-5 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h4 class="font-bold text-lg">Arrival Advisory</h4>
-          <p class="text-sm">Only <strong id="advisoryAheadCount" class="font-bold">3</strong> patients ahead. Please arrive near the doctor's OPD room shortly.</p>
+          <div className="font-mono text-xs uppercase tracking-wider text-teal-700 font-semibold">{booking.hospitalName}</div>
+          <h3 className="font-serif text-lg font-semibold">{booking.doctorName}</h3>
+        </div>
+        <Button variant={notifyOn ? 'primary' : 'ghost'} onClick={onToggleNotify}>
+          {notifyOn ? <Bell size={15} /> : <BellOff size={15} />}
+          {notifyOn ? 'Notifications on' : 'Turn on notifications'}
+        </Button>
+      </div>
+
+      <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Stat label="Your Token Number" value={`#${booking.token}`} accent="amber" big />
+        <Stat label="Current Token In-OPD" value={info.nowServing != null ? `#${info.nowServing}` : '—'} />
+        <Stat label="Patients Ahead of You" value={info.ahead} highlight={isNow} />
+        <Stat label="Estimated Wait Time (EWT)" value={isNow ? "It's now!" : `~ ${info.ewt} mins`} />
+      </div>
+
+      <div className={`mx-5 mb-5 rounded-xl p-4 flex gap-3 ${isNow ? 'bg-rose-50 border border-rose-200' : 'bg-amber-50 border border-amber-200'}`}>
+        <AlertTriangle size={18} className={isNow ? 'text-rose-600 shrink-0' : 'text-amber-600 shrink-0'} />
+        <div className="text-sm">
+          <div className="font-semibold text-slate-800 mb-0.5">Arrival Advisory</div>
+          <div className="text-slate-600">
+            {isNow
+              ? "It's your turn — please head to the OPD room now."
+              : info.ahead <= 3
+                ? `Only ${info.ahead} patient${info.ahead === 1 ? '' : 's'} ahead. Please arrive near the doctor's OPD room shortly.`
+                : `${info.ahead} patients ahead. You have some time — we'll estimate about ${info.ewt} minutes before your turn.`}
+          </div>
         </div>
       </div>
 
-    </div>
-
-    <!-- Right Column: Live Queue List -->
-    <aside class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex flex-col h-[550px]">
-      <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
-        <i class="fa-solid fa-list-ol text-sky-600"></i>
-        Live Queue List
-      </h3>
-      
-      <div id="queueListContainer" class="flex-1 overflow-y-auto pr-2 queue-scrollbar space-y-3">
-        <!-- Rendered via JavaScript -->
+      <div className="px-5 pb-5">
+        <div className="font-mono text-xs uppercase tracking-wider text-slate-400 mb-2">Live Queue List</div>
+        <div className="flex flex-wrap gap-2">
+          {info.liveQueue.map(t => (
+            <span
+              key={t}
+              className={`font-mono text-xs px-2.5 py-1 rounded-full border ${
+                t === booking.token ? 'bg-amber-500 border-amber-500 text-white font-semibold' :
+                t === info.nowServing ? 'bg-teal-700 border-teal-700 text-white font-semibold' :
+                'bg-slate-50 border-slate-200 text-slate-500'
+              }`}
+            >
+              #{t}
+            </span>
+          ))}
+          {info.liveQueue.length === 0 && <span className="text-slate-400 text-xs">Queue is empty.</span>}
+        </div>
       </div>
-    </aside>
+    </Card>
+  );
+}
 
-  </main>
-
-  <!-- Completed State Container (Hidden by Default) -->
-  <div id="completedContent" class="hidden max-w-2xl mx-auto flex flex-col items-center justify-center gap-6 p-12 bg-white rounded-3xl shadow-lg border border-gray-100 text-center my-12">
-    <div class="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center">
-      <i class="fa-solid fa-circle-check text-6xl"></i>
+function Stat({ label, value, accent, big, highlight }) {
+  return (
+    <div>
+      <div className="font-mono text-[11px] uppercase tracking-wide text-slate-400 mb-1">{label}</div>
+      <div className={`font-mono font-semibold ${big ? 'text-3xl' : 'text-2xl'} ${accent === 'amber' ? 'text-amber-600' : highlight ? 'text-rose-600' : 'text-slate-800'}`}>
+        {value}
+      </div>
     </div>
-    <h2 class="text-3xl font-bold text-gray-950">Consultation Completed</h2>
-    <p class="text-gray-600 max-w-md">You have finished your appointment. Thank you for using our digital queue system!</p>
-    <p class="text-sm text-gray-500">Your Token: <strong id="completedTokenDisplay" class="font-bold text-gray-700">#15</strong></p>
-  </div>
+  );
+}
 
-  <!-- JavaScript Logic -->
-  <script>
-    // =========================================================
-    // CONFIGURATION & STATE
-    // =========================================================
-    const AVG_CONSULTATION_TIME = 10; // Minutes per patient
-    const MY_TOKEN = 15; // Simulate current user token #15
-    let currentActiveToken = 3; // Starting active token
-    let notificationEnabled = false;
-    let hasNotified = false;
+// ---------- Hospital dashboard ----------
+function HospitalDashboard({ admin, doctors, queues, onAddDoctor, onManageQueue }) {
+  return (
+    <div className="pb-16">
+      <div className="flex items-center justify-between mt-4 mb-5">
+        <div>
+          <h2 className="font-serif text-2xl font-semibold">{admin.hospitalName}</h2>
+          <p className="text-slate-500 text-sm">Manage your doctors and live queues.</p>
+        </div>
+        <Button variant="hospital" onClick={onAddDoctor}><Plus size={15} />Add doctor</Button>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4">
+        {doctors.map(d => {
+          const q = queues[d.id] || { queue: [], lastToken: 0 };
+          return (
+            <Card key={d.id} className="p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-semibold text-slate-900">{d.name}</h3>
+                  <div className="text-slate-500 text-sm">{d.specialty}</div>
+                </div>
+                <div className="text-right font-mono">
+                  <div className="text-xs text-slate-400 uppercase">Waiting</div>
+                  <div className="text-xl font-semibold text-slate-800">{q.queue.length}</div>
+                </div>
+              </div>
+              <Button variant="subtle" className="w-full mt-4" onClick={() => onManageQueue(d)}>Manage queue<ArrowRight size={15} /></Button>
+            </Card>
+          );
+        })}
+        {doctors.length === 0 && <p className="text-slate-400 text-sm">No doctors added yet — add your first one to start taking bookings.</p>}
+      </div>
+    </div>
+  );
+}
 
-    // Generate total queue tokens 1 through 25
-    let patientQueue = Array.from({ length: 25 }, (_, i) => ({
-      id: `P-${101 + i}`,
-      tokenNo: i + 1,
-      status: (i + 1) < currentActiveToken ? 'completed' : ((i + 1) === currentActiveToken ? 'in-room' : 'waiting')
-    }));
+// ---------- Add doctor ----------
+function AddDoctorForm({ onBack, onSubmit }) {
+  const [name, setName] = useState('');
+  const [specialty, setSpecialty] = useState('');
+  return (
+    <div className="max-w-sm mx-auto pt-8 pb-16">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-slate-500 text-sm mb-4 hover:text-slate-700"><ArrowLeft size={14} />Back to dashboard</button>
+      <Card className="p-7">
+        <h2 className="font-serif text-xl font-semibold mb-5">Add a doctor</h2>
+        <div className="space-y-3">
+          <Input placeholder="Doctor's name" value={name} onChange={e => setName(e.target.value)} />
+          <Input placeholder="Specialty (e.g. Cardiology)" value={specialty} onChange={e => setSpecialty(e.target.value)} />
+          <Button variant="hospital" className="w-full" onClick={() => name && specialty && onSubmit({ name, specialty })}>
+            <Plus size={16} />Add doctor
+          </Button>
+        </div>
+      </Card>
+    </div>
+  );
+}
 
-    // =========================================================
-    // RENDER FUNCTIONS
-    // =========================================================
-    function updateDashboard() {
-      const myPatient = patientQueue.find(p => p.tokenNo === MY_TOKEN);
-      
-      // 1. Check if patient consultation is finished
-      if (myPatient.status === 'completed') {
-        document.getElementById('trackerContent').classList.add('hidden');
-        document.getElementById('completedContent').classList.remove('hidden');
-        document.getElementById('completedTokenDisplay').innerText = `#${MY_TOKEN}`;
-        return;
-      }
-
-      // 2. Calculate Stats
-      const patientsAhead = patientQueue.filter(p => p.tokenNo >= currentActiveToken && p.tokenNo < MY_TOKEN).length;
-      const ewt = myPatient.status === 'in-room' ? 0 : patientsAhead * AVG_CONSULTATION_TIME;
-
-      // 3. Update DOM Text Displays
-      document.getElementById('myTokenDisplay').innerText = `#${MY_TOKEN}`;
-      document.getElementById('activeTokenDisplay').innerText = `#${currentActiveToken}`;
-      document.getElementById('patientsAheadDisplay').innerText = patientsAhead;
-      document.getElementById('ewtDisplay').innerHTML = `~ ${ewt} <span class="text-lg font-medium text-gray-600">mins</span>`;
-
-      // 4. Update Status Badge
-      const badgeContainer = document.getElementById('statusBadgeContainer');
-      if (myPatient.status === 'in-room') {
-        badgeContainer.innerHTML = `<span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Currently Seeing Doctor</span>`;
-      } else {
-        badgeContainer.innerHTML = `<span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">Waiting</span>`;
-      }
-
-      // 5. Arrival Advisory Alert (Shows when <= 3 patients ahead)
-      const advisoryBanner = document.getElementById('arrivalAdvisory');
-      if (patientsAhead <= 3 && myPatient.status === 'waiting') {
-        advisoryBanner.classList.remove('hidden');
-        document.getElementById('advisoryAheadCount').innerText = patientsAhead;
-        
-        // Push notification if enabled
-        if (notificationEnabled && !hasNotified && ("Notification" in window) && Notification.permission === "granted") {
-          new Notification("🏥 Hospital Queue Alert!", {
-            body: `It's almost your turn! You have ${patientsAhead} patients ahead. Please head to the doctor's OPD room now.`
-          });
-          hasNotified = true;
-        }
-      } else {
-        advisoryBanner.classList.add('hidden');
-      }
-
-      // 6. Render Live Queue List
-      renderQueueList();
-    }
-
-    function renderQueueList() {
-      const container = document.getElementById('queueListContainer');
-      container.innerHTML = '';
-
-      patientQueue.forEach(patient => {
-        const isMe = patient.tokenNo === MY_TOKEN;
-        const item = document.createElement('div');
-
-        let itemClasses = "flex items-center justify-between p-4 rounded-xl transition ";
-        if (isMe) {
-          itemClasses += "bg-sky-600 text-white shadow-md";
-        } else if (patient.status === 'completed') {
-          itemClasses += "bg-gray-50 text-gray-400";
-        } else {
-          itemClasses += "bg-white border border-gray-100 text-gray-800";
-        }
-        item.className = itemClasses;
-
-        let rightBadge = '';
-        if (patient.status === 'in-room') {
-          rightBadge = `<span class="px-2 py-0.5 text-xs font-semibold rounded ${isMe ? 'bg-white/20 text-white' : 'bg-green-100 text-green-700'}">IN-OPD</span>`;
-        } else if (patient.status === 'completed') {
-          rightBadge = `<i class="fa-solid fa-circle-check text-gray-300"></i>`;
-        }
-
-        item.innerHTML = `
-          <div class="flex items-center gap-3.5">
-            <div class="font-bold text-sm px-2.5 py-1 rounded-lg ${isMe ? 'bg-white/20' : 'bg-gray-100 text-gray-700'}">
-              T-${patient.tokenNo}
-            </div>
-            <div class="font-mono text-xs ${isMe ? 'text-white' : patient.status === 'completed' ? 'text-gray-400' : 'text-gray-500'}">
-              ${patient.id} ${isMe ? '(You)' : ''}
-            </div>
+// ---------- Manage queue ----------
+function ManageQueue({ doctor, queue, onBack, onMarkServed }) {
+  const nowServing = queue.queue[0];
+  return (
+    <div className="pb-16 max-w-lg mx-auto">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-slate-500 text-sm mb-4 hover:text-slate-700"><ArrowLeft size={14} />Back to dashboard</button>
+      <Card className="p-7 mb-5">
+        <h2 className="font-serif text-xl font-semibold mb-1">{doctor.name}</h2>
+        <p className="text-slate-500 text-sm mb-6">{doctor.specialty}</p>
+        <div className="bg-slate-50 rounded-xl p-5 flex items-center justify-between mb-5">
+          <div>
+            <div className="font-mono text-xs uppercase text-slate-400 mb-1">Now serving</div>
+            <div className="font-mono text-4xl font-semibold text-slate-800">{nowServing ? nowServing.token : '—'}</div>
+            {nowServing && <div className="text-slate-500 text-sm mt-1">{nowServing.patientName}</div>}
           </div>
-          ${rightBadge}
-        `;
-
-        container.appendChild(item);
-      });
-    }
-
-    // =========================================================
-    // NOTIFICATION TOGGLE
-    // =========================================================
-    function toggleNotifications() {
-      if (!("Notification" in window)) {
-        alert("This browser does not support desktop notifications.");
-        return;
-      }
-
-      notificationEnabled = !notificationEnabled;
-      const btn = document.getElementById('notifyBtn');
-      const icon = document.getElementById('notifyIcon');
-      const text = document.getElementById('notifyText');
-
-      if (notificationEnabled) {
-        Notification.requestPermission();
-        btn.className = "flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition bg-amber-100 text-amber-800 hover:bg-amber-200";
-        icon.className = "fa-solid fa-bell animate-pulse";
-        text.innerText = "Notifications On";
-      } else {
-        btn.className = "flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition bg-gray-900 text-white hover:bg-gray-700";
-        icon.className = "fa-regular fa-bell";
-        text.innerText = "Turn On Notifications";
-      }
-    }
-
-    // =========================================================
-    // SIMULATION ENGINE (Advances doctor queue every 5 seconds)
-    // =========================================================
-    setInterval(() => {
-      if (currentActiveToken <= patientQueue.length) {
-        currentActiveToken++;
-        
-        // Update statuses
-        patientQueue = patientQueue.map(p => {
-          if (p.tokenNo < currentActiveToken) return { ...p, status: 'completed' };
-          if (p.tokenNo === currentActiveToken) return { ...p, status: 'in-room' };
-          return { ...p, status: 'waiting' };
-        });
-
-        updateDashboard();
-      }
-    }, 5000); // 5-second interval for demonstration speed
-
-    // Initial Render
-    updateDashboard();
-  </script>
-</body>
-</html>
+          <Button variant="hospital" onClick={onMarkServed} disabled={!nowServing}>
+            <Check size={16} />Done, call next
+          </Button>
+        </div>
+      </Card>
+      <h3 className="font-mono text-xs uppercase tracking-wider text-slate-400 mb-2">Waiting list ({queue.queue.length})</h3>
+      <div className="space-y-2">
+        {queue.queue.map((p, i) => (
+          <Card key={p.token} className={`p-4 flex items-center justify-between ${i === 0 ? 'border-amber-400' : ''}`}>
+            <div className="flex items-center gap-3">
+              <div className="font-mono text-lg font-semibold text-slate-800 w-8">{p.token}</div>
+              <div className="text-slate-700 text-sm">{p.patientName}</div>
+            </div>
+            {i === 0 && <span className="text-xs font-semibold text-amber-600 font-mono uppercase">Now serving</span>}
+          </Card>
+        ))}
+        {queue.queue.length === 0 && <p className="text-slate-400 text-sm">No one is currently waiting.</p>}
+      </div>
+    </div>
+  );
+}
